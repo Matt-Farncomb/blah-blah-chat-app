@@ -1,0 +1,56 @@
+{% extends "template.html" %}
+
+{% block heading %}
+    Get Blah Blah'd
+{% endblock %}
+
+{% block body %}
+<!-- <ul id="msg-room">
+    
+    {% for message in messages %}
+        <li>{{message}}</li>
+    {% endfor %}
+
+</ul> -->
+
+<!-- Will have this box fade away after saving -->
+
+<form action="{{ url_for('login') }}" method="post">
+	<input id="name-box" name="name"type="text" placeholder="Tell us your name...">
+	<button>Name Yourself</button>
+</form>
+
+<br>
+
+<!-- textarea id="msg" placeholder="Speak..."></textarea>
+<button id="blah">Blah!</button> -->
+<!-- <input type="submit" name="Blah!"> -->
+
+<h3>Channels</h3>
+<button id="create">Spawn</button>
+<input id='chan-name' type='text' hidden></input>
+<button id='save-chan' hidden>Save</button>
+
+
+
+
+<!-- MAKE A LOOP THAT PRINTS OUT THE VALUE -->
+
+<!-- 
+ -->
+
+
+<!-- This is name of your current channel: {{current}} -->
+
+
+
+
+{% for channel in channels %}
+<form action="{{ url_for('channel_selection', chan=channel ) }}" method="post">
+<li><button><a href="{{ url_for('channel_selection', chan=channel ) }}">{{channel}}</button></li>
+</form>
+{% endfor %}
+
+<span id="jina_channels"></span>
+
+{% endblock %}
