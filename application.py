@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, render_template, request, session
+from flask import Flask, render_template, request, session, redirect, url_for
 from flask_session import Session
 from flask_socketio import SocketIO, emit
 
@@ -23,11 +23,27 @@ channel_names = []
 #		   room2: [messages]
 #}
 
+'''
+Main page where users enter their name and create enw channelas.
+If users are visiting the site after previously going into a 
+particular channel, they are redirected from 'index' to the channel
+they last visited. The redirect is stopped when user has either
+not visited previously or are hitting the 'back' button on the'channels' 
+ page as the 'chan-name' key will no longer be in sesson.
+'''
+
 @app.route("/")
 def index():
-	return render_template("index.html", messages=messages, channels=channel_names)
- 
+	if "chan_name" not in session:
+		return render_template("index.html", messages=messages, channels=channel_names)
+	return redirect(url_for('channel_selection', chan=session["chan_name"]))
 
+
+'''
+Enable users to login. Logged in names are stored in session 
+so that when a user posts a message, said message is labelled
+witht their name.
+'''
 @app.route("/", methods=["POST"])
 def login():
  	name = request.form.get("name")
@@ -49,49 +65,47 @@ The messages that are rendered to DOM are from the channels dict...
 '''
 
 #<string:chan_name>
+
+'''
+When visiting /chan users are directed to the channel page of 
+name 'chan'. Variable chan is stored in sessions so when a user 
+revisits the site, they are automatically redirected from the main
+page to 'chan' which is the channel they were last using.
+'''
 @app.route("/<string:chan>", methods=["GET", "POST"])
 def channel_selection(chan):
 	print("doing stuff")
 	print("annoying")
-	# chan_name = request.form.get("clicked")
+
 	if chan not in channels:
 		return render_template("error")
 	session["chan_name"] = chan
-	# session["chan_name"] = chan_namea
-	#print(chan_name)
 	
 	return render_template("channel_template.html", 
 		messages=channels[chan], 
 		channels=channel_names,
 		current=chan)   
 
-# @socketio.on("clicked channel")
-# def clicked_channel(data):
-# 	global chan_name
-# 	chan_name = data["chan_name"]
 
-
+'''
+Creates a key, value pair of message and sender. adds that to
+the channels dict under the correct channle name key and then
+broadcasts the messgae k, v pair to all clients ready to
+be appended to DOM by js.
+'''
 @socketio.on("send message")
 def upload_msg(data):
-	# message = f"{
-	#				chanName:
-	#						{
-	#							session['name']: data['message']
-	#						}
-	#			  }"
 	message = f"{session['name']}: {data['message']}"
 	channels[session['chan_name']].append(message)
 	messages.append(message)
 	emit("broadcast message", message,
 		broadcast=True)
 
-# @socketio.on("send create")
-# def upload_msg(data):
-# 	chanName = data['chanName']
-# 	channels.append(chanName)
-# 	emit("create channel", chanName,
-# 		broadcast=True)
-
+'''
+Updates the channel list and dict on the server side with
+the new channel and sends the new channel name to all clients
+ready to be appended to the DOM by client side JS.
+'''
 @socketio.on("send create")
 def create_channel(data):
 	chanName = data['chanName']
@@ -99,6 +113,15 @@ def create_channel(data):
 	channels.update({ chanName:[] })
 	emit("create channel", chanName,
 		broadcast=True)
+
+'''
+Deletes the stored channel name from session enabling the user to
+return to the home page without being redirected.
+'''
+@app.route("/back")
+def back():
+	del session["chan_name"]
+	return redirect(url_for('index'))
 
 	
 
