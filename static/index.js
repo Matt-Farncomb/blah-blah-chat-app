@@ -18,25 +18,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     function create_jina_form(chanName) {
-        return `<button><a href="${chanName}">${chanName}</button>`;
-          }
+        return `<button><a href="/channels/${chanName}">${chanName}</button>`; }
+          
     // When connected...
     socket.on('connect', () => {
-        
-/*        saveName.onclick = () => {
-                    
-            console.log("called!!!");
-            console.log("called!!!!!");
-            usr_name = name.value;
-            socket.emit('send name', {'name': name.value});
-
-            name.disabled = true;
-            name.hidden = true;
-            saveName.disabled = true;
-            saveName.hidden = true;
-                /*return false;*/
-       // };*/
-
 
          document.querySelector('#save-chan').onclick = () => {
 
@@ -45,47 +30,19 @@ document.addEventListener('DOMContentLoaded', () => {
             socket.emit('send create', {'chanName': chanName.value.toLowerCase()});
 
             chanName.hidden = true;        
-            saveChan.hidden = true;
-            
+            saveChan.hidden = true;          
         };
     });
 
 
      socket.on('create channel', chanName => {
-        const button = document.createElement('button');
-        const li = document.createElement('li');
         const sp = document.createElement('span')
-        button.id = chanName;
-        button.type = "submit";
-        button.name = "clicked";
-        button.value = chanName;
-        button.innerText = chanName;
+        jc = document.querySelector('#jinja_channels');
+        sp.innerHTML = `<li><button>
+                            <a href="/channels/${chanName}">${chanName}
+                        </button></li>`;
+        jc.appendChild(sp)
 
-        new_form = create_jina_form(chanName);
-        sp.innerHTML = new_form
-
-        
-
-        li.appendChild(sp)
-        jc = document.querySelector('#jina_channels');
-        jc.appendChild(li)
-        /*jc.innerHTML = new_form*/
-        console.log("creating");
-
-        /*socket.emit('send store chan', {"channel":})*/
-
-        /*li.appendChild(button)*/
-;        /*li.innerHTML = `${name}: ${message}`*/
-        /*channel.append(li);*/
-
-        
- /*       jc.innerHTML = `<button id=${chanName} type="submit" name="clicked" value=${chanName}></button>`;
-        new_button = document.querySelector('#'+chanName);
-        new_button.innerText = chanName;
-
-        li.appendChild(new_button);
-        channel.append(li);*/
-        //jl.appendChild(jc)
     });
 
     //other fucntions
@@ -94,12 +51,5 @@ document.addEventListener('DOMContentLoaded', () => {
         saveChan.hidden = false;
         chanName.hidden = false;        
         
-
-    /*    chanName.visibility = "visible";
-        subName.visibility = "visible";*/
-
-            
-            //console.log("create");
-            /*return false;*/
         };
 });

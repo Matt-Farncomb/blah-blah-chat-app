@@ -22,7 +22,7 @@
 <!-- <input type="submit" name="Blah!"> -->
 
 <h3>Channels</h3>
-<button id="create">Spawn</button>
+<br>
 <input id='chan-name' type='text' hidden></input>
 <button id='save-chan' hidden>Save</button>
 
@@ -34,9 +34,9 @@
 <!-- 
  -->
 
-{% for channel in channels %}
+{% for k,v in channels.items() %}
 <!-- <form action="{{ url_for('channel_selection', chan=channel ) }}" method="post"> -->
-<li><button><a href="{{ url_for('channel_selection', chan=channel ) }}">{{channel}}</button></li>
+<li><button><a href="{{ url_for('channel_selection', chan=k ) }}">{{k}}</button></li>
 <!-- </form> -->
 {% endfor %}
 
