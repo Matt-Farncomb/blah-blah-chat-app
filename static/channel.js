@@ -20,9 +20,10 @@ document.addEventListener('DOMContentLoaded', () => {
     socket.on('connect', () => {
 
         document.querySelector('#blah').onclick = () => {
-            console.log("Pest!!!!!!!")
-            let message = document.querySelector('#msg').value;
-            socket.emit('send message', {'message': message});
+            let message = document.querySelector('#msg');
+            let msg_text = message.value
+            socket.emit('send message', {'message': msg_text});
+            message.value = "";
             /*return false;*/
         };
 
@@ -51,6 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     socket.on('delete msg', id => {
+        console.log(`id=${id}`)
         old_msg = document.querySelector(`#${id}`).parentNode;
         /*old_msg.parentNode.removeChild(old_msg);*/
         old_msg.style.display = 'none';

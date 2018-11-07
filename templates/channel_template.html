@@ -12,12 +12,12 @@
 <ul id="msg-room">
     
     {% for message in messages %}
-        <li>{{message}}</li>
+        <li><span id="{{message.id}}">{{message.name}}:{{message.message}}</span></li>
     {% endfor %}
 
 </ul>
 
-<textarea id="msg" placeholder="Speak..."></textarea>
+<textarea id="msg" placeholder="Speak..." autofocus></textarea>
 <button id="blah">Blah!</button>
 <!-- <input type="submit" name="Blah!"> -->
 
