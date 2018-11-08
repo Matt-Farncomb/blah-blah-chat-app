@@ -22,11 +22,9 @@
 <!-- <input type="submit" name="Blah!"> -->
 
 <h3>Channels</h3>
-<br>
+<button id="create">Spawn</button>
 <input id='chan-name' type='text' hidden></input>
 <button id='save-chan' hidden>Save</button>
-
-
 
 
 <!-- MAKE A LOOP THAT PRINTS OUT THE VALUE -->
@@ -40,9 +38,9 @@
 <!-- </form> -->
 {% endfor %}
 
-<span id="jina_channels"></span>
+<span id="jinja_channels"></span>
 
-<br>
-<button><a href="{{ url_for('back') }}">Back</button>
+<!-- <br>
+<button><a href="{{ url_for('back') }}">Back</button> -->
 
 {% endblock %}

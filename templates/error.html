@@ -1,11 +1,11 @@
 {% extends "template.html" %}
 
 {% block heading %}
-    404 Channel Not Found
+    404 Channel Not Found. This may have been deleted in your absence or a server reset wiped it from the system.
 {% endblock %}
 
 {% block body %}
 
-<button><a href="{{ url_for('index') }}">Back</button>
+<button><a href="{{ url_for('channel_selection', chan='home') }}">Back</button>
     
 {% endblock %}

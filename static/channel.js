@@ -58,4 +58,22 @@ document.addEventListener('DOMContentLoaded', () => {
         old_msg.style.display = 'none';
     });
 
+    socket.on('create channel', chanName => {
+        const sp = document.createElement('span')
+        jc = document.querySelector('#jinja_channels');
+        sp.innerHTML = `<li><button>
+                            <a href="/channels/${chanName}">${chanName}
+                        </button></li>`;
+        jc.appendChild(sp)
+
+    });
+
+    //other fucntions
+    document.querySelector('#create').onclick = () => {
+
+        saveChan.hidden = false;
+        chanName.hidden = false;        
+        
+        };
+
 });
