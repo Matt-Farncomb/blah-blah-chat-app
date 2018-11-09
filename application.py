@@ -28,8 +28,50 @@ db = scoped_session(sessionmaker(bind=engine))
 
 svr_reset = True
 
+#TODO:
+# A fucntion when the user can request to see older msgs
+# eg befoer server reset or before maximum reached
+# This will only be displayed for the current user, not any other user
+# Other users will just get the normal display
+# Aslo, user can search through messages in DB for things that were said
+# Imagine making an api to look at stats of total words used... :)
+
 #a dict to store key, value pairs of {channel string: messages list}
 channels = {"home": {"chan_id":0,"msg_count":0, "msg_list":[]} }
+
+# max messages shown to user
+maximum = 10
+
+channel_names = db.execute('''
+	SELECT * FROM channels
+	''').fetchall()
+
+messages = db.execute('''
+	SELECT * FROM messages
+	LIMIT :maximum''',
+	{"maximum":maximum}
+	).fetchall()
+	
+print(messages)
+
+for row in channel_names:
+	channels.update({
+		row.channel_name: {
+			"chan_id":row.id,
+			"msg_count":0,
+			"msg_list":[]
+			}
+		})
+
+for row in messages:
+	for k,v in channels.items():
+		print(f"row.channel_id: {row.channel_id}" )
+		print(f"v = {v}")
+		if v["chan_id"] == row.channel_id:
+			print(f"row is {row.message}")
+			channels[k]["msg_list"].append(row)
+
+print(channels)
 
 
 '''
