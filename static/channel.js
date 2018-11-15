@@ -31,6 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function saveChannel() {
         socket.emit('send create', {'chanName': chanName.value.toLowerCase()});
+        chanName.value = ""
        /* chanName.hidden = true;        
         saveChan.hidden = true;*/
     }
@@ -46,10 +47,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-        document.querySelector('#blah').onclick = () => {
+     /*   document.querySelector('#blah').onclick = () => {
             sendMessage()
-            /*return false;*/
-        };
+      
+        };*/
 
          msgBox.addEventListener('keydown', (e) => {
             if (e.key == "Enter") {
