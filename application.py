@@ -37,7 +37,10 @@ svr_reset = True
 # Imagine making an api to look at stats of total words used... :)
 
 #a dict to store key, value pairs of {channel string: messages list}
-channels = {"home": {"chan_id":0,"msg_count":0, "msg_list":[]} }
+channels = {"home": {"chan_id":0,"msg_count":0, "msg_list":[], "current_users":[]} }
+
+# stores users names and their current channels
+current_users = {}
 
 # max messages shown to user
 maximum = 10
@@ -48,30 +51,56 @@ channel_names = db.execute('''
 
 messages = db.execute('''
 	SELECT * FROM messages
+	ORDER BY id DESC
 	LIMIT :maximum''',
 	{"maximum":maximum}
 	).fetchall()
+
 	
-print(messages)
+# print(messages)
 
 for row in channel_names:
 	channels.update({
 		row.channel_name: {
 			"chan_id":row.id,
 			"msg_count":0,
-			"msg_list":[]
+			"msg_list":[],
+			"current_users":[]
 			}
 		})
+# x = len(channel_names)
 
-for row in messages:
+# for i in range(x):
+# 	channels.update({
+# 		channel_names[x-i-1].channel_name: {
+# 			"chan_id":channel_names[x-i-1].id,
+# 			"msg_count":0,
+# 			"msg_list":[]
+# 			}
+# 		})
+
+
+# for row in messages:
+# 	for k,v in channels.items():
+# 		# print(f"row.channel_id: {row.channel_id}" )
+# 		# print(f"v = {v}")
+# 		if v["chan_id"] == row.channel_id:
+# 			# print(f"row is {row.message}")
+# 			channels[k]["msg_list"].append(row)
+
+x = len(messages)
+
+for i in range(x):
 	for k,v in channels.items():
-		print(f"row.channel_id: {row.channel_id}" )
-		print(f"v = {v}")
-		if v["chan_id"] == row.channel_id:
-			print(f"row is {row.message}")
-			channels[k]["msg_list"].append(row)
+		# print(f"row.channel_id: {row.channel_id}" )
+		# print(f"v = {v}")
+		if v["chan_id"] == messages[-1-i].channel_id:
+			# print(f"row is {row.message}")
+			channels[k]["msg_list"].append(messages[-1-i])
 
-print(channels)
+
+
+# print(channels)
 
 
 '''
@@ -125,6 +154,7 @@ witht their name.
 def login():
  	name = request.form.get("name")
  	session["name"] = name
+ 	current_users.update({name:"home"})
  	# return render_template("/channels/home.html", channels=channels)
  	return redirect(url_for("channel_selection", chan="home"))
  	# return redirect(url_for('home'))
@@ -164,21 +194,43 @@ name 'chan'. Variable chan is stored in sessions so when a user
 revisits the site, they are automatically redirected from the main
 page to 'chan' which is the channel they were last using.
 '''
+# @socketio.on("swap channel")
 @app.route("/channels/<string:chan>", methods=["GET"])
 def channel_selection(chan):
 	# If channel in URL exists return it's template.
+	print(f"Channel selection done on {chan}")
+
 	global svr_reset
 	if svr_reset == True:
 		svr_reset = False
 		return redirect(url_for('welcome'))
 
 	if chan in channels:
+		#remove user from previous channel list
+		if "chan_name" in session:
+			l = channels[session["chan_name"]]["current_users"]
+			if session["name"] in l:
+				l.remove(session["name"])
+
+
 		session["chan_name"] = chan
-		print("here: ", channels[chan]["msg_list"])
-		return render_template("channel_template.html", 
+		current_users.update({session["name"]:chan})
+
+		#add user to new channel list
+		channels[chan]["current_users"].append(session["name"])
+		print(channels[chan])
+
+		# print("here: ", channels[chan]["msg_list"])
+		# emit("user entered", "{"name":session["name"], "channel":chan}", 
+		#  	broadcast=True)
+
+
+
+		return render_template("new_channel_template.html", 
 			messages=channels[chan]["msg_list"], 
 			channels=channels,
-			current=chan)
+			current=chan,
+			name=session["name"])
 
 	# If it does not exist, but aanotehr channel was visited previously
 	# (ie it is in  sesssion), delete old visited channel from session only
@@ -204,7 +256,6 @@ be appended to DOM by js.
 
 @socketio.on("send message")
 def upload_msg(data):
-	maximum = 3
 
 	new_msg = new_message(data)
 	
@@ -291,9 +342,11 @@ def new_channel(name):
 		{
 		"chan_id":chan_id.id,
 		"msg_count":0,
-		"msg_list":[]
+		"msg_list":[],
+		"current_users":[]
 		}
 	}
+	print(f"new channe: {new_channel}")
 	channels.update(new_channel)
 
 	return new_channel
@@ -326,6 +379,19 @@ def new_message(data):
 
 	return new_message
 
+@socketio.on("check")
+def check_channels(target):
+	print(f"current_users are {current_users}")
+	if target in channels:
+		emit("swap channel", target, 
+			broadcast=False)
+	elif target in current_users:
+		print(f"{current_users} are current")
+		new_value = current_users[target]
+		emit("swap channel", new_value, 
+			broadcast=False)
+	else:
+		print(f"{target} not found")
 
 	# return	{
 	# 			"id":f"msg_{count}",
@@ -333,14 +399,23 @@ def new_message(data):
 	# 			"message":data['message'],
 	# 			"channel":session['chan_name']
 	# 		}
+# @socketio.on("swap channel")
+# def swap_channel(channel):
+# 	emit("swap_channel",{ 'url': url_for('channel_selection', chan=channel)})
 
+	# return redirect(url_for('channel_selection', chan=value))
 
+# emits are constantly sent to server
+#these are checking what user is in what channel
+# it retrievs session[channel] each time
+# if session channel is equal to chnnel, append if not there
 
-
-
-
-
-			 
-
-
+@socketio.on("which channel")
+def send_users_channels():
+	print("sending users channels")
+	temp = {"chan":current_users[session["name"]],
+			"name":session["name"]
+			}
+	emit("update users", temp,
+		broadcast=True)
 
