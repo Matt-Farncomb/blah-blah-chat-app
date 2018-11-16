@@ -1,3 +1,11 @@
+<!--TODO:
+	Add scrollbar to chat window
+	Change hover colors
+		- Make hover the full width
+	Change color of Focus on New Channel to a paler versio of the bg color
+	NEw Channel should look button ish or form ish in somehow without losing the sidebar feel
+-->
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -27,13 +35,13 @@
 
             /*--- Row 1 ---*/
             #row-1 {
-            	height: 5vh; 
+            	height: 6vh; 
             }
 
             	/* Left */
-				#cr-chan-cont {
-            		padding: 0px;
-            	}
+				/* #cr-chan-cont {
+				            		padding: 0px;
+				            	} */
 
             	/* Middle */
             	#chan-title {
@@ -42,22 +50,36 @@
 
             	/* Right */
 
+            	#chan-name-div {
+            		padding: 0px;
+            	}
+
+            	.chan-form{
+            		background-color:#35383D;
+            		color: #35383D !important;
+            	} 
+
+            	.chan-form::placeholder {
+            		color: #E5EBFF;
+            	}
+
             	
 
             /*--- Row 2 ---*/
             #row-2 {
-            	height: 86vh; 
+            	height: 85vh; 
             }
 				
                 /* Left */
                 #chan-selection {
-	            	padding: 20px;
+	            	/* padding-top: 18px; */
 	            	background-color:#35383D; 
             	}
 
                 #chan-name {
             		border-radius: 0px;
             		height: 100%;
+
             	}
 
             	.channel-links {
@@ -73,8 +95,11 @@
             	/* Middle */
             	#msg-window {
 	            	padding: 20px;
-	                background-color: #F7F9FF;
+	                background-color: #e8ecf9;
+	                #F7F9FF
+	                #e8ecf9
 	                color:#030B30; 
+	                box-shadow:inset 0px 3px 5px 1px slategrey;
             	}
 
             	#msg-room {
@@ -92,8 +117,10 @@
 
             	#online {
 	            	background-color: #F7F9FF;
+	            	#e8ecf9
+	            	#F7F9FF
 	            	color:slategrey; 
-	            	border: solid 2px slategrey;
+	            	/* box-shadow:inset 0px 0px 2px 2px slategrey; */
 	            	border-top: none;
             	}
 
@@ -104,7 +131,9 @@
 	            }
 
 	            #online-div {
-	            	border: solid 2px slategrey;
+					/* Gives the appearance of an innder border */
+					/* box-shadow:inset 0px 0px 0px 2px slategrey; */
+	            	
 	            }
 
 	            #online-names {
@@ -125,48 +154,65 @@
             	}
 
 
+
+
         </style>
     </head>
 	<body>
         <div class="container-fluid">
 
         	<!--Top Row -->
-            <div class="row" id="row-1">
-                <div class="col-1" id="cr-chan-cont">
-                    <!-- <button type="button" class="btn btn-dark btn-block" id="create">Create Channel</button> -->
+<!--             <div class="row" id="row-1">
+    <div class="col" id="cr-chan-cont">
+        <button type="button" class="btn btn-dark btn-block" id="create">Create Channel</button>
 					<input class="form-control" id='chan-name' type='text' placeholder="New channel..."></input>
-					<!-- <input id='chan-name' type='text' hidden></input> -->
-					<!-- <button id='save-chan' hidden>Save</button> -->
-                </div>
-                <div class="col-9">
-                    <h2 id="chan-title">@{{current}}</h2>
-                </div>
-               	<div class="col" id="online-div">
-               		<h5 id="online-title">Users Online</h5>
-               </div>
+					<input id='chan-name' type='text' hidden></input>
+					<button id='save-chan' hidden>Save</button>
+    </div>
+    <div class="col-9">
+        <h2 id="chan-title">@{{current}}</h2>
+    </div>
+   	<div class="col" id="online-div">
+   		<h5 id="online-title">Users Online</h5>
+   </div>
+</div> -->
+
+
+
+			<div class="row" id="row-1">
+            	<div class="col-2" id="chan-name-div">
+            		<input class="form-control border-0 chan-form" id='chan-name' type='text' placeholder="  New channel..."></input>
+            	</div>
+            	<div class="col-8">
+            		<h2 id="chan-title">@{{current}}</h2>
+            	</div>
+            	<div class="col-2" id="online-div">
+            		<h5 id="online-title">Users Online</h5>
+            	</div>
             </div>
+
 
             <!--2nd Row (Chat Window and Channels) -->
             <div class="row" id="row-2">
-                <div class="col-1" id="chan-selection">
+                <div class="col" id="chan-selection">
                     {% for k,v in channels.items() %}
 
 					<!-- <form action="{{ url_for('channel_selection', chan=channel ) }}" method="post"> -->
 					<!-- <li><button type="button" class="btn btn-dark btn-block" id="chan-button"><a href="{{ url_for('channel_selection', chan=k ) }}">{{k}}</a></button></li> -->
 					<!-- </form> -->
-					<li class="channel-links"><a href="{{ url_for('channel_selection', chan=k ) }}">{{k}}</a></li>
+					<li class="channel-links"><a href="{{ url_for('channel_selection', chan=k ) }}" class="nav-link">{{k}}</a></li>
 					{% endfor %}
 
 					<span id="jinja_channels"></span>
                 </div>
-                <div class="col-9" id="msg-window">
+                <div class="col-8" id="msg-window">
                     <ul id="msg-room">
 					    {% for message in messages %}
 					        <li><span id="{{message.id}}"><span class="names">{{message.name}}:</span> {{message.message}}</span></li>
 					    {% endfor %}
 					</ul>
 				</div>
-				 <div class="col-2" id="online">
+				 <div class="col" id="online">
                     {% for k,v in channels.items() %}
                     	{% for e in v.current_users %}
                     		<li id="online-names">@{{e}}:<span class="user-channel" id="cur-chan-{{e}}">{{k}}</span></a></li>
