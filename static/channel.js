@@ -117,7 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const sp = document.createElement('span')
         jc = document.querySelector('#jinja_channels');
         sp.innerHTML = `<li class="channel-links">
-                            <a href="/channels/${chanName}">${chanName}
+                            <a href="/channels/${chanName}" class="nav-link">${chanName}
                         </li>`;
         jc.appendChild(sp)
 

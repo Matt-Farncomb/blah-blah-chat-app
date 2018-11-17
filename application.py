@@ -138,7 +138,7 @@ def welcome():
 
 
 
-	return render_template("welcome.html", 
+	return render_template("new_welcome.html", 
 		message=message, 
 		first_visit=first_visit, 
 		last_visited=last_visited)
@@ -413,9 +413,11 @@ def check_channels(target):
 @socketio.on("which channel")
 def send_users_channels():
 	print("sending users channels")
-	temp = {"chan":current_users[session["name"]],
-			"name":session["name"]
-			}
+	temp = {}
+	if session["name"] in current_users:
+		temp = {"chan":current_users[session["name"]],
+				"name":session["name"]
+				}
 	emit("update users", temp,
 		broadcast=True)
 

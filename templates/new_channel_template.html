@@ -1,9 +1,6 @@
 <!--TODO:
-	Add scrollbar to chat window
-	Change hover colors
-		- Make hover the full width
-	Change color of Focus on New Channel to a paler versio of the bg color
-	NEw Channel should look button ish or form ish in somehow without losing the sidebar feel
+	Make site responsive
+	You scroll individual sections, not the whole page
 -->
 
 <!DOCTYPE html>
@@ -20,10 +17,18 @@
 				font-family: courier new;
 			}
 
+			:root {
+				--sidebar-hover-color:#485160;
+				--palest-blue:#F7F9FF;
+				--darkest-blue:#35383D;
+				--even-darker-blue:#171a1e;
+			}
+
             
-            a { 
+            a, a:hover { 
+            	text-decoration: none;
             	color: inherit;
-            }
+               }
 
             .btn {
             	border-radius: 0px;
@@ -39,30 +44,44 @@
             }
 
             	/* Left */
-				/* #cr-chan-cont {
-				            		padding: 0px;
-				            	} */
-
-            	/* Middle */
-            	#chan-title {
-            		padding-left: 15px;
-            	}
-
-            	/* Right */
-
-            	#chan-name-div {
+				#chan-name-div {
             		padding: 0px;
             	}
 
             	.chan-form{
-            		background-color:#35383D;
+            		background-color:var(--even-darker-blue);
+            		#35383D
+            		#485160
             		color: #35383D !important;
+
             	} 
 
-            	.chan-form::placeholder {
-            		color: #E5EBFF;
+            	.chan-form:hover::placeholder, .chan-form:focus::placeholder {
+            		color: var(--darkest-blue);
             	}
 
+            	.chan-form::placeholder {
+            		color: var(--palest-blue);
+            	}
+
+            	.channel-links:hover   {
+            	 	background-color: var(--sidebar-hover-color);
+            	}
+
+            	.chan-form:hover {
+            		background-color: var(--palest-blue);
+            		color: var(--darkest-blue);
+            	}
+
+            	/* Middle */
+            	#chan-title {
+            		padding-left: 15px;
+            		text-transform: capitalize;
+            	}
+
+            	/* Right */
+
+            	
             	
 
             /*--- Row 2 ---*/
@@ -73,25 +92,43 @@
                 /* Left */
                 #chan-selection {
 	            	/* padding-top: 18px; */
-	            	background-color:#35383D; 
+	            	background-color:#35383D;
+	            /* 	overflow-y: scroll;  
+	            overflow-x: hidden;  */
+	            	margin-bottom: -100px; 
+	            	          	
             	}
 
                 #chan-name {
             		border-radius: 0px;
             		height: 100%;
+            		box-shadow:outset 5px 5px 5px 5px slategrey;
+
+
+
 
             	}
 
             	.channel-links {
 	            	color:#E5EBFF;
 	            	padding: 5px;
+	            	padding-left: 15px;
+	          	    text-decoration: none !important;
+	          	    margin-right: -20px;
+            	 	margin-left: -13px;
+
+            	 	text-transform: capitalize;
             	}
 
-             	.channel-links:hover {
-	            	background-color:white;
-	            	color:black;
+            	.channel-links:first-child {
+            		padding-top: 20px;
             	}
 
+             	/* .channel-links:hover {
+             		            	background-color:white;
+             		            	color:black;
+             	            	}
+             	 */
             	/* Middle */
             	#msg-window {
 	            	padding: 20px;
@@ -100,10 +137,17 @@
 	                #e8ecf9
 	                color:#030B30; 
 	                box-shadow:inset 0px 3px 5px 1px slategrey;
-            	}
+	                overflow-y: scroll;                
+	            }
 
             	#msg-room {
             		list-style: none;
+            		margin-left: 30px;
+            		margin-right: 30px;
+            	}
+
+            	.msgs {
+            		padding-bottom: 1.2em;
             	}
 
             	/* Right */
@@ -122,6 +166,7 @@
 	            	color:slategrey; 
 	            	/* box-shadow:inset 0px 0px 2px 2px slategrey; */
 	            	border-top: none;
+	            	margin-bottom: -90px;
             	}
 
 	            #online-title{
@@ -136,14 +181,19 @@
 	            	
 	            }
 
-	            #online-names {
+	            .online-names {
 					padding: 7px;
+					
 	            }
 
             /*--- Row 3 ---*/
             #row-3 {
             	height: 9vh; 
             }
+            	#bottom-left {
+            		background-color: white;
+            		margin-top: 100px;
+            	}
 
             	 #msg-div {
             		padding: 14px;
@@ -152,6 +202,8 @@
             	#msg {
             		resize: none;
             	}
+
+
 
 
 
@@ -181,7 +233,7 @@
 
 			<div class="row" id="row-1">
             	<div class="col-2" id="chan-name-div">
-            		<input class="form-control border-0 chan-form" id='chan-name' type='text' placeholder="  New channel..."></input>
+            		<input class="form-control border-0 chan-form" id='chan-name' type='text' placeholder="  New Channel +" onfocus="this.placeholder='  Type new name...'" onblur="this.placeholder = '  New Channel +'"></input>
             	</div>
             	<div class="col-8">
             		<h2 id="chan-title">@{{current}}</h2>
@@ -208,14 +260,14 @@
                 <div class="col-8" id="msg-window">
                     <ul id="msg-room">
 					    {% for message in messages %}
-					        <li><span id="{{message.id}}"><span class="names">{{message.name}}:</span> {{message.message}}</span></li>
+					        <li class="msgs"><span id="{{message.id}}"><span class="names">{{message.name}}:</span> {{message.message}}</span></li>
 					    {% endfor %}
 					</ul>
 				</div>
 				 <div class="col" id="online">
                     {% for k,v in channels.items() %}
                     	{% for e in v.current_users %}
-                    		<li id="online-names">@{{e}}:<span class="user-channel" id="cur-chan-{{e}}">{{k}}</span></a></li>
+                    		<li class="online-names">@{{e}}:<span class="user-channel" id="cur-chan-{{e}}">{{k}}</span></a></li>
                     	{% endfor %}
 
 					<!-- <form action="{{ url_for('channel_selection', chan=channel ) }}" method="post"> -->
@@ -245,7 +297,8 @@
 
 			<!--3rd Row -->
 			<div class="row" id="row-3">
-		        <div class="col-12">
+				<div class="col-2" id="bottom-left"></div>
+		        <div class="col-8">
 		            <div class="input-group input-group-default" id="msg-div">
 		            	<span class="input-group-text" id="inputGroup-sizing-default">{{name}}</span>
 					  <textarea type="text" id="msg" class="form-control" placeholder="Speak..." autofocus></textarea>
@@ -255,7 +308,6 @@
 					</div>
 				</div>
 		    </div>
-	</body>
 
 
 
