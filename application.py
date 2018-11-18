@@ -412,12 +412,13 @@ def check_channels(target):
 
 @socketio.on("which channel")
 def send_users_channels():
-	print("sending users channels")
 	temp = {}
-	if session["name"] in current_users:
-		temp = {"chan":current_users[session["name"]],
-				"name":session["name"]
-				}
-	emit("update users", temp,
-		broadcast=True)
+	# if session["name"] in current_users:
+	if "name" in session:
+		if session["name"] in current_users:
+			temp = {"chan":current_users[session["name"]],
+					"name":session["name"]
+					}
+			emit("update users", temp,
+			broadcast=True)
 

@@ -73,7 +73,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 /*temp = msgBox.value.split("");
                 temp = temp.slice(1,temp.length).join("")*/
                 target = msgBox.value.slice(1,temp.length);
-                console.log(target);
+                target = target.toLowerCase();
+                console.log(`lowercase: ${target}`);
 
                 socket.emit('check', target)
                 /*location = `http://127.0.0.1:5000/channels/${target}`*/
