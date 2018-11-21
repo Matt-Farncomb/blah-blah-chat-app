@@ -156,7 +156,7 @@ def login():
  	session["name"] = name
  	current_users.update({name:"home"})
  	# return render_template("/channels/home.html", channels=channels)
- 	return redirect(url_for("channel_selection", chan="home"))
+ 	return redirect(url_for("channel_selection", chan="home", test=None))
  	# return redirect(url_for('home'))
 
 
@@ -195,8 +195,8 @@ revisits the site, they are automatically redirected from the main
 page to 'chan' which is the channel they were last using.
 '''
 # @socketio.on("swap channel")
-@app.route("/channels/<string:chan>", methods=["GET"])
-def channel_selection(chan):
+@app.route("/channels/<string:chan>/<test>", methods=["GET"])
+def channel_selection(chan, test=None):
 	# If channel in URL exists return it's template.
 	print(f"Channel selection done on {chan}")
 
@@ -218,7 +218,7 @@ def channel_selection(chan):
 
 		#add user to new channel list
 		channels[chan]["current_users"].append(session["name"])
-		print(channels[chan])
+		# print(f"ban is {ban}")
 
 		# print("here: ", channels[chan]["msg_list"])
 		# emit("user entered", "{"name":session["name"], "channel":chan}", 
