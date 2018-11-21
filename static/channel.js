@@ -16,6 +16,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let usr_name = "unnamed"
 
+    const columns = document.querySelectorAll('.col-4');
+    let focus = "msg-room"
+
 
     // Connect to websocket
     var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
@@ -35,6 +38,21 @@ document.addEventListener('DOMContentLoaded', () => {
        /* chanName.hidden = true;        
         saveChan.hidden = true;*/
     }
+
+
+
+
+    
+
+    columns.forEach((column) => {
+       column.addEventListener('click', () => {
+               focus = column.firstChild.id
+               
+               console.log(`focus: ${focus}`); 
+               console.log("focus"); 
+            });
+        });
+   
 
 
     // When connected...
@@ -104,7 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         new_msg = `<span id="${message.id}"><span class="names">${message.name}:</span> ${message.message}</span>`
         li.innerHTML = new_msg
-        document.querySelector('#msg-room').append(li);
+        document.querySelector(`#${focus}`).append(li);
     });
 
     socket.on('delete msg', id => {

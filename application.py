@@ -156,7 +156,7 @@ def login():
  	session["name"] = name
  	current_users.update({name:"home"})
  	# return render_template("/channels/home.html", channels=channels)
- 	return redirect(url_for("channel_selection", chan="home", test=None))
+ 	return redirect(url_for("channel_selection", chan="home", test="None"))
  	# return redirect(url_for('home'))
 
 
@@ -196,7 +196,7 @@ page to 'chan' which is the channel they were last using.
 '''
 # @socketio.on("swap channel")
 @app.route("/channels/<string:chan>/<test>", methods=["GET"])
-def channel_selection(chan, test=None):
+def channel_selection(chan, test="None"):
 	# If channel in URL exists return it's template.
 	print(f"Channel selection done on {chan}")
 
@@ -230,7 +230,8 @@ def channel_selection(chan, test=None):
 			messages=channels[chan]["msg_list"], 
 			channels=channels,
 			current=chan,
-			name=session["name"])
+			name=session["name"],
+			home_chan=channels["home"]["msg_list"])
 
 	# If it does not exist, but aanotehr channel was visited previously
 	# (ie it is in  sesssion), delete old visited channel from session only

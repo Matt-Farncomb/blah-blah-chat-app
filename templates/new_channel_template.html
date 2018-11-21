@@ -133,7 +133,7 @@
              	            	}
              	 */
             	/* Middle */
-            	#msg-window {
+            	#msg-window, #msg-window-home {
 	            	padding: 20px;
 	                background-color: #e8ecf9;
 	                #F7F9FF
@@ -262,13 +262,21 @@
 
 					<span id="jinja_channels"></span>
                 </div>
-                <div class="col-8" id="msg-window">
-                    <ul id="msg-room">
+                <div class="col-4" id="msg-window"><ul id="msg-room">
 					    {% for message in messages %}
 					        <li class="msgs"><span id="{{message.id}}"><span class="names">{{message.name}}:</span> {{message.message}}</span></li>
 					    {% endfor %}
 					</ul>
 				</div>
+
+				<div class="col-4" id="msg-window-home"><ul id="msg-room-home">
+					    {% for message in home_chan %}
+					        <li class="msgs"><span id="{{message.id}}"><span class="names">{{message.name}}:</span> {{message.message}}</span></li>
+					    {% endfor %}
+					</ul>
+				</div>
+
+
 				 <div class="col" id="online">
                     {% for k,v in channels.items() %}
                     	{% for e in v.current_users %}
@@ -303,7 +311,7 @@
 				<div class="col-2" id="bottom-left"></div>
 		        <div class="col-8">
 		            <div class="input-group input-group-default" id="msg-div">
-		            	<span class="input-group-text" id="inputGroup-sizing-default">{{name}}</span>
+		            	<span class="input-group-text" id="inputGroup-sizing-default">{{name}} @{{current}}</span>
 					  <textarea type="text" id="msg" class="form-control" placeholder="Speak..." autofocus></textarea>
 					   <div class="input-group-prepend">
 					    <!-- <span class="input-group-text" id="inputGroup-sizing-default"><button class="btn btn-light btn-block" id="blah">Blah!</button></span> -->
