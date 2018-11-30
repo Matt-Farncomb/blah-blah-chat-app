@@ -110,15 +110,80 @@
 	            	          	
             	}
 
-                #chan-name {
+                .new-chan-name {
             		border-radius: 0px;
             		height: 100%;
             		box-shadow:outset 5px 5px 5px 5px slategrey;
-
-            		
-
-
             	}
+
+            	#new_convo {
+                  	height: 63px;
+            	}
+
+            	#new_convo, #new-convo-div {
+					background-color: var(--darkest-blue);
+					color:var(--palest-blue);					
+            	}
+
+            	#new_convo:focus::placeholder { 
+            		color: var(--darkest-blue);
+            	}
+
+
+
+				#new_convo:hover {
+            		color: var(--darkest-blue);
+            		background-color: var(--palest-blue);
+            	}
+
+            	#new-convo-div:hover {
+            		color: var(--darkest-blue);
+            		background-color: var(--palest-blue);
+            	}
+
+            	 #new-convo-div:focus::placeholder {
+            		color: var(--darkest-blue);
+            	}
+
+            	#new_convo:hover::placeholder {
+            		color:var(--darkest-blue);
+            	}
+
+            	#new_convo::placeholder {
+            		color: var(--palest-blue);
+            	}
+
+            	#new-convo-div:focus, #new_convo:focus {
+            		background-color: var(--palest-blue);
+            	}
+
+
+            	#new-convo-div {
+            		margin-right: -15px;
+            		margin-left: -15px;
+            	}
+
+
+            	/* #new_convo:hover {
+            		background-color: var(--darkest-blue);
+            		color: var(--palest-blue);
+            	} */
+
+            	.col > .form-control:focus {
+   					/* box-shadow:0 0 0 0.2rem slategrey; */
+   					box-shadow: none;
+				}
+
+
+
+
+
+
+
+
+
+
+            	
 
             	.channel-links {
 	            	color:#E5EBFF;
@@ -253,7 +318,7 @@
 
 			<div class="row" id="row-1">
             	<div class="col-2" id="chan-name-div">
-            		<input class="form-control border-0 chan-form" id='chan-name' type='text' placeholder="  New Channel +" onfocus="this.placeholder='  Type new name...'" onblur="this.placeholder = '  New Channel +'"></input>
+            		<input class="form-control border-0 chan-form chan-name new-chan-name" id='chan-name' type='text' placeholder="  New Channel +" onfocus="this.placeholder='  Type new name...'" onblur="this.placeholder = '  New Channel +'"></input>
             	</div>
             	<div class="col-4">
             		<h2 id="chan-title">@{{current}}</h2>
@@ -277,7 +342,7 @@
             <div class="row" id="row-2">
                 <div class="col" id="chan-selection">
                     {% for k,v in channels.items() %}
-                    	{% if k !="home" %}
+                    	{% if k !="home" and v.private == false %}
 							{%- if loop.index0 <= 10 %}
 								<li class="channel-links" id="link-{{((loop.index0)/10)|round(0, 'ceil')}}"><a href="{{ url_for('channel_selection', chan=k, test='None' ) }}" class="nav-link">{{k}}</a></li>
 							{% else %}
@@ -297,9 +362,38 @@
 						<button class="btn btn-sm btn-outline-secondary chan-nav-btn" type="button" id="nav-2"><span class="chan-nav-text"> 2 </span></button>
 						<button class="btn btn-sm btn-outline-secondary chan-nav-btn" type="button" id="nav-3"><span class="chan-nav-text"> 3 </span></button>
 						<button class="btn btn-sm btn-outline-secondary chan-nav-btn" type="button" id="nav-4"><span class="chan-nav-text"> 4 </span></button>
-						<button class="btn btn-sm btn-outline-secondary chan-nav-btn" type="button" id="nav-right"><span class="chan-nav-text"> > </span></button>
-							
+						<button class="btn btn-sm btn-outline-secondary chan-nav-btn" type="button" id="nav-right"><span class="chan-nav-text"> > </span></button>						
 					</nav>
+					<br>
+					<div id="new-convo-div">
+						<input class="form-control border-0 chan-name" id='new_convo' type='text' placeholder="  New Conversation +" onfocus="this.placeholder='  Type new name...'" onblur="this.placeholder = '  New Conversation +'"></input>
+					</div>
+					{% set count = [1] %}
+					{% for k,v in channels.items() %}
+						{% if v.private == false %}	
+						<!--
+							Ingenius solution for scoping issue thanks to below Peter Hollingsworth:
+
+						https://stackoverflow.com/questions/7537439/how-to-increment-a-variable-on-a-for-loop-in-jinja-template
+						-->
+						
+							{% if count.append(count.pop() + 1) %}{% endif %}
+						{% endif %}
+					
+                    	{% if k !="home" and v.private == true %}
+
+							{%- if loop.index0 <= 10 %}
+								<li class="channel-links" id="link-{{((loop.index-count[0])/10)|round(0, 'ceil')}}"><a href="{{ url_for('channel_selection', chan=k, test='None' ) }}" class="nav-link">{{k}}</a></li>
+
+							{% else %}
+
+								<li class="channel-links invisible" id="link-{{((loop.index-count[0])/10)|round(0, 'ceil')}}"><a href="{{ url_for('channel_selection', chan=k, test='None' ) }}" class="nav-link">{{k}}</a></li>
+							{% endif %}
+						
+						{% endif %}
+					{% endfor %}
+
+
 
                 </div>
                 <div class="col-4" id="msg-window"><ul id="msg-room-{{current}}">

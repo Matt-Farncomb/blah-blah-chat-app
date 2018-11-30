@@ -68,6 +68,7 @@ for row in channel_names:
 	channels.update({
 		row.channel_name: {
 			"chan_id":row.id,
+			"private":row.private,
 			"msg_count":0,
 			"msg_list":[],
 			"current_users":[]
@@ -300,7 +301,8 @@ ready to be appended to the DOM by client side JS.
 def create_channel(data):
 	
 	chanName = data['chanName']
-	new_channel(chanName)
+	private = data['private']
+	new_channel(chanName, private)
 	# channels.update({ chanName:
 	# 							{
 	# 							"msg_count": 0,
@@ -325,7 +327,7 @@ def back():
 		del session["chan_name"]
 	return redirect(url_for('home'))
 
-def new_channel(name):
+def new_channel(name, private):
 	# new_channel = \
 	# { name:
 	# 	{
@@ -335,8 +337,12 @@ def new_channel(name):
 	# }
 	# channels.update(new_channel)
 
-	db.execute('''INSERT INTO channels (channel_name)
-		VALUES (:channel_name)''', {"channel_name": name})
+	db.execute('''INSERT INTO channels (channel_name, private)
+		VALUES (:channel_name, :private)''',
+		 {
+		 "channel_name": name,
+		 "private":private
+		 })
 	db.commit()
 
 	chan_id = db.execute('''SELECT id FROM channels
@@ -347,6 +353,7 @@ def new_channel(name):
 	{ name:
 		{
 		"chan_id":chan_id.id,
+		"private":private,
 		"msg_count":0,
 		"msg_list":[],
 		"current_users":[]

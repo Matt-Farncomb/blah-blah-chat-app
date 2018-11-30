@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /*  const saveName = document.querySelector('#save-name');*/
     const channel = document.querySelector('#channels');
-    const chanName = document.querySelector('#chan-name');
+    const chanNames = document.querySelectorAll('.chan-name');
     const saveChan = document.querySelector('#save-chan');
     const msgBox = document.querySelector('#msg');
     /*const name = document.querySelector('#input-name');*/
@@ -40,12 +40,45 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function saveChannel() {
-        socket.emit('send create', {'chanName': chanName.value.toLowerCase()});
+    function saveChannel(chanName, private) {
+
+        socket.emit('send create', {
+            'private':private,
+            'chanName': chanName.value.toLowerCase()
+            });
+        
+
         chanName.value = ""
        /* chanName.hidden = true;        
         saveChan.hidden = true;*/
     }
+
+    /*function saveRoom(newRoom) {
+        socket.emit('send create', {'chanName': newRoom.value.toLowerCase()});
+        newRoom.value = ""
+    }*/
+
+    chanNames.forEach((chanName) => {
+        let private = false;
+        chanName.addEventListener('keydown', (e) => {
+            if (e.key == "Enter") {
+                console.log("Consoling and maybe working");
+                if (chanName.id == "new_convo") {
+                    private = true
+                }
+                saveChannel(chanName, private);
+            }
+        });
+    });
+
+
+   /* chanName.addEventListener('keydown', (e) => {
+             if (e.key == "Enter") {
+                saveChannel()   
+             }
+        });  */
+
+
 
     const chanNavs = document.querySelectorAll(".chan-nav-btn");
     console.log("ha");
@@ -165,12 +198,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } 
                      
-        chanName.addEventListener('keydown', (e) => {
+/*        chanNames.addEventListener('keydown', (e) => {
              if (e.key == "Enter") {
                 saveChannel()   
              }
         });       
-        
+        */
     });
 
     // When a new message is announced, append to DOM
