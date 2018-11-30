@@ -41,10 +41,18 @@
             	padding-top: 10px;
             }
 
+            .invisible {
+            	display: none;
+            }
+
             /*--- Row 1 ---*/
             #row-1 {
             	height: 6vh; 
             }
+
+            	h2 {
+            		text-align: center;
+            	}
 
             	/* Left */
 				#chan-name-div {
@@ -107,7 +115,7 @@
             		height: 100%;
             		box-shadow:outset 5px 5px 5px 5px slategrey;
 
-
+            		
 
 
             	}
@@ -140,7 +148,7 @@
 	                #e8ecf9
 	                color:#030B30; 
 	                box-shadow:inset 0px 3px 5px 1px slategrey;
-	                overflow-y: scroll;                
+	                overflow-y: scroll;               
 	            }
 
             	#msg-room {
@@ -187,6 +195,15 @@
 	            .online-names {
 					padding: 7px;
 					
+	            }
+
+	            .chan-nav {
+	            	padding: 0px;
+	            	margin: -14.5px;
+	            }
+
+	            .chan-nav-text {
+	            	padding: 12px;
 	            }
 
             /*--- Row 3 ---*/
@@ -238,8 +255,11 @@
             	<div class="col-2" id="chan-name-div">
             		<input class="form-control border-0 chan-form" id='chan-name' type='text' placeholder="  New Channel +" onfocus="this.placeholder='  Type new name...'" onblur="this.placeholder = '  New Channel +'"></input>
             	</div>
-            	<div class="col-8">
+            	<div class="col-4">
             		<h2 id="chan-title">@{{current}}</h2>
+            	</div>
+            	<div class="col-4">
+            		<h2>@Home</h2>
             	</div>
             	<div class="col-2" id="online-div">
             		<h5 id="online-title">Users Online</h5>
@@ -257,12 +277,32 @@
             <div class="row" id="row-2">
                 <div class="col" id="chan-selection">
                     {% for k,v in channels.items() %}
-					<li class="channel-links"><a href="{{ url_for('channel_selection', chan=k, test='None' ) }}" class="nav-link">{{k}}</a></li>
+                    	{% if k !="home" %}
+							{%- if loop.index0 <= 10 %}
+								<li class="channel-links" id="link-{{((loop.index0)/10)|round(0, 'ceil')}}"><a href="{{ url_for('channel_selection', chan=k, test='None' ) }}" class="nav-link">{{k}}</a></li>
+							{% else %}
+
+								<li class="channel-links invisible" id="link-{{((loop.index0)/10)|round(0, 'ceil')}}"><a href="{{ url_for('channel_selection', chan=k, test='None' ) }}" class="nav-link">{{k}}</a></li>
+							{% endif %}
+						
+						{% endif %}
 					{% endfor %}
 
 					<span id="jinja_channels"></span>
+
+					<br>
+					<nav class="navbar navbar-dark bg-dark chan-nav"> 
+						<button class="btn btn-sm btn-outline-secondary chan-nav-btn" type="button" id="nav-left"><span class="chan-nav-text"> < </span></button>
+						<button class="btn btn-sm btn-outline-secondary chan-nav-btn" type="button" id="nav-1"><span class="chan-nav-text"> 1 </span></button>
+						<button class="btn btn-sm btn-outline-secondary chan-nav-btn" type="button" id="nav-2"><span class="chan-nav-text"> 2 </span></button>
+						<button class="btn btn-sm btn-outline-secondary chan-nav-btn" type="button" id="nav-3"><span class="chan-nav-text"> 3 </span></button>
+						<button class="btn btn-sm btn-outline-secondary chan-nav-btn" type="button" id="nav-4"><span class="chan-nav-text"> 4 </span></button>
+						<button class="btn btn-sm btn-outline-secondary chan-nav-btn" type="button" id="nav-right"><span class="chan-nav-text"> > </span></button>
+							
+					</nav>
+
                 </div>
-                <div class="col-4" id="msg-window"><ul id="msg-room">
+                <div class="col-4" id="msg-window"><ul id="msg-room-{{current}}">
 					    {% for message in messages %}
 					        <li class="msgs"><span id="{{message.id}}"><span class="names">{{message.name}}:</span> {{message.message}}</span></li>
 					    {% endfor %}
@@ -311,7 +351,7 @@
 				<div class="col-2" id="bottom-left"></div>
 		        <div class="col-8">
 		            <div class="input-group input-group-default" id="msg-div">
-		            	<span class="input-group-text" id="inputGroup-sizing-default">{{name}} @{{current}}</span>
+		            	<span class="input-group-text" id="inputGroup-sizing-default">{{name}} @<span id="chan-span">{{current}}</span></span>
 					  <textarea type="text" id="msg" class="form-control" placeholder="Speak..." autofocus></textarea>
 					   <div class="input-group-prepend">
 					    <!-- <span class="input-group-text" id="inputGroup-sizing-default"><button class="btn btn-light btn-block" id="blah">Blah!</button></span> -->

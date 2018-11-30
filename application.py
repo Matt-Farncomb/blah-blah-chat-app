@@ -3,6 +3,7 @@ import os
 from flask import Flask, render_template, request, session, redirect, url_for, jsonify
 from flask_session import Session
 from flask_socketio import SocketIO, emit
+from jinja2 import Environment, PackageLoader
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
@@ -20,6 +21,10 @@ socketio = SocketIO(app)
 #Configure session to use filesystem
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
+
+#enable jinja extension 'break' - app is the jina env
+app.jinja_env.add_extension('jinja2.ext.loopcontrols')
+
 Session(app)
 
 engine = create_engine(os.getenv("DATABASE_URL"))
@@ -422,4 +427,15 @@ def send_users_channels():
 					}
 			emit("update users", temp,
 			broadcast=True)
+
+@socketio.on("swap channel")
+def swap_channel(focus):
+	session["chan_name"] = focus[9:]
+	print(focus[9:])
+
+@socketio.on("home focus")
+def home_focus():
+	session["chan_name"] = "home"
+	
+
 
