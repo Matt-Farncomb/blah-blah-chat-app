@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const chanNames = document.querySelectorAll('.chan-name');
     const saveChan = document.querySelector('#save-chan');
     const msgBox = document.querySelector('#msg');
+    const chanNavBtns = document.querySelectorAll('.nav-arrow');
     /*const name = document.querySelector('#input-name');*/
 
     let targeting = false;
@@ -57,6 +58,64 @@ document.addEventListener('DOMContentLoaded', () => {
         socket.emit('send create', {'chanName': newRoom.value.toLowerCase()});
         newRoom.value = ""
     }*/
+
+    function changeNav(ele){
+        let tempId = ele.previousSibling.previousSibling.id;
+        let classListed = document.querySelector(`#${tempId}`);
+        newClassList = classListed.classList;
+        if (newClassList.contains('invisible')) {
+            return changeNav(classListed);
+        }
+        else {
+            classListed.nextSibling.nextSibling.classList.remove('invisible');
+            /*parsed = tempId.slice(4)*/
+            return tempId.slice(4);
+        }
+    }
+
+    function changeNavPrev(ele){
+        let tempId = ele.nextSibling.nextSibling.id;
+        let classListed = document.querySelector(`#${tempId}`);
+        newClassList = classListed.classList;
+        if (newClassList.contains('invisible')) {
+            return changeNavPrev(classListed);
+        }
+        else {
+            classListed.previousSibling.previousSibling.classList.remove('invisible');
+/*            parsed = tempId.slice(4)
+            console.log(`func parsed: ${parsed}`)*/
+            return tempId.slice(4);
+        }
+    }
+
+
+    function next(new_id, direction) {
+        //click on left/right arrow minus/plus in chan page selection
+        if (direction === "left") {
+            console.log("prev");
+            let left_parsed = changeNavPrev(new_id);
+            //below most be changed to a MAX value
+            left_parsed = parseInt(left_parsed);
+            left_parsed += 3;
+            console.log(left_parsed)
+            document.querySelector(`#nav-${left_parsed}`).classList.add("invisible");
+        }
+        else if (direction === "right") {
+            let right_parsed = changeNav(new_id);
+            //below most be changed to a MAX value
+            right_parsed -= 3;
+            document.querySelector(`#nav-${right_parsed}`).classList.add("invisible");
+                        
+        }
+    }
+
+    chanNavBtns.forEach((chanNavBtn) => {
+        chanNavBtn.addEventListener('click', () => {
+            direction = chanNavBtn.id;
+            next(chanNavBtn, direction);
+            console.log(" Step 1");
+        })
+    })
 
     chanNames.forEach((chanName) => {
         let private = false;
@@ -226,12 +285,22 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     socket.on('create channel', chanName => {
+        let appendHere = ""
         const sp = document.createElement('span')
         jc = document.querySelector('#jinja_channels');
+        pc = document.querySelector('#private_channels');
+        if (chanName.private == true) {
+            appendHere = pc
+            console.log(`private: ${chanName.private}`)
+        }
+        else {
+            appendHere = jc
+            console.log(`not private: ${chanName.private}`)
+        }
         sp.innerHTML = `<li class="channel-links">
-                            <a href="/channels/${chanName}" class="nav-link">${chanName}
+                            <a href="/channels/${chanName["name"]}" class="nav-link">${chanName["name"]}
                         </li>`;
-        jc.appendChild(sp)
+        appendHere.appendChild(sp)
 
     });
 

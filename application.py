@@ -237,7 +237,8 @@ def channel_selection(chan, test="None"):
 			channels=channels,
 			current=chan,
 			name=session["name"],
-			home_chan=channels["home"]["msg_list"])
+			home_chan=channels["home"]["msg_list"],
+			chan_len=len(channels)//5)
 
 	# If it does not exist, but aanotehr channel was visited previously
 	# (ie it is in  sesssion), delete old visited channel from session only
@@ -310,7 +311,7 @@ def create_channel(data):
 	# 							}
 	# 				})
 								
-	emit("create channel", chanName,
+	emit("create channel", {"name":chanName, "private":data['private']},
 		broadcast=True)
 
 

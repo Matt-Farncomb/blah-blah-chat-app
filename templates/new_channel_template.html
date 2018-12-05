@@ -11,310 +11,17 @@
     <head>
         <title>My Web Page!</title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+		<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/channel_styles.css') }}">
 		<script src="{{ url_for('static', filename='channel.js') }}"></script>
 		<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
-		<style>
-			 /*--- All ---*/
-			body {
-				list-style: none;
-				font-family: courier new;
-			}
-
-			:root {
-				--sidebar-hover-color:#485160;
-				--palest-blue:#F7F9FF;
-				--darkest-blue:#35383D;
-				--even-darker-blue:#171a1e;
-			}
-
-            
-            a, a:hover { 
-            	text-decoration: none;
-            	color: inherit;
-               }
-
-            .btn {
-            	border-radius: 0px;
-            }
-
-            h2 {
-            	padding-top: 10px;
-            }
-
-            .invisible {
-            	display: none;
-            }
-
-            /*--- Row 1 ---*/
-            #row-1 {
-            	height: 6vh; 
-            }
-
-            	h2 {
-            		text-align: center;
-            	}
-
-            	/* Left */
-				#chan-name-div {
-            		padding: 0px;
-            	}
-
-            	.chan-form{
-            		background-color:var(--even-darker-blue);
-            		#35383D
-            		#485160
-            		color: #35383D !important;
-
-            	} 
-
-            	.chan-form:hover::placeholder, .chan-form:focus::placeholder {
-            		color: var(--darkest-blue);
-            	}
-
-            	.chan-form::placeholder {
-            		color: var(--palest-blue);
-            	}
-
-            	.channel-links:hover   {
-            	 	background-color: var(--sidebar-hover-color);
-            	}
-
-            	.chan-form:hover {
-            		background-color: var(--palest-blue);
-            		color: var(--darkest-blue);
-            	}
-
-            	/* Middle */
-            	#chan-title {
-            		padding-left: 15px;
-            		text-transform: capitalize;
-            	}
-
-            	/* Right */
-
-            	
-            	
-
-            /*--- Row 2 ---*/
-            #row-2 {
-            	height: 85vh; 
-            }
-				
-                /* Left */
-                #chan-selection {
-	            	/* padding-top: 18px; */
-	            	background-color:#35383D;
-	            /* 	overflow-y: scroll;  
-	            overflow-x: hidden;  */
-	            	margin-bottom: -100px; 
-	            	          	
-            	}
-
-                .new-chan-name {
-            		border-radius: 0px;
-            		height: 100%;
-            		box-shadow:outset 5px 5px 5px 5px slategrey;
-            	}
-
-            	#new_convo {
-                  	height: 63px;
-            	}
-
-            	#new_convo, #new-convo-div {
-					background-color: var(--darkest-blue);
-					color:var(--palest-blue);					
-            	}
-
-            	#new_convo:focus::placeholder { 
-            		color: var(--darkest-blue);
-            	}
-
-
-
-				#new_convo:hover {
-            		color: var(--darkest-blue);
-            		background-color: var(--palest-blue);
-            	}
-
-            	#new-convo-div:hover {
-            		color: var(--darkest-blue);
-            		background-color: var(--palest-blue);
-            	}
-
-            	 #new-convo-div:focus::placeholder {
-            		color: var(--darkest-blue);
-            	}
-
-            	#new_convo:hover::placeholder {
-            		color:var(--darkest-blue);
-            	}
-
-            	#new_convo::placeholder {
-            		color: var(--palest-blue);
-            	}
-
-            	#new-convo-div:focus, #new_convo:focus {
-            		background-color: var(--palest-blue);
-            	}
-
-
-            	#new-convo-div {
-            		margin-right: -15px;
-            		margin-left: -15px;
-            	}
-
-
-            	/* #new_convo:hover {
-            		background-color: var(--darkest-blue);
-            		color: var(--palest-blue);
-            	} */
-
-            	.col > .form-control:focus {
-   					/* box-shadow:0 0 0 0.2rem slategrey; */
-   					box-shadow: none;
-				}
-
-
-
-
-
-
-
-
-
-
-            	
-
-            	.channel-links {
-	            	color:#E5EBFF;
-	            	padding: 5px;
-	            	padding-left: 15px;
-	          	    text-decoration: none !important;
-	          	    margin-right: -20px;
-            	 	margin-left: -13px;
-
-            	 	text-transform: capitalize;
-            	}
-
-            	.channel-links:first-child {
-            		padding-top: 20px;
-            	}
-
-             	/* .channel-links:hover {
-             		            	background-color:white;
-             		            	color:black;
-             	            	}
-             	 */
-            	/* Middle */
-            	#msg-window, #msg-window-home {
-	            	padding: 20px;
-	                background-color: #e8ecf9;
-	                #F7F9FF
-	                #e8ecf9
-	                color:#030B30; 
-	                box-shadow:inset 0px 3px 5px 1px slategrey;
-	                overflow-y: scroll;               
-	            }
-
-            	#msg-room {
-            		list-style: none;
-            		margin-left: 30px;
-            		margin-right: 30px;
-            	}
-
-            	.msgs {
-            		padding-bottom: 1.2em;
-            	}
-
-            	/* Right */
-            	.names {
-	            	color:#01AD52;
-            	}
-
-            	.user-channel {
-            		color:red;
-            	}
-
-            	#online {
-	            	background-color: #F7F9FF;
-	            	#e8ecf9
-	            	#F7F9FF
-	            	color:slategrey; 
-	            	/* box-shadow:inset 0px 0px 2px 2px slategrey; */
-	            	border-top: none;
-	            	margin-bottom: -90px;
-            	}
-
-	            #online-title{
-					padding: 15px;
-					text-align: center;
-
-	            }
-
-	            #online-div {
-					/* Gives the appearance of an innder border */
-					/* box-shadow:inset 0px 0px 0px 2px slategrey; */
-	            	
-	            }
-
-	            .online-names {
-					padding: 7px;
-					
-	            }
-
-	            .chan-nav {
-	            	padding: 0px;
-	            	margin: -14.5px;
-	            }
-
-	            .chan-nav-text {
-	            	padding: 12px;
-	            }
-
-            /*--- Row 3 ---*/
-            #row-3 {
-            	height: 9vh; 
-            }
-            	#bottom-left {
-            		background-color: white;
-            		margin-top: 100px;
-            	}
-
-            	 #msg-div {
-            		padding: 14px;
-            	}
-
-            	#msg {
-            		resize: none;
-            	}
-
-
-
-
-
-
-        </style>
     </head>
+
 	<body>
+		{% from 'macros.html' import channel_list, channel_nav %}
+
         <div class="container-fluid">
 
         	<!--Top Row -->
-<!--             <div class="row" id="row-1">
-    <div class="col" id="cr-chan-cont">
-        <button type="button" class="btn btn-dark btn-block" id="create">Create Channel</button>
-					<input class="form-control" id='chan-name' type='text' placeholder="New channel..."></input>
-					<input id='chan-name' type='text' hidden></input>
-					<button id='save-chan' hidden>Save</button>
-    </div>
-    <div class="col-9">
-        <h2 id="chan-title">@{{current}}</h2>
-    </div>
-   	<div class="col" id="online-div">
-   		<h5 id="online-title">Users Online</h5>
-   </div>
-</div> -->
-
-
 
 			<div class="row" id="row-1">
             	<div class="col-2" id="chan-name-div">
@@ -331,69 +38,29 @@
             	</div>
             </div>
 
-			<!--TODO:
-				This 'None' will have to be the next chosen channel. So once K is chosen some bool
-				is made true and the next click will choose the next channel.... or...
-				maybe use javascrpt INSTEAD of 'url_for', that way i can beter store the values
-
-				HOw about... see big TODO
-			-->
             <!--2nd Row (Chat Window and Channels) -->
+
             <div class="row" id="row-2">
                 <div class="col" id="chan-selection">
-                    {% for k,v in channels.items() %}
-                    	{% if k !="home" and v.private == false %}
-							{%- if loop.index0 <= 10 %}
-								<li class="channel-links" id="link-{{((loop.index0)/10)|round(0, 'ceil')}}"><a href="{{ url_for('channel_selection', chan=k, test='None' ) }}" class="nav-link">{{k}}</a></li>
-							{% else %}
 
-								<li class="channel-links invisible" id="link-{{((loop.index0)/10)|round(0, 'ceil')}}"><a href="{{ url_for('channel_selection', chan=k, test='None' ) }}" class="nav-link">{{k}}</a></li>
-							{% endif %}
-						
-						{% endif %}
-					{% endfor %}
+         			{{ channel_list(channels, false) }}
 
 					<span id="jinja_channels"></span>
 
 					<br>
 					<nav class="navbar navbar-dark bg-dark chan-nav"> 
-						<button class="btn btn-sm btn-outline-secondary chan-nav-btn" type="button" id="nav-left"><span class="chan-nav-text"> < </span></button>
-						<button class="btn btn-sm btn-outline-secondary chan-nav-btn" type="button" id="nav-1"><span class="chan-nav-text"> 1 </span></button>
-						<button class="btn btn-sm btn-outline-secondary chan-nav-btn" type="button" id="nav-2"><span class="chan-nav-text"> 2 </span></button>
-						<button class="btn btn-sm btn-outline-secondary chan-nav-btn" type="button" id="nav-3"><span class="chan-nav-text"> 3 </span></button>
-						<button class="btn btn-sm btn-outline-secondary chan-nav-btn" type="button" id="nav-4"><span class="chan-nav-text"> 4 </span></button>
-						<button class="btn btn-sm btn-outline-secondary chan-nav-btn" type="button" id="nav-right"><span class="chan-nav-text"> > </span></button>						
+						<button class="btn btn-sm btn-outline-secondary nav-arrow" type="button" id="left"><span class="chan-nav-text"> < </span></button>
+						{{ channel_nav(chan_len) }}
+						<button class="btn btn-sm btn-outline-secondary nav-arrow" type="button" id="right"><span class="chan-nav-text"> > </span></button>						
 					</nav>
 					<br>
 					<div id="new-convo-div">
 						<input class="form-control border-0 chan-name" id='new_convo' type='text' placeholder="  New Conversation +" onfocus="this.placeholder='  Type new name...'" onblur="this.placeholder = '  New Conversation +'"></input>
 					</div>
-					{% set count = [1] %}
-					{% for k,v in channels.items() %}
-						{% if v.private == false %}	
-						<!--
-							Ingenius solution for scoping issue thanks to below Peter Hollingsworth:
 
-						https://stackoverflow.com/questions/7537439/how-to-increment-a-variable-on-a-for-loop-in-jinja-template
-						-->
-						
-							{% if count.append(count.pop() + 1) %}{% endif %}
-						{% endif %}
-					
-                    	{% if k !="home" and v.private == true %}
+					{{ channel_list(channels, true) }}
 
-							{%- if loop.index0 <= 10 %}
-								<li class="channel-links" id="link-{{((loop.index-count[0])/10)|round(0, 'ceil')}}"><a href="{{ url_for('channel_selection', chan=k, test='None' ) }}" class="nav-link">{{k}}</a></li>
-
-							{% else %}
-
-								<li class="channel-links invisible" id="link-{{((loop.index-count[0])/10)|round(0, 'ceil')}}"><a href="{{ url_for('channel_selection', chan=k, test='None' ) }}" class="nav-link">{{k}}</a></li>
-							{% endif %}
-						
-						{% endif %}
-					{% endfor %}
-
-
+					<span id="private_channels"></span>
 
                 </div>
                 <div class="col-4" id="msg-window"><ul id="msg-room-{{current}}">
@@ -410,35 +77,18 @@
 					</ul>
 				</div>
 
-
 				 <div class="col" id="online">
                     {% for k,v in channels.items() %}
                     	{% for e in v.current_users %}
                     		<li class="online-names">@{{e}}:<span class="user-channel" id="cur-chan-{{e}}">{{k}}</span></a></li>
                     	{% endfor %}
-
-				
 					
 					{% endfor %}
 
 					<span id="jinja_channels"></span>
                 </div>
-				<!-- <div class="col-1" id="cur-users">
-					{% for k,v in channels.items() %}
-						<li>{{v}}</li>
-					{% endfor %}
-				                </div> -->
 
             </div>
-
-
-            <!--3rd Row -->
-<!--             <div class="row">
-    <div class="col-12">
-        <textarea class="form-control" id="msg" placeholder="Speak..." autofocus></textarea>
-					<button id="blah">Blah!</button>
-    </div>
-</div> -->
 
 			<!--3rd Row -->
 			<div class="row" id="row-3">
@@ -448,32 +98,8 @@
 		            	<span class="input-group-text" id="inputGroup-sizing-default">{{name}} @<span id="chan-span">{{current}}</span></span>
 					  <textarea type="text" id="msg" class="form-control" placeholder="Speak..." autofocus></textarea>
 					   <div class="input-group-prepend">
-					    <!-- <span class="input-group-text" id="inputGroup-sizing-default"><button class="btn btn-light btn-block" id="blah">Blah!</button></span> -->
 					  </div>		
 					</div>
 				</div>
 		    </div>
-
-
-
-
-
-
-
-<!-- <input type="submit" name="Blah!"> -->
-
-
-
-
-<!-- MAKE A LOOP THAT PRINTS OUT THE VALUE -->
-
-<!-- 
- -->
-
-
-
-
-
-<!-- <br>
-<button><a href="{{ url_for('back') }}">Back</button> -->
 
