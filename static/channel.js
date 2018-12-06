@@ -69,42 +69,56 @@ document.addEventListener('DOMContentLoaded', () => {
         else {
             classListed.nextSibling.nextSibling.classList.remove('invisible');
             /*parsed = tempId.slice(4)*/
-            return tempId.slice(4);
+            console.log(`tempid: ${tempId}`)
+            return tempId;
         }
     }
 
     function changeNavPrev(ele){
+        console.log(`ele: ${ele.id}`)
         let tempId = ele.nextSibling.nextSibling.id;
         let classListed = document.querySelector(`#${tempId}`);
         newClassList = classListed.classList;
-        if (newClassList.contains('invisible')) {
+        if (newClassList.contains('invisible')) {;
             return changeNavPrev(classListed);
         }
         else {
             classListed.previousSibling.previousSibling.classList.remove('invisible');
 /*            parsed = tempId.slice(4)
             console.log(`func parsed: ${parsed}`)*/
-            return tempId.slice(4);
+            console.log(`tempid: ${tempId}`)
+            return tempId;
         }
     }
 
 
     function next(new_id, direction) {
         //click on left/right arrow minus/plus in chan page selection
-        if (direction === "left") {
-            console.log("prev");
+        if (direction.slice(5) === "left") {
             let left_parsed = changeNavPrev(new_id);
-            //below most be changed to a MAX value
-            left_parsed = parseInt(left_parsed);
-            left_parsed += 3;
-            console.log(left_parsed)
-            document.querySelector(`#nav-${left_parsed}`).classList.add("invisible");
+            console.log(`left_parsed!!!: ${left_parsed.slice(0,9)}`);
+
+            //convert end of id to int and increment by 3 so last btn is targeted
+            left_parsed_int = parseInt(left_parsed.slice(9)) + 3;
+            left_parsed_name = left_parsed.slice(0,9)
+            
+            //below must be changed to a MAX value
+            left_parsed_str = `${left_parsed_name}${left_parsed_int}`;
+            console.log(left_parsed_str)
+            document.querySelector(`#${left_parsed_str}`).classList.add("invisible");
         }
-        else if (direction === "right") {
+        else if (direction.slice(5) === "right") {
             let right_parsed = changeNav(new_id);
-            //below most be changed to a MAX value
-            right_parsed -= 3;
-            document.querySelector(`#nav-${right_parsed}`).classList.add("invisible");
+            console.log(`right_parsed!!!: ${right_parsed.slice(0,9)}`);
+            
+            //convert end of id to int and increment by 3 so last btn is targeted
+            right_parsed_int = parseInt(right_parsed.slice(9)) - 3;
+            right_parsed_name = right_parsed.slice(0,9)
+            
+            //below must be changed to a MAX value
+            right_parsed_str = `${right_parsed_name}${right_parsed_int}`;
+            console.log(right_parsed_str)
+            document.querySelector(`#${right_parsed_str}`).classList.add("invisible");
                         
         }
     }
@@ -113,7 +127,6 @@ document.addEventListener('DOMContentLoaded', () => {
         chanNavBtn.addEventListener('click', () => {
             direction = chanNavBtn.id;
             next(chanNavBtn, direction);
-            console.log(" Step 1");
         })
     })
 

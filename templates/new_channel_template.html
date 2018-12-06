@@ -48,19 +48,19 @@
 					<span id="jinja_channels"></span>
 
 					<br>
-					<nav class="navbar navbar-dark bg-dark chan-nav"> 
-						<button class="btn btn-sm btn-outline-secondary nav-arrow" type="button" id="left"><span class="chan-nav-text"> < </span></button>
-						{{ channel_nav(chan_len) }}
-						<button class="btn btn-sm btn-outline-secondary nav-arrow" type="button" id="right"><span class="chan-nav-text"> > </span></button>						
-					</nav>
+					{{ channel_nav(chan_len, 'chan') }}
 					<br>
+
 					<div id="new-convo-div">
 						<input class="form-control border-0 chan-name" id='new_convo' type='text' placeholder="  New Conversation +" onfocus="this.placeholder='  Type new name...'" onblur="this.placeholder = '  New Conversation +'"></input>
 					</div>
-
 					{{ channel_list(channels, true) }}
 
 					<span id="private_channels"></span>
+
+					<br>
+					{{ channel_nav(chan_len, 'priv') }}
+					<br>
 
                 </div>
                 <div class="col-4" id="msg-window"><ul id="msg-room-{{current}}">
@@ -86,7 +86,11 @@
 					{% endfor %}
 
 					<span id="jinja_channels"></span>
+
+
                 </div>
+
+                
 
             </div>
 

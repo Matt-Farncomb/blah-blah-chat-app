@@ -1,4 +1,5 @@
 /*--- All ---*/
+
             body {
                   list-style: none;
                   font-family: courier new;
@@ -28,6 +29,8 @@
             .invisible {
                   display: none;
             }
+
+/* ----------- */
 
             /*--- Row 1 ---*/
             #row-1 {

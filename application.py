@@ -4,6 +4,7 @@ from flask import Flask, render_template, request, session, redirect, url_for, j
 from flask_session import Session
 from flask_socketio import SocketIO, emit
 from jinja2 import Environment, PackageLoader
+from flask import g
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
@@ -24,6 +25,8 @@ app.config["SESSION_TYPE"] = "filesystem"
 
 #enable jinja extension 'break' - app is the jina env
 app.jinja_env.add_extension('jinja2.ext.loopcontrols')
+
+
 
 Session(app)
 
@@ -444,6 +447,17 @@ def swap_channel(focus):
 @socketio.on("home focus")
 def home_focus():
 	session["chan_name"] = "home"
+
+def raise_helper(var1, var2):
+    raise Exception(
+    	f'''length of 'arg': {var1} is {var2} but should be exactly 4 characters.
+    	 ''') 
+
+#globasl to raise exception with jinja
+app.jinja_env.globals['raise'] = raise_helper
+
+
+
 	
 
 
