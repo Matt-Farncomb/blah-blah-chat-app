@@ -9,8 +9,28 @@ document.addEventListener('DOMContentLoaded', () => {
     const chanNames = document.querySelectorAll('.chan-name');
     const saveChan = document.querySelector('#save-chan');
     const msgBox = document.querySelector('#msg');
-    const chanNavBtns = document.querySelectorAll('.nav-arrow');
+    const chanNavArrows = document.querySelectorAll('.nav-arrow');
+    
+    const chanChanNavBtns = document.querySelectorAll(`.chan-bar > .chan-nav-btn`);
+    const privChanNavBtns = document.querySelectorAll(`.priv-bar > .chan-nav-btn`);
+
+
     /*const name = document.querySelector('#input-name');*/
+
+    let privChanNavBtnsCount = 0;
+    privChanNavBtns.forEach((privChanNavBtn) => {
+        privChanNavBtnsCount += 1;
+    });
+
+    let chanChanNavBtnsCount = 0;
+    chanChanNavBtns.forEach((chanChanNavBtn) => {
+        chanChanNavBtnsCount += 1;
+    });
+
+    console.log(`chachan ${chanChanNavBtnsCount}`);
+    console.log(privChanNavBtnsCount);
+
+    
 
     let targeting = false;
     console.log(location);
@@ -91,39 +111,59 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-
     function next(new_id, direction) {
         //click on left/right arrow minus/plus in chan page selection
         if (direction.slice(5) === "left") {
             let left_parsed = changeNavPrev(new_id);
+            left_parsed_name = left_parsed.slice(0,9)
+
             console.log(`left_parsed!!!: ${left_parsed.slice(0,9)}`);
 
             //convert end of id to int and increment by 3 so last btn is targeted
             left_parsed_int = parseInt(left_parsed.slice(9)) + 3;
-            left_parsed_name = left_parsed.slice(0,9)
-            
-            //below must be changed to a MAX value
-            left_parsed_str = `${left_parsed_name}${left_parsed_int}`;
-            console.log(left_parsed_str)
-            document.querySelector(`#${left_parsed_str}`).classList.add("invisible");
+            console.log(`int: ${left_parsed_int}`)
+            if (left_parsed_int > 4) {
+                console.log(`int: ${left_parsed_int}`)
+                
+                
+                //below must be changed to a MAX value
+                left_parsed_str = `${left_parsed_name}${left_parsed_int}`;
+                console.log(left_parsed_str)
+                document.querySelector(`#${left_parsed_str}`).classList.add("invisible");
+            }
         }
         else if (direction.slice(5) === "right") {
+            console.log(`direction: ${direction}`);
             let right_parsed = changeNav(new_id);
+            right_parsed_name = right_parsed.slice(0,9)
+            console.log(`right_parsed_name: ${right_parsed_name}`);
             console.log(`right_parsed!!!: ${right_parsed.slice(0,9)}`);
             
             //convert end of id to int and increment by 3 so last btn is targeted
             right_parsed_int = parseInt(right_parsed.slice(9)) - 3;
-            right_parsed_name = right_parsed.slice(0,9)
-            
-            //below must be changed to a MAX value
-            right_parsed_str = `${right_parsed_name}${right_parsed_int}`;
-            console.log(right_parsed_str)
-            document.querySelector(`#${right_parsed_str}`).classList.add("invisible");
+            console.log(`int: ${right_parsed_int}`)
+            //half of max number
+            if (right_parsed_name == "nav-chan-") {
+                btnCount = chanChanNavBtnsCount-3;
+            }
+            else {
+                btnCount = privChanNavBtnsCount-3
+            }
+
+            if (right_parsed_int < btnCount) {
+                console.log(`int: ${right_parsed_int}`)
+                
+                
+                //below must be changed to a MAX value
+                right_parsed_str = `${right_parsed_name}${right_parsed_int}`;
+                console.log(right_parsed_str)
+                document.querySelector(`#${right_parsed_str}`).classList.add("invisible");
+            }
                         
         }
     }
 
-    chanNavBtns.forEach((chanNavBtn) => {
+    chanNavArrows.forEach((chanNavBtn) => {
         chanNavBtn.addEventListener('click', () => {
             direction = chanNavBtn.id;
             next(chanNavBtn, direction);
@@ -156,13 +196,15 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log("ha");
 
 
-
     chanNavs.forEach((chanNav) => {
         chanNav.addEventListener('click', () => {
             let linkId = 1.0;
-            const chanNavId = parseFloat(chanNav.id.slice(4));
+            console.log("this one");
+            const navType = chanNav.id.slice(4,8);
+            console.log(navType);
+            const chanNavId = parseFloat(chanNav.id.slice(9));
             //`link-${temp}`
-            const chanLinks = document.querySelectorAll(".channel-links");
+            const chanLinks = document.querySelectorAll(`.${navType}-links`);
             chanLinks.forEach((chanLink) => {
                 linkId = parseFloat(chanLink.id.slice(5));
                 //console.log(`"chanNavId: ${chanNavId}, "linkId: ${linkId}`)

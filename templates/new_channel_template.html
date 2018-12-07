@@ -43,23 +43,23 @@
             <div class="row" id="row-2">
                 <div class="col" id="chan-selection">
 
-         			{{ channel_list(channels, false) }}
+         			{{ channel_list(channels, false, 'chan') }}
 
 					<span id="jinja_channels"></span>
 
 					<br>
-					{{ channel_nav(chan_len, 'chan') }}
+					{{ channel_nav(chanCounts.chanCount, 'chan') }}
 					<br>
 
 					<div id="new-convo-div">
 						<input class="form-control border-0 chan-name" id='new_convo' type='text' placeholder="  New Conversation +" onfocus="this.placeholder='  Type new name...'" onblur="this.placeholder = '  New Conversation +'"></input>
 					</div>
-					{{ channel_list(channels, true) }}
+					{{ channel_list(channels, true, 'priv') }}
 
 					<span id="private_channels"></span>
 
 					<br>
-					{{ channel_nav(chan_len, 'priv') }}
+					{{ channel_nav(chanCounts.privCount, 'priv') }}
 					<br>
 
                 </div>

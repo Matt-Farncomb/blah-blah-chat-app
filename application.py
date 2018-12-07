@@ -1,4 +1,5 @@
 import os
+import math
 
 from flask import Flask, render_template, request, session, redirect, url_for, jsonify
 from flask_session import Session
@@ -81,6 +82,13 @@ for row in channel_names:
 
 # for i in range(x):
 # 	channels.update({
+
+
+
+
+
+
+
 # 		channel_names[x-i-1].channel_name: {
 # 			"chan_id":channel_names[x-i-1].id,
 # 			"msg_count":0,
@@ -233,7 +241,26 @@ def channel_selection(chan, test="None"):
 		# emit("user entered", "{"name":session["name"], "channel":chan}", 
 		#  	broadcast=True)
 
+		privCount = 0
+		chanCount = 0
+		for key,value in channels.items():
+			for k,v in value.items():
+				if k == "private":
+					if v == True:
+						privCount += 1
+					else:
+						chanCount += 1
+		
+		print(privCount)
+		print(chanCount)
+		#to ensure there are at least 4 nav bts
+		if privCount < 20:
+			privCount = 20
+		if chanCount < 20:
+			chanCount = 20
 
+		chanCounts = {"privCount": math.ceil(privCount/5), "chanCount": math.ceil(chanCount/5)}
+			
 
 		return render_template("new_channel_template.html", 
 			messages=channels[chan]["msg_list"], 
@@ -241,7 +268,7 @@ def channel_selection(chan, test="None"):
 			current=chan,
 			name=session["name"],
 			home_chan=channels["home"]["msg_list"],
-			chan_len=len(channels)//5)
+			chanCounts=chanCounts)
 
 	# If it does not exist, but aanotehr channel was visited previously
 	# (ie it is in  sesssion), delete old visited channel from session only
