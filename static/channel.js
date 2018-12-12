@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let msgText = msgBox.value
         //don't allow an empty msg to send
         if (msgText.length > 0) {
-            socket.emit('send message', {'message': msgText});
+            c
             msgBox.value = "";
             console.log("is doing something");
         }
@@ -374,6 +374,28 @@ document.addEventListener('DOMContentLoaded', () => {
         userChan = document.querySelector(`#cur-chan-${value.name}`)
         userChan.innerText = value.chan
     })
+
+    socket.on('test msg', data => {
+        console.log(data);
+        console.log("test success");
+    })
+
+    //const invite = document.querySelector('#invite');
+
+    updaters = document.querySelectorAll('.updater');
+
+
+    updaters.forEach((updater) => {
+        updater.addEventListener('keydown', (e) => {
+            if (e.key == "Enter") {
+                console.log("updater working");
+                socket.emit("update private", {
+                    "friend": updater.value,
+                    "command":updater.id } ) 
+            }
+        })
+    })
+    
 
 
 

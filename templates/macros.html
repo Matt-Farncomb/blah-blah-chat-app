@@ -2,7 +2,7 @@
 {% macro channel_list(channels, private, type) %}
 	{% set count = [0] %}
 	{% for k,v in channels.items() %}
-		{% if k !="home" and v.private == private %}
+		{% if k !="home" and v.private.private == private %}
 			{% if count[0] <= 5 %}
 			<li class="{{type}}-links channel-links bob-{{count}}" id="link-{{((count[0])/10)|round(0, 'ceil')}}"><a href="{{ url_for('channel_selection', chan=k, test='None' ) }}" class="nav-link">{{k}}</a></li>	
 			{% else %}

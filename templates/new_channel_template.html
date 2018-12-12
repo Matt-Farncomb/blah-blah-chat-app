@@ -64,6 +64,23 @@
 
                 </div>
                 <div class="col-4" id="msg-window"><ul id="msg-room-{{current}}">
+
+				<form>
+				  <div class="row">
+				    <div class="col">
+				      <input id="add" type="text" class="form-control updater" placeholder="Invite +">
+				    </div>
+				    <div class="col">
+				      <input id="remove" type="text" class="form-control updater" placeholder="Remove -">
+				    </div>
+				  </div>
+				</form>			
+
+
+
+              <!--   	<button id ="invite" class="btn btn-warning">Invite + </button>
+              <button id ="un-invite" class="btn btn-warning">Un-invite - </button> -->
+                	<hr>
 					    {% for message in messages %}
 					        <li class="msgs"><span id="{{message.id}}"><span class="names">{{message.name}}:</span> {{message.message}}</span></li>
 					    {% endfor %}

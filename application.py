@@ -46,7 +46,7 @@ svr_reset = True
 # Imagine making an api to look at stats of total words used... :)
 
 #a dict to store key, value pairs of {channel string: messages list}
-channels = {"home": {"chan_id":0,"msg_count":0, "msg_list":[], "current_users":[]} }
+channels = {"home": {"chan_id":0,"private": {"private":False, "members":[] }, "msg_count":0, "msg_list":[], "current_users":[]} }
 
 # stores users names and their current channels
 current_users = {}
@@ -58,6 +58,58 @@ channel_names = db.execute('''
 	SELECT * FROM channels
 	''').fetchall()
 
+# membership = db.execute('''
+# 	SELECT * FROM membership
+# 	''')
+
+# DB.EXECUTE('''SELECT * FROM membership
+# 	JOIN channels
+# 	ON channel_id. 
+# 	''')
+
+
+
+#must also join to blah users to get user names
+#so all three join
+# - channel name, user_name:
+	# I will then use this somehow after channles dict is created: if row.private.private == True:
+		#channels[row.channel_name]["private"]["members"].append(row.user_name)
+
+# TODO:
+# 1: Create The necessary tables
+# 2: Test the join statement
+# 3. The rest...
+
+#GET
+# SELECT * FROM channels
+# JOIN membership
+# ON channels.id = membership.channel_id
+
+
+# p_channels = db.execute('''SELECT * FROM membership
+# 							JOIN channels
+# 							ON channels.user_id = membership.user_id''').fetchall()
+
+#ii want it to look like:
+	# - channel name, user_id
+
+p_channels = db.execute('''SELECT channel_name, user_name, private 
+	FROM channels
+	INNER JOIN membership ON channels.id = membership.channel_id
+	INNER JOIN blah_users ON membership.user_id = blah_users.id
+	WHERE private = true
+	ORDER BY channel_name
+	''').fetchall()
+
+p_dict = {}
+for row in p_channels:
+	p_dict.setdefault(row.channel_name, []).append(row.user_name)
+
+print(f"p_dict: {p_dict}")
+
+
+
+
 messages = db.execute('''
 	SELECT * FROM messages
 	ORDER BY id DESC
@@ -65,21 +117,29 @@ messages = db.execute('''
 	{"maximum":maximum}
 	).fetchall()
 
-	
+#maybe add to channels["private"]
+#{"private": True,
+#"members": member_list}	
 # print(messages)
 
 for row in channel_names:
 	channels.update({
 		row.channel_name: {
 			"chan_id":row.id,
-			"private":row.private,
+			"private":{"private": row.private, "members":p_dict[row.channel_name] },
 			"msg_count":0,
 			"msg_list":[],
 			"current_users":[]
 			}
 		})
-# x = len(channel_names)
+	# if row.private.private == True:
+	# 	channels[channel_name]["private"]["members"].append(row.user_name)
 
+print(f"channel members: {channels}")		
+# x = len(channel_names)
+# for row in membership:
+# 	temp_name = chann
+# 	channels[channel_name]["private"]["members"].append(row.user_name)
 # for i in range(x):
 # 	channels.update({
 
@@ -169,9 +229,29 @@ witht their name.
 '''
 @app.route("/", methods=["POST"])
 def login():
- 	name = request.form.get("name")
- 	session["name"] = name
- 	current_users.update({name:"home"})
+ 	user_name = request.form.get("name")
+
+ 	usr_name = db.execute('''SELECT user_name 
+ 		FROM blah_users 
+ 		WHERE user_name = :user_name''',
+ 		{"user_name":user_name}).fetchone()
+
+ 	print(f"usr_name_row: {usr_name}")
+ 	
+ 	if usr_name == None:
+ 		db.execute('''INSERT INTO blah_users (user_name)
+	 		VALUES (:user_name) ''',
+	 		{"user_name": user_name})
+ 		db.commit()
+
+ 	
+
+ 	session["name"] = user_name
+ 	current_users.update({user_name:"home"})
+
+ 	
+
+ 		
  	# return render_template("/channels/home.html", channels=channels)
  	return redirect(url_for("channel_selection", chan="home", test="None"))
  	# return redirect(url_for('home'))
@@ -243,11 +323,17 @@ def channel_selection(chan, test="None"):
 
 		privCount = 0
 		chanCount = 0
+		my_private_channels = []
+
+		# if current channel is private, increase count... 
+		# then add to list to append later
 		for key,value in channels.items():
 			for k,v in value.items():
 				if k == "private":
-					if v == True:
-						privCount += 1
+					if v["private"] == True:
+						if session["name"] in v["members"]:
+							privCount += 1
+							my_private_channels.append({key:value})
 					else:
 						chanCount += 1
 		
@@ -260,11 +346,13 @@ def channel_selection(chan, test="None"):
 			chanCount = 20
 
 		chanCounts = {"privCount": math.ceil(privCount/5), "chanCount": math.ceil(chanCount/5)}
-			
+		
+
 
 		return render_template("new_channel_template.html", 
 			messages=channels[chan]["msg_list"], 
 			channels=channels,
+			my_private_channels=my_private_channels,
 			current=chan,
 			name=session["name"],
 			home_chan=channels["home"]["msg_list"],
@@ -374,6 +462,9 @@ def new_channel(name, private):
 		 "channel_name": name,
 		 "private":private
 		 })
+
+	
+
 	db.commit()
 
 	chan_id = db.execute('''SELECT id FROM channels
@@ -384,14 +475,20 @@ def new_channel(name, private):
 	{ name:
 		{
 		"chan_id":chan_id.id,
-		"private":private,
+		"private":{"private":private, "members":[session["name"]]},
 		"msg_count":0,
 		"msg_list":[],
 		"current_users":[]
 		}
 	}
+
+	# "private":{"private":private, "members":[]},
+
 	print(f"new channe: {new_channel}")
 	channels.update(new_channel)
+
+	if private == True:
+		update_private({"command":"add", "friend": session["name"]}, name)
 
 	return new_channel
 
@@ -483,8 +580,122 @@ def raise_helper(var1, var2):
 #globasl to raise exception with jinja
 app.jinja_env.globals['raise'] = raise_helper
 
+#SQL
+#Private channels memebrship has its own table, referecned by the nornal channels table
+#	- It will have an id of the channel and channel name
+#	- A members table will have each particular membership eg a persons id and the group they are in
+# 	- users can appear multiple times in this table under their id
+
+# sql command
+# CREATE TABLE membership (
+# 	id serial PRIMARY KEY,
+# 	user_id INTEGER,
+# 	channel_id INTEGER);
+
+# CREATE TABLE blah_users (
+# 	id serial PRIMARY KEY,
+# 	user_name UNIQUE VARCHAR,
+#	password VARCHAR
 
 
-	
+
+#Python
+#WHen logging in, grab the user name and id
+#store them both in a session
+
+#The sql execute command is made
+# on channel load, the request from thew table is made and put into a list
+# when rendering to the DOM, the user name is compared against  that list
+# - if the users name is in the list, then that provate channel is rendered
+
+#maybe add to channels["private"]
+#{"private": True,
+#"members": member_list}
+
+#JS
+#On the DOM, there is some kind of plus button to add users
+#this will send an emit to thee server which will update thge array and make the execute command
+
+
+
+# @SocketIO.on("update private")
+# update_private(friends)
+#friends is a list from javascript of all epoople added including current user
+#{"friends": [friends]}
+
+'''
+When called, adds a list of users to the private channels db (membership).
+It finds their id by comparing thier names against the db.
+Then adds that id to the db under the id of the new channel.
+
+This channel should have been created already including its id so 
+the channel id should be stored in session.
+
+To de the below functipon (ie update private) the creatore must clcik on the neter
+and thereby slet that channel and hence session id will be changed to that channel.
+
+NEW IDEA:
+	-	A code editor type of thing:
+			- Its visual
+			- One function will be linked to the other like a mind map
+			- ITs a code map
+			- At the top (or bottom) would be the main
+				- Each other function would link off that
+				- if a calls b and b calls c it would be a => b => c
+				- if a calls ab and c it would be like a => b
+													   a => c
+			- Variables could do something similar
+'''
+
+'''
+Adds friend user to adb so they can access the private channel
+'''
+@socketio.on("update private")
+def update_private(*args):
+
+	if len(args) > 1:
+		priv_chan_name = args[1]
+	else:
+		priv_chan_name = session["chan_name"]
+
+	emit("test msg", args[0],
+			broadcast=True)
+
+	friend = db.execute('''SELECT id FROM blah_users
+		WHERE user_name = :user_name''',
+		{"user_name":args[0]["friend"]}).fetchone()
+	f_id = friend.id
+	if args[0]["command"] == "add":
+		print(f"Is this causing zero? f_id: {f_id}, channel_id: {channels[priv_chan_name]}")
+		db.execute('''INSERT INTO membership (user_id, channel_id) 
+			VALUES (:user_id, :channel_id)''',
+			{"user_id":f_id, 
+			"channel_id":channels[priv_chan_name]["chan_id"]})
+
+		channels[session["chan_name"]]["private"]["members"].append(args[0]["friend"])
+	else:
+		print("Or this?")
+		db.execute('''DELETE FROM membership
+		 WHERE user_id = :user_id 
+		 and channel_id = :channel_id''',
+		 {"user_id":f_id, 
+		"channel_id":channels[priv_chan_name]["chan_id"]})
+
+		channels[priv_chan_name]["private"]["members"].remove(args[0]["friend"])
+	db.commit()
+
+
+TODO:
+Now that the new members are added to private 
+successfully upon creating a new channel 
+and when actually added,
+I should ensure that only members can 
+access tose channels and have them appended
+
+
+
+
+
+
 
 
