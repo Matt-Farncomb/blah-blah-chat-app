@@ -391,7 +391,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.log("updater working");
                 socket.emit("update private", {
                     "friend": updater.value,
-                    "command":updater.id } ) 
+                    "command":updater.id } )
+                updater.value = ""; 
             }
         })
     })

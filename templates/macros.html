@@ -39,3 +39,19 @@
 		<button class="btn btn-sm btn-outline-secondary nav-arrow" type="button" id="{{arg}}-right"><span class="chan-nav-text"> > </span></button>						
 	</nav>
 {% endmacro %}
+
+<!-- Private Channel Macro -->
+{% macro private_macro(priv_chans) %}
+	{% set count = [0] %}
+	{% for e in priv_chans %}
+		{% if count[0] <= 5 %}
+			<li class="{{type}}-links channel-links bob-{{count}}" id="link-{{((count[0])/10)|round(0, 'ceil')}}"><a href="{{ url_for('channel_selection', chan=e, test='None' ) }}" class="nav-link">{{e}}</a></li>	
+		{% else %}
+			<li class="{{type}}-links channel-links bob-{{count}} invisible" id="link-{{((count[0])/10)|round(0, 'ceil')}}"><a href="{{ url_for('channel_selection', chan=e, test='None' ) }}" class="nav-link">{{e}}</a></li>
+		{% endif %}
+		{% if count.append(count.pop() + 1) %}{% endif %}
+		{% if count[0] % 5 == 0 %}
+			{% if count.append(count.pop() + 5) %}{% endif %}
+		{% endif %}
+	{% endfor %}
+{% endmacro %}

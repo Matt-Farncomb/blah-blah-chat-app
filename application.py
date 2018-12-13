@@ -102,6 +102,7 @@ p_channels = db.execute('''SELECT channel_name, user_name, private
 	''').fetchall()
 
 p_dict = {}
+# Set [] as default value of p_dict[channel_name] and append members to that list
 for row in p_channels:
 	p_dict.setdefault(row.channel_name, []).append(row.user_name)
 
@@ -330,13 +331,15 @@ def channel_selection(chan, test="None"):
 		for key,value in channels.items():
 			for k,v in value.items():
 				if k == "private":
+					print(f"k is private")
 					if v["private"] == True:
+						print(f"v is private")
 						if session["name"] in v["members"]:
 							privCount += 1
-							my_private_channels.append({key:value})
+							my_private_channels.append(key)
 					else:
 						chanCount += 1
-		
+		print(f"my priv: {my_private_channels}")
 		print(privCount)
 		print(chanCount)
 		#to ensure there are at least 4 nav bts
@@ -685,12 +688,12 @@ def update_private(*args):
 	db.commit()
 
 
-TODO:
-Now that the new members are added to private 
-successfully upon creating a new channel 
-and when actually added,
-I should ensure that only members can 
-access tose channels and have them appended
+# TODO:
+# Now that the new members are added to private 
+# successfully upon creating a new channel 
+# and when actually added,
+# I should ensure that only members can 
+# access tose channels and have them appendedgit
 
 
 

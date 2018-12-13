@@ -17,7 +17,7 @@
     </head>
 
 	<body>
-		{% from 'macros.html' import channel_list, channel_nav %}
+		{% from 'macros.html' import channel_list, channel_nav, private_macro %}
 
         <div class="container-fluid">
 
@@ -54,7 +54,8 @@
 					<div id="new-convo-div">
 						<input class="form-control border-0 chan-name" id='new_convo' type='text' placeholder="  New Conversation +" onfocus="this.placeholder='  Type new name...'" onblur="this.placeholder = '  New Conversation +'"></input>
 					</div>
-					{{ channel_list(channels, true, 'priv') }}
+					<!-- {{ channel_list(channels, true, 'priv') }} -->
+					{{ private_macro(my_private_channels) }}
 
 					<span id="private_channels"></span>
 
