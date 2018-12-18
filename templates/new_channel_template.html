@@ -1,11 +1,3 @@
-<!--TODO:
-	Swap the 'None' in application.py's test paramater of channel_selection
-		with the value of the next selected channel
-		hen it will need to append in another column
-	Make site responsive
-	You scroll individual sections, not the whole page
--->
-
 <!DOCTYPE html>
 <html>
     <head>
@@ -17,7 +9,7 @@
     </head>
 
 	<body>
-		{% from 'macros.html' import channel_list, channel_nav, private_macro %}
+		{% from 'macros.html' import channel_list, channel_nav, private_macro, updater_macro %}
 
         <div class="container-fluid">
 
@@ -28,7 +20,7 @@
             		<input class="form-control border-0 chan-form chan-name new-chan-name" id='chan-name' type='text' placeholder="  New Channel +" onfocus="this.placeholder='  Type new name...'" onblur="this.placeholder = '  New Channel +'"></input>
             	</div>
             	<div class="col-4">
-            		<h2 id="chan-title">@{{current}}</h2>
+            		<h2 id="chan-title">@{{current.chan_name}}</h2>
             	</div>
             	<div class="col-4">
             		<h2>@Home</h2>
@@ -55,7 +47,7 @@
 						<input class="form-control border-0 chan-name" id='new_convo' type='text' placeholder="  New Conversation +" onfocus="this.placeholder='  Type new name...'" onblur="this.placeholder = '  New Conversation +'"></input>
 					</div>
 					<!-- {{ channel_list(channels, true, 'priv') }} -->
-					{{ private_macro(my_private_channels) }}
+					{{ private_macro(my_private_channels, 'priv') }}
 
 					<span id="private_channels"></span>
 
@@ -64,23 +56,16 @@
 					<br>
 
                 </div>
-                <div class="col-4" id="msg-window"><ul id="msg-room-{{current}}">
-
+                <div class="col-4" id="msg-window"><ul id="msg-room-{{current.chan_name}}">
+				{% if current.private %}
 				<form>
 				  <div class="row">
-				    <div class="col">
-				      <input id="add" type="text" class="form-control updater" placeholder="Invite +">
-				    </div>
-				    <div class="col">
-				      <input id="remove" type="text" class="form-control updater" placeholder="Remove -">
-				    </div>
+				  	{{ updater_macro('add', 'Invite +') }}
+				  	{{ updater_macro('remove', 'Remove -') }}
 				  </div>
-				</form>			
+				</form>	
+				{% endif %}		
 
-
-
-              <!--   	<button id ="invite" class="btn btn-warning">Invite + </button>
-              <button id ="un-invite" class="btn btn-warning">Un-invite - </button> -->
                 	<hr>
 					    {% for message in messages %}
 					        <li class="msgs"><span id="{{message.id}}"><span class="names">{{message.name}}:</span> {{message.message}}</span></li>
@@ -105,10 +90,7 @@
 
 					<span id="jinja_channels"></span>
 
-
                 </div>
-
-                
 
             </div>
 
@@ -117,7 +99,7 @@
 				<div class="col-2" id="bottom-left"></div>
 		        <div class="col-8">
 		            <div class="input-group input-group-default" id="msg-div">
-		            	<span class="input-group-text" id="inputGroup-sizing-default">{{name}} @<span id="chan-span">{{current}}</span></span>
+		            	<span class="input-group-text" id="inputGroup-sizing-default">{{name}} @<span id="chan-span">{{current.chan_name}}</span></span>
 					  <textarea type="text" id="msg" class="form-control" placeholder="Speak..." autofocus></textarea>
 					   <div class="input-group-prepend">
 					  </div>		

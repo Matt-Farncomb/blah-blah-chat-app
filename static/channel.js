@@ -1,10 +1,8 @@
 
-//NOTES: Won't regeister a change unless actual new code is added ratehr than just ccommenting out some stuff
 
 document.addEventListener('DOMContentLoaded', () => {
     console.log("test")
 
-  /*  const saveName = document.querySelector('#save-name');*/
     const channel = document.querySelector('#channels');
     const chanNames = document.querySelectorAll('.chan-name');
     const saveChan = document.querySelector('#save-chan');
@@ -14,8 +12,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const chanChanNavBtns = document.querySelectorAll(`.chan-bar > .chan-nav-btn`);
     const privChanNavBtns = document.querySelectorAll(`.priv-bar > .chan-nav-btn`);
 
-
-    /*const name = document.querySelector('#input-name');*/
+    // max amount of nav buttons for channel page switching
+    const maxNavBtns = 4
+    // used to find buttons on either side of nav
+    const navShifter = maxNavBtns-1
 
     let privChanNavBtnsCount = 0;
     privChanNavBtns.forEach((privChanNavBtn) => {
@@ -50,119 +50,94 @@ document.addEventListener('DOMContentLoaded', () => {
     // Connect to websocket
     var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
 
+    // Text grabbed from chat msg window and sent to server
     function sendMessage() {
-        
         let msgText = msgBox.value
-        //don't allow an empty msg to send
+        // Don't allow an empty msg to send
         if (msgText.length > 0) {
-            c
+            socket.emit('send message', {'message': msgText});
             msgBox.value = "";
-            console.log("is doing something");
         }
     }
-
+   
+    // Sends info to server to enable creation...
+    // with channel named 'chanName' that's private or public
     function saveChannel(chanName, private) {
-
         socket.emit('send create', {
             'private':private,
             'chanName': chanName.value.toLowerCase()
             });
-        
-
         chanName.value = ""
-       /* chanName.hidden = true;        
-        saveChan.hidden = true;*/
     }
 
-    /*function saveRoom(newRoom) {
-        socket.emit('send create', {'chanName': newRoom.value.toLowerCase()});
-        newRoom.value = ""
-    }*/
+    // Get id of the sibling two steps over in specified direction
+    function nextSibId(ele, dir) {
+        if (dir === "right") {
+            return ele.previousSibling.previousSibling.id;
+        }
+        return ele.nextSibling.nextSibling.id;
+    }
 
-    function changeNav(ele){
-        let tempId = ele.previousSibling.previousSibling.id;
-        let classListed = document.querySelector(`#${tempId}`);
-        newClassList = classListed.classList;
-        if (newClassList.contains('invisible')) {
-            return changeNav(classListed);
+    //make element two steps over visible
+    function revealSib(ele, dir) {
+        if (dir === "right") {
+            ele.nextSibling.nextSibling.classList.remove('invisible');
         }
         else {
-            classListed.nextSibling.nextSibling.classList.remove('invisible');
-            /*parsed = tempId.slice(4)*/
-            console.log(`tempid: ${tempId}`)
-            return tempId;
+            ele.previousSibling.previousSibling.classList.remove('invisible');
         }
     }
 
-    function changeNavPrev(ele){
-        console.log(`ele: ${ele.id}`)
-        let tempId = ele.nextSibling.nextSibling.id;
-        let classListed = document.querySelector(`#${tempId}`);
-        newClassList = classListed.classList;
-        if (newClassList.contains('invisible')) {;
-            return changeNavPrev(classListed);
+    // reveal next number along on nav, hiding alternate side
+    function changeNavs(ele, direction) {
+        // arrow clicked on (direction) determines which id is targeted
+        const tempId = nextSibId(ele, direction)
+        const tempEle = document.querySelector(`#${tempId}`);
+        const tempList = tempEle.classList;
+
+        if (tempList.contains('invisible')) {
+            return changeNavs(tempEle, direction)
         }
-        else {
-            classListed.previousSibling.previousSibling.classList.remove('invisible');
-/*            parsed = tempId.slice(4)
-            console.log(`func parsed: ${parsed}`)*/
-            console.log(`tempid: ${tempId}`)
-            return tempId;
-        }
+
+        revealSib(tempEle, direction)
+        return tempId;  
     }
 
+    //click on left/right arrow minus/plus in chan page selection
     function next(new_id, direction) {
-        //click on left/right arrow minus/plus in chan page selection
         if (direction.slice(5) === "left") {
-            let left_parsed = changeNavPrev(new_id);
+            let left_parsed = changeNavs(new_id, "left");
             left_parsed_name = left_parsed.slice(0,9)
-
-            console.log(`left_parsed!!!: ${left_parsed.slice(0,9)}`);
-
-            //convert end of id to int and increment by 3 so last btn is targeted
-            left_parsed_int = parseInt(left_parsed.slice(9)) + 3;
-            console.log(`int: ${left_parsed_int}`)
-            if (left_parsed_int > 4) {
-                console.log(`int: ${left_parsed_int}`)
-                
-                
+            //convert end of id to int and increment by navShifter so last btn is targeted
+            left_parsed_int = parseInt(left_parsed.slice(9)) + navShifter;
+            if (left_parsed_int > maxNavBtns) {
                 //below must be changed to a MAX value
                 left_parsed_str = `${left_parsed_name}${left_parsed_int}`;
-                console.log(left_parsed_str)
                 document.querySelector(`#${left_parsed_str}`).classList.add("invisible");
             }
         }
         else if (direction.slice(5) === "right") {
-            console.log(`direction: ${direction}`);
-            let right_parsed = changeNav(new_id);
+            let right_parsed = changeNavs(new_id, "right");
             right_parsed_name = right_parsed.slice(0,9)
-            console.log(`right_parsed_name: ${right_parsed_name}`);
-            console.log(`right_parsed!!!: ${right_parsed.slice(0,9)}`);
-            
-            //convert end of id to int and increment by 3 so last btn is targeted
-            right_parsed_int = parseInt(right_parsed.slice(9)) - 3;
-            console.log(`int: ${right_parsed_int}`)
-            //half of max number
+            //convert end of id to int and increment by navShifter so last btn is targeted
+            right_parsed_int = parseInt(right_parsed.slice(9)) - navShifter;
+     
             if (right_parsed_name == "nav-chan-") {
-                btnCount = chanChanNavBtnsCount-3;
+                btnCount = chanChanNavBtnsCount - navShifter;
             }
             else {
-                btnCount = privChanNavBtnsCount-3
+                btnCount = privChanNavBtnsCount - navShifter
             }
 
             if (right_parsed_int < btnCount) {
-                console.log(`int: ${right_parsed_int}`)
-                
-                
-                //below must be changed to a MAX value
                 right_parsed_str = `${right_parsed_name}${right_parsed_int}`;
-                console.log(right_parsed_str)
                 document.querySelector(`#${right_parsed_str}`).classList.add("invisible");
             }
                         
         }
     }
 
+    // arrow buttons will cycle through the channel page numbers
     chanNavArrows.forEach((chanNavBtn) => {
         chanNavBtn.addEventListener('click', () => {
             direction = chanNavBtn.id;
@@ -170,11 +145,11 @@ document.addEventListener('DOMContentLoaded', () => {
         })
     })
 
+    // save new channel and determine it private or not
     chanNames.forEach((chanName) => {
         let private = false;
         chanName.addEventListener('keydown', (e) => {
             if (e.key == "Enter") {
-                console.log("Consoling and maybe working");
                 if (chanName.id == "new_convo") {
                     private = true
                 }
@@ -184,33 +159,20 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 
-   /* chanName.addEventListener('keydown', (e) => {
-             if (e.key == "Enter") {
-                saveChannel()   
-             }
-        });  */
-
-
-
     const chanNavs = document.querySelectorAll(".chan-nav-btn");
-    console.log("ha");
 
-
+    // when cicking on chan page number, hide all channles not in that page...
+    // and reveal the others
     chanNavs.forEach((chanNav) => {
         chanNav.addEventListener('click', () => {
             let linkId = 1.0;
-            console.log("this one");
             const navType = chanNav.id.slice(4,8);
-            console.log(navType);
             const chanNavId = parseFloat(chanNav.id.slice(9));
-            //`link-${temp}`
             const chanLinks = document.querySelectorAll(`.${navType}-links`);
             chanLinks.forEach((chanLink) => {
                 linkId = parseFloat(chanLink.id.slice(5));
-                //console.log(`"chanNavId: ${chanNavId}, "linkId: ${linkId}`)
                 if (linkId == chanNavId) {
                     chanLink.classList.remove("invisible");
-                    console.log("no longer invisible");
                 }
                 else {  
                     chanLink.classList.add("invisible");
@@ -219,39 +181,21 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-
-
-
-    
-
+    // change which channel to post messages into on click
     columns.forEach((column) => {
        column.addEventListener('click', () => {
                focus = column.firstChild.id;
                socket.emit('swap channel', focus);
                let chan_target = document.querySelector('#chan-span');
+               // change the text next that shows what channel user is posting to
                chan_target.textContent = focus.slice(9)
-               
-               console.log(`focus: ${focus}`); 
-               console.log("focus"); 
             });
         });
    
-
-
     // When connected...
     socket.on('connect', () => {
-        
+        // activate server's function to update client on who is logged on on which channel
         socket.emit('which channel');
-    
-
-
-
-
-
-     /*   document.querySelector('#blah').onclick = () => {
-            sendMessage()
-      
-        };*/
 
          msgBox.addEventListener('keydown', (e) => {
             if (e.key == "Enter") {
@@ -261,18 +205,16 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
+         // if user has pressed @ followed by space, switch channel
          msgBox.addEventListener('keydown', (e) => {
             if (e.key == "@") {
-               /* msgBox.value += "@"*/
-                /*console.log("@ detected")*/
                 msgBox.style.color = "blue";
+                // prepare to switch channel
                 targeting = true;
             }
             else if (e.code === "Space" && targeting === true) {
                 console.log("Space Detected");
                 temp = msgBox.value
-                /*temp = msgBox.value.split("");
-                temp = temp.slice(1,temp.length).join("")*/
                 target = msgBox.value.slice(1,temp.length);
                 target = target.toLowerCase();
                 if (target == "home") {
@@ -289,45 +231,19 @@ document.addEventListener('DOMContentLoaded', () => {
                     /*location = `http://127.0.0.1:5000/channels/${target}`*/
                 msgBox.style.color = "#495057"
                 msgBox.value = ""
+                // stop preparing to switch channel
                 targeting = false
-                
-/*socket.emit('send create', {'chanName': chanName.value.toLowerCase()});*/
 
             }
          });
-
-         
-
-
-
-        /*saveChan.onclick = () => saveChannel();*/
-
-        function chanNav(clicked) {
-            //when corresponding nav button is clicked,
-            //...make current channel links invisible
-            //..and remove inivisble class from correct channels
-            //const arr = clicked.classList;
-            //console.log(arr[1]);
-
-
-        } 
-                     
-/*        chanNames.addEventListener('keydown', (e) => {
-             if (e.key == "Enter") {
-                saveChannel()   
-             }
-        });       
-        */
     });
 
     // When a new message is announced, append to DOM
     socket.on('broadcast message', message => {
         const li = document.createElement('li')
         li.classList.add("msgs");
-
         new_msg = `<span id="${message.id}"><span class="names">${message.name}:</span> ${message.message}</span>`
         li.innerHTML = new_msg
-
         document.querySelector(`#${focus}`).append(li);
     });
 
@@ -339,56 +255,40 @@ document.addEventListener('DOMContentLoaded', () => {
         //maybe can change to .remove instead of display 'none'
     });
 
+    // last step of save channel...
+    // creates channel locally (previous steps created on server)
     socket.on('create channel', chanName => {
         let appendHere = ""
-        const sp = document.createElement('span')
+        const li = document.createElement('li');
+        li.className = "channel-links";
         jc = document.querySelector('#jinja_channels');
         pc = document.querySelector('#private_channels');
         if (chanName.private == true) {
             appendHere = pc
-            console.log(`private: ${chanName.private}`)
         }
         else {
             appendHere = jc
-            console.log(`not private: ${chanName.private}`)
         }
-        sp.innerHTML = `<li class="channel-links">
-                            <a href="/channels/${chanName["name"]}" class="nav-link">${chanName["name"]}
-                        </li>`;
-        appendHere.appendChild(sp)
-
+        li.innerHTML = `<a href="/channels/${chanName["name"]}" class="nav-link">${chanName["name"]}</a>`
+        appendHere.appendChild(li)
     });
 
     socket.on('swap channel', value => {
-        console.log(`this is my value: ${value}`);
         location = `http://127.0.0.1:5000/channels/${value}/none`
     })
 
-    socket.on('user entered', value => {
-        console.log(`User Entered ${value}`)
-    })
-
+    // updates 'online' div with the users and their channels
     socket.on('update users', value => {
-        console.log(`updating users: ${value.name}`)
-        console.log(`updating channel: ${value.chan}`)
         userChan = document.querySelector(`#cur-chan-${value.name}`)
         userChan.innerText = value.chan
     })
 
-    socket.on('test msg', data => {
-        console.log(data);
-        console.log("test success");
-    })
-
-    //const invite = document.querySelector('#invite');
-
     updaters = document.querySelectorAll('.updater');
 
-
+    // add new members to private channels
     updaters.forEach((updater) => {
         updater.addEventListener('keydown', (e) => {
             if (e.key == "Enter") {
-                console.log("updater working");
                 socket.emit("update private", {
                     "friend": updater.value,
                     "command":updater.id } )
@@ -396,9 +296,4 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         })
     })
-    
-
-
-
-
 });

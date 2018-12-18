@@ -1,0 +1,42 @@
+{% extends "template.html" %}
+
+{% block heading %}
+    Get Blah Blah'd
+{% endblock %}
+
+{% block body %}
+<!-- <ul id="msg-room">
+    
+    {% for message in messages %}
+        <li>{{message}}</li>
+    {% endfor %}
+
+</ul> -->
+
+<!-- Will have this box fade away after saving -->
+
+<!-- <form action="{{ url_for('login') }}" method="post">
+	<input id="name-box" name="name"type="text" placeholder="Tell us your name..." autofocus>
+	<button>Name Yourself</button>
+</form>
+ -->
+<br>
+
+<!-- textarea id="msg" placeholder="Speak..."></textarea>
+<button id="blah">Blah!</button> -->
+<!-- <input type="submit" name="Blah!"> -->
+
+<h3>Channels</h3>
+<button id="create">Spawn</button>
+<input id='chan-name' type='text' hidden></input>
+<button id='save-chan' hidden>Save</button>
+
+
+{% for k,v in channels.items() %}
+<li><button><a href="{{ url_for('channel_selection', chan=k ) }}">{{k}}</button></li>
+</form>
+{% endfor %}
+
+<span id="jinja_channels"></span>
+
+{% endblock %}

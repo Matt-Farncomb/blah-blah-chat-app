@@ -32,7 +32,7 @@
 
 /* ----------- */
 
-            /*--- Row 1 ---*/
+/*--- Row 1 ---*/
             #row-1 {
                   height: 6vh; 
             }
@@ -41,7 +41,7 @@
                         text-align: center;
                   }
 
-                  /* Left */
+      /* Left */
                         #chan-name-div {
                         padding: 0px;
                   }
@@ -71,29 +71,24 @@
                         color: var(--darkest-blue);
                   }
 
-                  /* Middle */
+      /* Middle */
                   #chan-title {
                         padding-left: 15px;
                         text-transform: capitalize;
                   }
 
-                  /* Right */
-
-                  
-                  
-
-            /*--- Row 2 ---*/
+      /* Right */
+                 
+/*--- Row 2 ---*/
             #row-2 {
                   height: 85vh; 
             }
                         
-                /* Left */
+      /* Left */
                 #chan-selection {
-                        /* padding-top: 18px; */
                         background-color:#35383D;
-                  /*    overflow-y: scroll;  
-                  overflow-x: hidden;  */
                         margin-bottom: -100px; 
+
                                     
                   }
 
@@ -115,8 +110,6 @@
                   #new_convo:focus::placeholder { 
                         color: var(--darkest-blue);
                   }
-
-
 
                         #new_convo:hover {
                         color: var(--darkest-blue);
@@ -151,26 +144,9 @@
                   }
 
 
-                  /* #new_convo:hover {
-                        background-color: var(--darkest-blue);
-                        color: var(--palest-blue);
-                  } */
-
                   .col > .form-control:focus {
-                              /* box-shadow:0 0 0 0.2rem slategrey; */
                               box-shadow: none;
                         }
-
-
-
-
-
-
-
-
-
-
-                  
 
                   .channel-links {
                         color:#E5EBFF;
@@ -183,21 +159,11 @@
                         text-transform: capitalize;
                   }
 
-                  .channel-links:first-child {
-                        padding-top: 20px;
-                  }
-
-                  /* .channel-links:hover {
-                                          background-color:white;
-                                          color:black;
-                                    }
-                   */
-                  /* Middle */
+                 
+       /* Middle */
                   #msg-window, #msg-window-home {
                         padding: 20px;
                       background-color: #e8ecf9;
-                      #F7F9FF
-                      #e8ecf9
                       color:#030B30; 
                       box-shadow:inset 0px 3px 5px 1px slategrey;
                       overflow-y: scroll;               
@@ -213,7 +179,7 @@
                         padding-bottom: 1.2em;
                   }
 
-                  /* Right */
+      /* Right */
                   .names {
                         color:#01AD52;
                   }
@@ -227,7 +193,6 @@
                         #e8ecf9
                         #F7F9FF
                         color:slategrey; 
-                        /* box-shadow:inset 0px 0px 2px 2px slategrey; */
                         border-top: none;
                         margin-bottom: -90px;
                   }
@@ -236,12 +201,6 @@
                               padding: 15px;
                               text-align: center;
 
-                  }
-
-                  #online-div {
-                              /* Gives the appearance of an innder border */
-                              /* box-shadow:inset 0px 0px 0px 2px slategrey; */
-                        
                   }
 
                   .online-names {
@@ -258,7 +217,7 @@
                         padding: 12px;
                   }
 
-            /*--- Row 3 ---*/
+/*--- Row 3 ---*/
             #row-3 {
                   height: 9vh; 
             }

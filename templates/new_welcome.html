@@ -3,55 +3,7 @@
     <head>
         <title>Welcome Page</title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-        <style>
-
-          :root {
-          --sidebar-hover-color:#485160;
-          --palest-blue:#F7F9FF;
-          --darkest-blue:#35383D;
-          --even-darker-blue:#171a1e;
-        }
-
-
-
-          .col-4{
-            height: 10vh;
-            
-          }
-
-          .col-12 {
-            height:45vh;
-          }
-
-          h1 {
-            text-align: center;
-            padding-top: 2em;
-            padding-right: 1em;
-            font-size: 6em;
-
-          }
-
-          body {
-           background-color: var(--palest-blue); */
-              overflow-y: scroll;  
-              overflow-x: hidden;
-          }
-
-          .welcome-form {
-            /* background-color: white;
-            padding-top:40px; 
-            height: 20vh; 
-            padding-top: 50px;
-            border:solid 10px white;
-            border-radius: 10%;
-            padding-left: 20px; */
-          }
-
-          .col-5 {
-
-          }
-
-        </style>
+        <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/welcome.css') }}">
     </head>
     <body>
       <div class="container-fluid" id="welcome-page">
@@ -65,40 +17,25 @@
             <div class="col-2 welcome-form">
 
               {% if first_visit == False %}
-
-              
+         
                 <div class="form-group">
-                  <!-- <label for="exampleInputEmail1">Nickname</label> -->
-                  <!-- <input id="name-box" name="name" type="text" placeholder="Tell us your name..." autofocus class="form-control" aria-describedby="emailHelp"> -->
+
                   <input type="text" readonly class="form-control-plaintext" id="staticEmail2" value="{{message}}">
                 </div>
-                <!-- <div class="form-group">
-                  <label for="exampleInputPassword1">Password</label>
-                  <input type="password" class="form-control" placeholder="Password">
-                </div> -->
+   
                 <a href="{{  url_for('channel_selection', chan=last_visited, test='None') }}" class="btn btn-dark mb-2" role="button">Continue</a>
                 <a href="{{  url_for('logout') }}" class="btn btn-warning mb-2" role="button">That's not me!</a>
               
-
               {% else %}
 
               <form action="{{ url_for('welcome') }}" method="post">
                 <div class="form-group">
-                  <!-- <label for="exampleInputEmail1">Nickname</label> -->
                   <input id="name-box" name="name" type="text" placeholder="Tell us your name..." autofocus class="form-control" aria-describedby="emailHelp">
                 </div>
-                <!-- <div class="form-group">
-                  <label for="exampleInputPassword1">Password</label>
-                  <input type="password" class="form-control" placeholder="Password">
-                </div> -->
                 <button class="btn btn-dark">Join Us...</button>
               </form>
 
               {% endif %}
-
-
-
-
 
             </div>
           <div class="col-5"></div>

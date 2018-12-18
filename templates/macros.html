@@ -41,7 +41,7 @@
 {% endmacro %}
 
 <!-- Private Channel Macro -->
-{% macro private_macro(priv_chans) %}
+{% macro private_macro(priv_chans, type) %}
 	{% set count = [0] %}
 	{% for e in priv_chans %}
 		{% if count[0] <= 5 %}
@@ -54,4 +54,11 @@
 			{% if count.append(count.pop() + 5) %}{% endif %}
 		{% endif %}
 	{% endfor %}
+{% endmacro %}
+
+<!-- Updater Macro -->
+{% macro updater_macro(task, str) %}
+ <div class="col">
+	<input id="{{task}}" type="text" class="form-control updater" placeholder="{{str}}">
+</div>
 {% endmacro %}

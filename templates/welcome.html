@@ -14,7 +14,7 @@ Blah Blah
 <a href="{{  url_for('channel_selection', chan=last_visited) }}"><button>Continue</button></a>
 {% else %}
 <form action="{{ url_for('welcome') }}" method="post">
-	<input id="name-box" name="name"type="text" placeholder="Tell us your name..." autofocus>
+	<input id="name-box" name="name" type="text" placeholder="Tell us your name..." autofocus>
 	<button>Name Yourself</button>
 </form>
 {% endif %}
