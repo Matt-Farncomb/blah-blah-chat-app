@@ -34,7 +34,8 @@
 
 /*--- Row 1 ---*/
             #row-1 {
-                  height: 6vh; 
+                  /* height: 6vh;  */
+                  height: 4em;
             }
 
                   h2 {
@@ -78,13 +79,23 @@
                   }
 
       /* Right */
+
+            #tempId {
+                  background-color: red;
+            }
                  
 /*--- Row 2 ---*/
             #row-2 {
-                  height: 85vh; 
+                  /* height: 85vh;  */
+                  height: 100vh;
             }
                         
       /* Left */
+
+                  .chan-nav-btn, .nav-arrow {
+                        width: 20%;
+                  }
+
                 #chan-selection {
                         background-color:#35383D;
                         margin-bottom: -100px; 
@@ -166,8 +177,12 @@
                       background-color: #e8ecf9;
                       color:#030B30; 
                       box-shadow:inset 0px 3px 5px 1px slategrey;
-                      overflow-y: scroll;               
+                      overflow-y: scroll;
+
+
                   }
+
+
 
                   #msg-room {
                         list-style: none;
@@ -195,6 +210,8 @@
                         color:slategrey; 
                         border-top: none;
                         margin-bottom: -90px;
+
+                        /* display: none; */
                   }
 
                   #online-title{
@@ -214,12 +231,21 @@
                   }
 
                   .chan-nav-text {
-                        padding: 12px;
+                        padding: 30%;
+                  }
+
+                  #online-div {
+                       /*  display: none; */
                   }
 
 /*--- Row 3 ---*/
             #row-3 {
-                  height: 9vh; 
+                  /* height: 9vh;  */
+                  height: 6em;
+                  background-color: white;
+                  margin-left: 0vw;
+                  padding-left: 2%;
+                  padding-right: 3%;
             }
                   #bottom-left {
                         background-color: white;
@@ -227,9 +253,103 @@
                   }
 
                    #msg-div {
-                        padding: 14px;
+                        padding: 0px;
+                        padding-top: 10px;
+                        padding-right: 14px;
+                        /* background-color: red; */
+                        /* border:solid white 30px 0 0 0; */
+                        /* margin-left: -11vw; */
+                        
                   }
 
                   #msg {
                         resize: none;
                   }
+
+
+
+
+/* Responsive */
+ 
+
+
+#chan-name-div, #chan-selection, #bottom-left {
+            display: none;
+      }
+
+ #online-div,  #online {
+            display: none;
+      }
+
+#home-title-div-mob {
+            height: 3em;
+      }
+
+#home-title-div-big {
+            display: none;
+      }
+
+@media (max-width: 768px) {
+
+      #msg-window, #msg-window-home {
+            height: 45em;
+      }      
+}
+
+@media (min-width:768px ) {
+      #home-title-div-mob {
+            display: none;
+            height: 3em;
+      }
+
+      #home-title-div-big {
+            display: block;
+      }
+
+}
+
+
+
+@media (min-width:992px ) {
+      
+      #online-div,  #online {
+            display: block;
+      } 
+
+      #row-3 {
+            margin-right: 16.7vw;
+      }
+
+      #msg { 
+            margin-right: 0vw;
+      }
+
+      #msg-div {
+            width: 75vw;
+      } 
+
+}
+
+@media (min-width:1200px ) {
+      /*Hides div to be revealed by button click */
+      #chan-name-div, #chan-selection, #bottom-left {
+            display: block;
+      }
+
+      #row-3 {
+           /*  background-color: red; */
+            margin-left: 16.7vw; 
+            margin-right: 16.7vw;
+      }
+
+      #msg {
+            /* margin-left: -17.5vw;
+            margin-right:-11.7vw; */
+            margin-right: 0vw;
+      } 
+      
+      #msg-div {
+            margin-left: -12vw;
+            width: 62vw;
+      }
+}

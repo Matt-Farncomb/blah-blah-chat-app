@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const privChanNavBtns = document.querySelectorAll(`.priv-bar > .chan-nav-btn`);
 
     // max amount of nav buttons for channel page switching
-    const maxNavBtns = 4
+    const maxNavBtns = 3
     // used to find buttons on either side of nav
     const navShifter = maxNavBtns-1
 
@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let usr_name = "unnamed"
 
-    const columns = document.querySelectorAll('.col-4');
+    const columns = document.querySelectorAll('.chat-windows');
     let focused = false;
     let focus = `msg-room-${curChan}`;
 
@@ -189,6 +189,7 @@ document.addEventListener('DOMContentLoaded', () => {
                let chan_target = document.querySelector('#chan-span');
                // change the text next that shows what channel user is posting to
                chan_target.textContent = focus.slice(9)
+               console.log("clicked")
             });
         });
    

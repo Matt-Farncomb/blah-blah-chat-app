@@ -2,10 +2,11 @@
 <html>
     <head>
         <title>My Web Page!</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 		<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/channel_styles.css') }}">
 		<script src="{{ url_for('static', filename='channel.js') }}"></script>
-		<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+		<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>  	
     </head>
 
 	<body>
@@ -16,16 +17,17 @@
         	<!--Top Row -->
 
 			<div class="row" id="row-1">
-            	<div class="col-2" id="chan-name-div">
-            		<input class="form-control border-0 chan-form chan-name new-chan-name" id='chan-name' type='text' placeholder="  New Channel +" onfocus="this.placeholder='  Type new name...'" onblur="this.placeholder = '  New Channel +'"></input>
+            	<div class="col-xl-2 col-lg-2 col-md-2 col-sm-6" id="chan-name-div">
+            		<input class="form-control border-0 chan-form chan-name new-chan-name" id='chan-name' type='text' placeholder="  Channels +" onfocus="this.placeholder='  Type new name...'" onblur="this.placeholder = '  Channels +'"></input>
             	</div>
-            	<div class="col-4">
-            		<h2 id="chan-title">@{{current.chan_name}}</h2>
+            	<!-- -->
+            	<div class="col-xl-4 col-lg-5 col-md-6 col-sm-12">
+            		<h2 id="chan-title">{{current.chan_name}}</h2>
             	</div>
-            	<div class="col-4">
+            	<div class="col-xl-4 col-lg-5 col-md-6 col-sm-12" id="home-title-div-big">
             		<h2>@Home</h2>
             	</div>
-            	<div class="col-2" id="online-div">
+            	<div class="col-xl-2 col-lg-2 col-md-2 col-sm-6" id="online-div">
             		<h5 id="online-title">Users Online</h5>
             	</div>
             </div>
@@ -33,7 +35,7 @@
             <!--2nd Row (Chat Window and Channels) -->
 
             <div class="row" id="row-2">
-                <div class="col" id="chan-selection">
+                <div class="col-xl col-lg-2 col-md-2 col-sm-6" id="chan-selection">
 
          			{{ channel_list(channels, false, 'chan') }}
 
@@ -44,7 +46,7 @@
 					<br>
 
 					<div id="new-convo-div">
-						<input class="form-control border-0 chan-name" id='new_convo' type='text' placeholder="  New Conversation +" onfocus="this.placeholder='  Type new name...'" onblur="this.placeholder = '  New Conversation +'"></input>
+						<input class="form-control border-0 chan-name" id='new_convo' type='text' placeholder="  Conversations +" onfocus="this.placeholder='  Type new name...'" onblur="this.placeholder = '  Conversations +'"></input>
 					</div>
 					<!-- {{ channel_list(channels, true, 'priv') }} -->
 					{{ private_macro(my_private_channels, 'priv') }}
@@ -56,7 +58,7 @@
 					<br>
 
                 </div>
-                <div class="col-4" id="msg-window"><ul id="msg-room-{{current.chan_name}}">
+                <div class="col-xl-4 col-lg-5 col-md-6 col-sm-12 chat-windows" id="msg-window"><ul id="msg-room-{{current.chan_name}}">
 				{% if current.private %}
 				<form>
 				  <div class="row">
@@ -72,15 +74,17 @@
 					    {% endfor %}
 					</ul>
 				</div>
-
-				<div class="col-4" id="msg-window-home"><ul id="msg-room-home">
+				<div class="col-xl-4 col-lg-5 col-md-6 col-sm-12" id="home-title-div-mob">
+            		<h2>@Home</h2>
+            	</div>
+				<div class="col-xl-4 col-lg-5 col-md-6 col-sm-12 chat-windows" id="msg-window-home"><ul id="msg-room-home">
 					    {% for message in home_chan %}
 					        <li class="msgs"><span id="{{message.id}}"><span class="names">{{message.name}}:</span> {{message.message}}</span></li>
 					    {% endfor %}
 					</ul>
 				</div>
 
-				 <div class="col" id="online">
+				 <div class="col-xl col-lg-2 col-md-2" id="online">
                     {% for k,v in channels.items() %}
                     	{% for e in v.current_users %}
                     		<li class="online-names">@{{e}}:<span class="user-channel" id="cur-chan-{{e}}">{{k}}</span></a></li>
@@ -95,9 +99,9 @@
             </div>
 
 			<!--3rd Row -->
-			<div class="row" id="row-3">
-				<div class="col-2" id="bottom-left"></div>
-		        <div class="col-8">
+			<div class="row fixed-bottom" id="row-3">
+				<div class="col-xl-2 col-lg-2 col-md-2" id="bottom-left"></div>
+		        <div class="col-xl-8 col-lg-10 col-md-12 col-sm-12">
 		            <div class="input-group input-group-default" id="msg-div">
 		            	<span class="input-group-text" id="inputGroup-sizing-default">{{name}} @<span id="chan-span">{{current.chan_name}}</span></span>
 					  <textarea type="text" id="msg" class="form-control" placeholder="Speak..." autofocus></textarea>
