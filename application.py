@@ -37,7 +37,23 @@ db = scoped_session(sessionmaker(bind=engine))
 
 svr_reset = True
 
-channels = {"home": {"chan_id":0,"private": {"private":False, "members":[] }, "msg_count":0, "msg_list":[], "current_users":[]} }
+channels = {
+	"home": {
+		"chan_id":0,
+		"private": {"private":False, "members":[] },
+		"msg_count":0,
+		"msg_list":[],
+		"current_users":[]},
+	"select channel": {
+		"chan_id":9999,
+		"private": {"private":False, "members":[] },
+		"msg_count":0,
+		"msg_list":["Please select a channel on the left"],
+		"current_users":[]},
+	}
+	#'select' is a channel whose only purpose is to display
+	# "please select a channel" when user loads up for the first time
+
 
 # stores users names and their current channels
 current_users = {}
@@ -115,10 +131,10 @@ def welcome():
 		#TODO: Legacy code: HOME should never be loaded up here. 
 		#	   HOME is always on right window. What to do?
 		else:
-			last_visited = "home"
+			last_visited = "select channel"
 	else:
 		message = f"Welcome to Blah-Blah! Sign-In!"
-		last_visited = "home"
+		last_visited = "select channel"
 
 	return render_template("new_welcome.html", 
 		message=message, 
@@ -150,7 +166,7 @@ def login():
  	session["name"] = user_name
  	current_users.update({user_name:"home"})
 
- 	return redirect(url_for("channel_selection", chan="home", test="None"))
+ 	return redirect(url_for("channel_selection", chan="select channel", test="None"))
 
 
 @app.route("/logout", methods=["GET"])
@@ -216,11 +232,16 @@ def channel_selection(chan, test="None"):
 
 		if chan in my_private_channels:
 			current_privacy = True
-		
+		messages = []
 		current = {"chan_name":chan, "private":current_privacy }
+		if chan == "select channel":
+			print("I am a select 2")
+			messages.append({"message":"Select a channel on the left", "id":9999, "name":"Blah-Blah"})
+		else:
+			messages = channels[chan]["msg_list"]
 		
 		return render_template("new_channel_template.html", 
-			messages=channels[chan]["msg_list"], 
+			messages=messages, 
 			channels=channels,
 			my_private_channels=my_private_channels,
 			current=current,
@@ -253,7 +274,8 @@ def upload_msg(data):
 	#each message has an id
 	#this id increments on python and is sent with the msg
 	#python emits a command to delete id with number incremenetr minus maximum
-		
+	if session['chan_name'] == "select channel":
+		return
 	channels[session['chan_name']]["msg_list"].append(new_msg)
 
 	emit("broadcast message", new_msg,
