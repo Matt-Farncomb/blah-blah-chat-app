@@ -166,7 +166,7 @@ def login():
  	session["name"] = user_name
  	current_users.update({user_name:"home"})
 
- 	return redirect(url_for("channel_selection", chan="select channel", test="None"))
+ 	return redirect(url_for("channel_selection", chan="select channel"))
 
 
 @app.route("/logout", methods=["GET"])
@@ -181,8 +181,8 @@ revisits the site, they are automatically redirected from the main
 page to 'chan' which is the channel they were last using.
 '''
 
-@app.route("/channels/<string:chan>/<test>", methods=["GET"])
-def channel_selection(chan, test="None"):
+@app.route("/channels/<string:chan>", methods=["GET"])
+def channel_selection(chan):
 	# If channel in URL exists return it's template.
 
 	global svr_reset

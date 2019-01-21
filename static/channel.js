@@ -8,6 +8,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const saveChan = document.querySelector('#save-chan');
     const msgBox = document.querySelector('#msg');
     const chanNavArrows = document.querySelectorAll('.nav-arrow');
+
+    const channelLinks = document.querySelectorAll('.channel-links')
+    const privLinks = document.querySelectorAll('.priv-links');
+    const chanLinks = document.querySelectorAll('.chan-links');
     
     const chanChanNavBtns = document.querySelectorAll(`.chan-bar > .chan-nav-btn`);
     const privChanNavBtns = document.querySelectorAll(`.priv-bar > .chan-nav-btn`);
@@ -16,6 +20,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const maxNavBtns = 3
     // used to find buttons on either side of nav
     const navShifter = maxNavBtns-1
+
+
 
     let privChanNavBtnsCount = 0;
     privChanNavBtns.forEach((privChanNavBtn) => {
@@ -45,6 +51,24 @@ document.addEventListener('DOMContentLoaded', () => {
     const columns = document.querySelectorAll('.chat-windows');
     let focused = false;
     let focus = `msg-room-${curChan}`;
+
+    //for final int-id of below
+    let finChanLinkId = ""
+    let finPrivLinkId = ""
+
+    //get final int-id of channel-links
+    //right now this restarts when coutning privs. Must seperate them
+    chanLinks.forEach((chanLink) => {
+        finChanLinkId = chanLink.id;
+        finChanLinkId = finChanLinkId.slice(10);
+        //console.log(`finChanLinkId: ${finChanLinkId}`)
+    });
+
+     privLinks.forEach((privLink) => {
+        finPrivLinkId = privLink.id;
+        finPrivLinkId = finPrivLinkId.slice(10);
+        //console.log(`finPrivLinkId: ${finPrivLinkId}`)
+    });
 
 
     // Connect to websocket
@@ -165,21 +189,30 @@ document.addEventListener('DOMContentLoaded', () => {
     // and reveal the others
     chanNavs.forEach((chanNav) => {
         chanNav.addEventListener('click', () => {
-            let linkId = 1.0;
+            //let linkId = 1.0;
             const navType = chanNav.id.slice(4,8);
             const chanNavId = parseFloat(chanNav.id.slice(9));
-            const chanLinks = document.querySelectorAll(`.${navType}-links`);
-            chanLinks.forEach((chanLink) => {
-                linkId = parseFloat(chanLink.id.slice(5));
-                if (linkId == chanNavId) {
-                    chanLink.classList.remove("invisible");
-                }
-                else {  
-                    chanLink.classList.add("invisible");
-                }
-            }) 
+            
+            hideChannels(navType, chanNavId);
         });
     });
+
+    // hides the channel nav buttons so only a column of 5 appear at once
+    function hideChannels(chanType, chanNavId) {
+        console.log(`showing only  ${chanNavId}`)
+        const chanLinks = document.querySelectorAll(`.${chanType}-links`);
+        chanLinks.forEach((chanLink) => {
+            let linkId = parseFloat(chanLink.id.slice(10));
+            linkId = Math.ceil(linkId / 10) 
+            if (linkId == chanNavId) {
+                chanLink.classList.remove("invisible");
+            }
+            else {  
+                chanLink.classList.add("invisible");
+            }
+        }) 
+
+    }
 
     // change which channel to post messages into on click
     columns.forEach((column) => {
@@ -259,19 +292,34 @@ document.addEventListener('DOMContentLoaded', () => {
     // last step of save channel...
     // creates channel locally (previous steps created on server)
     socket.on('create channel', chanName => {
+        console.log("working");
         let appendHere = ""
         const li = document.createElement('li');
-        li.className = "channel-links";
+        /*li.className = "channel-links";*/
         jc = document.querySelector('#jinja_channels');
         pc = document.querySelector('#private_channels');
         if (chanName.private == true) {
-            appendHere = pc
+            li.classList.add('priv-links', 'channel-links')
+            li.id = `priv-link-${parseInt(finPrivLinkId)+1}`
+            console.log(`NEw id = ${finPrivLinkId}`);
+            appendHere = pc;
+            let tempId = parseFloat(li.id.slice(10));
+            hideChannels("priv", Math.ceil(tempId / 10));
+
         }
         else {
-            appendHere = jc
+            li.classList.add('chan-links', 'channel-links')
+            li.id = `chan-link-${parseInt(finChanLinkId)+1}`
+            console.log(`NEw id = ${finChanLinkId}`)
+            appendHere = jc;
+            let tempId = parseFloat(li.id.slice(10));
+            hideChannels("chan", Math.ceil(tempId / 10));
         }
         li.innerHTML = `<a href="/channels/${chanName["name"]}" class="nav-link">${chanName["name"]}</a>`
         appendHere.appendChild(li)
+        //here here
+        
+        
     });
 
     socket.on('swap channel', value => {
@@ -297,4 +345,40 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         })
     })
+
+    const ham1 = document.querySelector('#hamburg-1');
+    let leftSidebarActive = false;
+    ham1.addEventListener("click", () => {
+        if (leftSidebarActive == false) {
+            console.log("clicked6");
+            document.querySelector('#chan-name-div').classList.add("sidebar", "name-height");
+            document.querySelector('#chan-selection').classList.add("sidebar", "select-height");
+            ham1.style.zIndex = "2";
+            ham1.style.position = "relative"
+            leftSidebarActive = true;
+            }
+        else {
+            document.querySelector('#chan-name-div').classList.remove("sidebar", "name-height");
+            document.querySelector('#chan-selection').classList.remove("sidebar", "select-height");
+            leftSidebarActive = false;
+        }
+        });
+
+    //if sidebar is opened and screensize is changed, hide sidebar when... 
+    //media query when normally kick in
+    var mq = window.matchMedia( "(min-width: 1200px)" );
+    window.onresize = resize;
+
+    function resize() {
+        if (mq.matches && leftSidebarActive == true) {
+            console.log("removing classes");
+            document.querySelector('#chan-name-div').classList.remove("sidebar", "name-height");
+            document.querySelector('#chan-selection').classList.remove("sidebar", "select-height"); 
+            leftSidebarActive = false
+        }
+    }
+
+    
+    
+
 });

@@ -4,9 +4,9 @@
 	{% for k,v in channels.items() %}
 		{% if k !="home" and k != "select channel" and v.private.private == private %}
 			{% if count[0] <= 5 %}
-			<li class="{{type}}-links channel-links bob-{{count}}" id="link-{{((count[0])/10)|round(0, 'ceil')}}"><a href="{{ url_for('channel_selection', chan=k, test='None' ) }}" class="nav-link">{{k}}</a></li>	
+			<li class="{{type}}-links channel-links bob-{{count[0]}}" id="chan-link-{{((count[0]))}}"><a href="{{ url_for('channel_selection', chan=k) }}" class="nav-link">{{k}}</a></li>	
 			{% else %}
-			<li class="{{type}}-links channel-links bob-{{count}} invisible" id="link-{{((count[0])/10)|round(0, 'ceil')}}"><a href="{{ url_for('channel_selection', chan=k, test='None' ) }}" class="nav-link">{{k}}</a></li>
+			<li class="{{type}}-links channel-links bob-{{count[0]}} invisible" id="chan-link-{{((count[0]))}}"><a href="{{ url_for('channel_selection', chan=k) }}" class="nav-link">{{k}}</a></li>
 			{% endif %}
 			{% if count.append(count.pop() + 1) %}{% endif %}
 			{% if count[0] % 5 == 0 %}
@@ -45,9 +45,9 @@
 	{% set count = [0] %}
 	{% for e in priv_chans %}
 		{% if count[0] <= 5 %}
-			<li class="{{type}}-links channel-links bob-{{count}}" id="link-{{((count[0])/10)|round(0, 'ceil')}}"><a href="{{ url_for('channel_selection', chan=e, test='None' ) }}" class="nav-link">{{e}}</a></li>	
+			<li class="{{type}}-links channel-links bob-{{count[0]}}" id="priv-link-{{((count[0]))}}"><a href="{{ url_for('channel_selection', chan=e) }}" class="nav-link">{{e}}</a></li>	
 		{% else %}
-			<li class="{{type}}-links channel-links bob-{{count}} invisible" id="link-{{((count[0])/10)|round(0, 'ceil')}}"><a href="{{ url_for('channel_selection', chan=e, test='None' ) }}" class="nav-link">{{e}}</a></li>
+			<li class="{{type}}-links channel-links bob-{{count[0]}} invisible" id="priv-link-{{((count[0]))}}"><a href="{{ url_for('channel_selection', chan=e) }}" class="nav-link">{{e}}</a></li>
 		{% endif %}
 		{% if count.append(count.pop() + 1) %}{% endif %}
 		{% if count[0] % 5 == 0 %}

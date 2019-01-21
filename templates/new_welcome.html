@@ -23,7 +23,7 @@
                   <input type="text" readonly class="form-control-plaintext" id="staticEmail2" value="{{message}}">
                 </div>
    
-                <a href="{{  url_for('channel_selection', chan=last_visited, test='None') }}" class="btn btn-dark mb-2" role="button">Continue</a>
+                <a href="{{  url_for('channel_selection', chan=last_visited) }}" class="btn btn-dark mb-2" role="button">Continue</a>
                 <a href="{{  url_for('logout') }}" class="btn btn-warning mb-2" role="button">That's not me!</a>
               
               {% else %}
