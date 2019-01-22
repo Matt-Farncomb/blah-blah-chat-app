@@ -346,21 +346,45 @@ document.addEventListener('DOMContentLoaded', () => {
         })
     })
 
-    const ham1 = document.querySelector('#hamburg-1');
+    const ham1 = document.querySelector('#l-sidebar-toggle');
+    const ham2 = document.querySelector('#r-sidebar-toggle');
     let leftSidebarActive = false;
+    let rightSidebarActive = false;
+
     ham1.addEventListener("click", () => {
-        if (leftSidebarActive == false) {
-            console.log("clicked6");
-            document.querySelector('#chan-name-div').classList.add("sidebar", "name-height");
-            document.querySelector('#chan-selection').classList.add("sidebar", "select-height");
+        if (leftSidebarActive == false) {;
+            document.querySelector('#chan-name-div').classList.add("sidebar", "name-height", "col-sm-4","col-md-5", "col-lg-4", "shift-div" );
+            document.querySelector('#chan-selection').classList.add("sidebar", "select-height",  "col-md-6", "col-lg-5");
+            document.querySelector('#chan-name-div').classList.remove("col-sm-5");
+            /*document.querySelector('#chan-name-div').style.left = "8.3%";*/
+
             ham1.style.zIndex = "2";
             ham1.style.position = "relative"
             leftSidebarActive = true;
             }
         else {
-            document.querySelector('#chan-name-div').classList.remove("sidebar", "name-height");
-            document.querySelector('#chan-selection').classList.remove("sidebar", "select-height");
+            document.querySelector('#chan-name-div').classList.remove("sidebar", "name-height", "col-md-6", "col-lg-5", "shift-div" );
+            document.querySelector('#chan-selection').classList.remove("sidebar", "select-height", "col-md-6", "col-lg-5" );
+            document.querySelector('#chan-name-div').classList.add("col-sm-5")
             leftSidebarActive = false;
+        }
+        });
+
+    ham2.addEventListener("click", () => {
+        if (rightSidebarActive == false) {
+            console.log("clicked!!!");
+            document.querySelector('#online-div').classList.add("r_sidebar", "name-height", "col-md-6", "col-lg-5" );
+            document.querySelector('#online').classList.add("r_sidebar", "select-height",  "col-md-6", "col-lg-5");
+            document.querySelector('#h-title-span').classList.add("invisible");
+            ham2.style.zIndex = "2";
+            ham2.style.position = "relative"
+            rightSidebarActive = true;
+            }
+        else {
+            document.querySelector('#online-div').classList.remove("r_sidebar", "name-height", "col-md-6", "col-lg-5" );
+            document.querySelector('#online').classList.remove("r_sidebar", "select-height", "col-md-6", "col-lg-5" );
+            document.querySelector('#h-title-span').classList.remove("invisible");
+            rightSidebarActive = false;
         }
         });
 
@@ -370,11 +394,15 @@ document.addEventListener('DOMContentLoaded', () => {
     window.onresize = resize;
 
     function resize() {
-        if (mq.matches && leftSidebarActive == true) {
+        if (mq.matches && leftSidebarActive == true || rightSidebarActive == true) {
             console.log("removing classes");
-            document.querySelector('#chan-name-div').classList.remove("sidebar", "name-height");
-            document.querySelector('#chan-selection').classList.remove("sidebar", "select-height"); 
-            leftSidebarActive = false
+            document.querySelector('#chan-name-div').classList.remove("sidebar", "name-height", "col-md-6", "col-lg-5", "shift-div" );
+            document.querySelector('#chan-selection').classList.remove("sidebar", "select-height", "col-md-6", "col-lg-5" );
+            document.querySelector('#online-div').classList.remove("r_sidebar", "name-height", "col-md-6", "col-lg-5" );
+            document.querySelector('#online').classList.remove("r_sidebar", "select-height", "col-md-6", "col-lg-5" );
+            document.querySelector('#h-title-span').classList.remove("invisible");
+            leftSidebarActive = false;
+            rightSidebarActive = false;
         }
     }
 

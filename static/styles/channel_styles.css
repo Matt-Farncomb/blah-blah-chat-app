@@ -313,6 +313,14 @@
             left: 0;
       }
 
+      .r_sidebar {
+            display: block !important;
+            position: fixed;
+            z-index: 1;
+            top: 30;
+            right: 0;
+      }
+
 
       .name-height {
             height: 7%;
@@ -322,6 +330,26 @@
       .select-height {
             height: 100%;
       }
+
+      #l-sidebar-toggle {
+            background-color: #35383D;
+            color: white;
+      }
+
+       #r-sidebar-toggle {
+            background-color: #35383D;
+            color: white;
+      }
+
+      .fa-bars {
+            padding: 14px;
+            font-size: 2em;
+      }
+
+      .shift-div {
+            left:8.3%;
+      }
+
 
 @media (max-width: 768px) {
 
@@ -345,6 +373,14 @@
 
 
 @media (min-width:992px ) {
+
+      #r-sidebar-toggle {
+            display: none;
+      }
+
+      #hamburg-2 {
+            display: none;
+      }
       
       #online-div,  #online {
             display: block;
@@ -398,6 +434,14 @@
             margin-left: -12vw;
             width: 62vw;
       }
+
+      #hamburg-1 {
+            display: none;
+      }
+
+      #l-sidebar-toggle {
+      display: none;
+}
 }
 
 
