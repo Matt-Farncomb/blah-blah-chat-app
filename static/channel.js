@@ -56,6 +56,59 @@ document.addEventListener('DOMContentLoaded', () => {
     let finChanLinkId = ""
     let finPrivLinkId = ""
 
+    //gets size of row-2 on load and resizes r2 according
+    //... to height of fixed chat bar. Function called on
+    //... resize too.
+    let iH = 0;
+
+    function getHeight(){   
+        iH = window.innerHeight;
+        r2 = document.querySelector(`#row-2`);
+        r3 = document.querySelector(`#row-3`);
+        msgW = document.querySelector(`#msg-window`);
+        msgWH = document.querySelector(`#msg-window-home`);
+        r3H = r3.offsetHeight;
+        // Double the size of row 3 (.25 used to make it look nicer)
+        deducter = r3H * 1.75;
+        newHeight =  iH - deducter;
+        //approx mobile width
+        let curWidth = window.matchMedia( "(max-width: 768px)" );
+        // maths used to calcualte the size of the msg box
+        ///... so that the size of widnows will change accordingly
+
+        //If window is at the small/mobile width...
+        if (curWidth.matches) {
+            //two widnows now untop of each other instead of side to side...
+            ///... hence the '/2'.
+            newHeight /= 2;
+            // below used to account for msg box
+            let newHeightH = newHeight - r3H/2;
+            console.log("Changing according to m");
+            msgW.style.height = `${newHeight}px`;
+            msgWH.style.height = `${newHeightH}px`;
+            //r2.style.height = `${newHeight}px`;
+
+        }
+        else {
+            //console.log(newHeight)
+            console.log(r2.offsetHeight);
+
+            //r2.style.height = `${newHeight}px`;
+            msgW.style.height = `${newHeight}px`;
+            msgWH.style.height = `${newHeight}px`;
+
+            console.log(r2.offsetHeight);
+            console.log("r2.offsetHeight");
+        }
+
+        
+
+    }
+
+    getHeight();
+
+    
+
     //get final int-id of channel-links
     //right now this restarts when coutning privs. Must seperate them
     chanLinks.forEach((chanLink) => {
@@ -405,6 +458,9 @@ document.addEventListener('DOMContentLoaded', () => {
             rightSidebarActive = false;
         }
     }
+
+    window.onresize = getHeight;
+
 
     
     

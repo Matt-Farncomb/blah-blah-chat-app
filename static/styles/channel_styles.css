@@ -3,6 +3,7 @@
             body {
                   list-style: none;
                   font-family: courier new;
+                  overflow-y: hidden;
             }
 
             :root {
@@ -100,7 +101,8 @@
 /*--- Row 2 ---*/
             #row-2 {
                   /* height: 85vh;  */
-                  height: 100vh;
+                  /* height: 100%;  */
+
             }
                         
       /* Left */
@@ -188,11 +190,10 @@
                   #msg-window, #msg-window-home {
                         padding: 20px;
                       background-color: #e8ecf9;
+                     background-color: white;
                       color:#030B30; 
                       box-shadow:inset 0px 3px 5px 1px slategrey;
                       overflow-y: scroll;
-
-
                   }
 
 
@@ -279,7 +280,10 @@
                         resize: none;
                   }
 
-
+/* row-4 */
+                  #row-4 {
+                        min-height: 6em;
+                  }
 
 
 /* Responsive */
@@ -342,7 +346,8 @@
       }
 
       .fa-bars {
-            padding: 14px;
+            
+            padding: 30% 10% 10% 10%;
             font-size: 2em;
       }
 
