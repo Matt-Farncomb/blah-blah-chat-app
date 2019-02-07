@@ -429,7 +429,7 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelector('#online-div').classList.add("r_sidebar", "name-height", "col-md-6", "col-lg-5" );
             document.querySelector('#online').classList.add("r_sidebar", "select-height",  "col-md-6", "col-lg-5");
             document.querySelector('#h-title-span').classList.add("invisible");
-            ham2.style.zIndex = "2";
+            ham2.style.zIndex = "5";
             ham2.style.position = "relative"
             rightSidebarActive = true;
             }
