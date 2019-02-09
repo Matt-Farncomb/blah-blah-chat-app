@@ -23,29 +23,29 @@
         	<!--Top Row -->
 
 			<div class="row" id="row-1">
-				<div class="col-1" id="l-sidebar-toggle"><i class="fas fa-bars"></i></div>
-            	<div class="sidebar-left col-xl-2 col-lg-2 col-md-2 col-sm-5" id="chan-name-div">
+				<div class="col-2 toggle" id="l-sidebar-toggle"><i class="fas fa-bars"></i></div>
+            	<div class="sidebar-left col-xl-2 col-lg-2 col-md-2 col-sm-3" id="chan-name-div">
             		<input class="form-control border-0 chan-form chan-name new-chan-name" id='chan-name' type='text' placeholder="  Channels +" onfocus="this.placeholder='  Type new name...'" onblur="this.placeholder = '  Channels +'"></input>
             	</div>
             	<!-- -->
-            	<div class="col-xl-4 col-lg-4 col-md-5 col-sm-10 col-10">
+            	<div class="col-xl-4 col-lg-3 col-md-4 col-sm-8 col-8" id="chan-title-div">
             		<h2 id="chan-title">{{current.chan_name}}</h2>
             		
             	</div>
-            	<div class="col-xl-4 col-lg-5 col-md-5 col-sm-12" id="home-title-div-big">
+            	<div class="col-xl-4 col-lg-5 col-md-4 col-sm-12" id="home-title-div-big">
             		<h2 id="home-title"><span id="h-title-span">@Home</span></h2>
             		
             	</div>
             	<div class="col-xl-2 col-lg-2 col-md-1 col-sm-5" id="online-div">
-            		<h5 id="online-title">Users Online</h5>
+            		<h2 id="online-title">Online</h2>
             	</div>
-            	<div class="col-1" id="r-sidebar-toggle"><i class="fas fa-bars"></i></div>
+            	<div class="col-2 toggle" id="r-sidebar-toggle"><i class="fas fa-bars"></i></div>
             </div>
 
             <!--2nd Row (Chat Window and Channels) -->
 
             <div class="row" id="row-2">
-                <div class="sidebar-left ol-xl col-lg-2 col-md-2 col-sm-6" id="chan-selection">
+                <div class="sidebar-left col-lg-2 col-md-2 col-sm-6" id="chan-selection">
 
          			{{ channel_list(channels, false, 'chan') }}
 

@@ -63,9 +63,13 @@
 
                   .chan-form{
                         background-color:var(--even-darker-blue);
+                       
                         #35383D
                         #485160
-                        color: #35383D !important;
+
+
+
+                        
 
                   } 
 
@@ -120,7 +124,7 @@
 
                 .new-chan-name {
                         border-radius: 0px;
-                        height: 100%;
+                        height: 110%;
                         box-shadow:outset 5px 5px 5px 5px slategrey;
                   }
 
@@ -249,6 +253,7 @@
                   }
 
                   #online-div {
+                        background-color: white;
                        /*  display: none; */
                   }
 
@@ -294,6 +299,7 @@
             display: none;
       }
 
+
  #online-div,  #online {
             display: none;
       }
@@ -306,15 +312,20 @@
             display: none;
       }
 
+.color-change {
+      background-color:var(--even-darker-blue);
+}
+
 
 
 /* sidebar classes */
       .sidebar {
             display: block !important;
             position: fixed;
-            z-index: 1;
+            z-index: 10;
             top: 30;
             left: 0;
+            
       }
 
       .r_sidebar {
@@ -323,6 +334,7 @@
             z-index: 1;
             top: 30;
             right: 0;
+           
       }
 
 
@@ -335,35 +347,84 @@
             height: 100%;
       }
 
-      #l-sidebar-toggle {
+      /* #l-sidebar-toggle {
             background-color: #35383D;
             color: white;
-      }
+      } */
 
-       #r-sidebar-toggle {
-            background-color: #35383D;
-            color: white;
+      /*  #r-sidebar-toggle {
+           background-color: #35383D;
+           color: white;
+            } */
+
+      .toggle {
+            /* background-color: #35383D; */
+            /* color: white; */
+            color: black;
+            text-align: center;
+
+            z-index: 100;
       }
 
       .fa-bars {
             
-            padding: 30% 10% 10% 10%;
+            padding-top: 10px;
             font-size: 2em;
+
       }
 
-      .shift-div {
-            left:8.3%;
+      .alt_ham {
+            background-color: var(--even-darker-blue);
+            color:white;
+            
       }
+
+      .top {
+            z-index: 99;
+      }
+
+      
+
+      
+/* 
+      .shift-div {
+            left:16.6vw;
+            width: 25vw;
+      } */
+
+      .fixed-pos {
+            /* position:fixed;
+            left:5.5em; */
+            background-color: red !important;
+      }
+
+      .shuffle-right {
+            padding-left:65px;
+            
+
+      }
+
+      .form-width {
+            left:16.6vw;
+            width: 33.3vw;
+      }  
 
 
 @media (max-width: 768px) {
 
       #msg-window, #msg-window-home {
-            height: 45em;
-      }      
+            height: 40em;
+      }
+
+      .form-width {
+            left:16.6vw;
+            width: 66.6vw;
+      }  
+
+          
 }
 
-@media (min-width:768px ) {
+@media (min-width:769px ) {
       #home-title-div-mob {
             display: none;
             height: 3em;
@@ -403,6 +464,11 @@
             width: 75vw;
       }
 
+      .form-width {
+            left:16.6vw;
+            width: 25vw;
+      }
+
 
      /*  #chan-name-div, #chan-selection, #bottom-left {
            make into sidebar thing
@@ -418,6 +484,10 @@
 }
 
 @media (min-width:1200px ) {
+
+      .new-chan-name {
+            height: 100%;
+      }
       /*Hides div to be revealed by button click */
       #chan-name-div, #chan-selection, #bottom-left {
             display: block;
@@ -445,8 +515,8 @@
       }
 
       #l-sidebar-toggle {
-      display: none;
-}
+            display: none;
+      }
 }
 
 

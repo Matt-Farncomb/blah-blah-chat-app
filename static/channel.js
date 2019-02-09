@@ -73,6 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
         newHeight =  iH - deducter;
         //approx mobile width
         let curWidth = window.matchMedia( "(max-width: 768px)" );
+        console.log(`curWidth = ${window.innerWidth}`)
         // maths used to calcualte the size of the msg box
         ///... so that the size of widnows will change accordingly
 
@@ -401,23 +402,35 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const ham1 = document.querySelector('#l-sidebar-toggle');
     const ham2 = document.querySelector('#r-sidebar-toggle');
+    const chanTitleDiv = document.querySelector('#chan-title-div');
     let leftSidebarActive = false;
     let rightSidebarActive = false;
 
     ham1.addEventListener("click", () => {
         if (leftSidebarActive == false) {;
-            document.querySelector('#chan-name-div').classList.add("sidebar", "name-height", "col-sm-4","col-md-5", "col-lg-4", "shift-div" );
-            document.querySelector('#chan-selection').classList.add("sidebar", "select-height",  "col-md-6", "col-lg-5");
+            document.querySelector('#online-div').classList.remove("r_sidebar", "name-height", "col-sm-12","col-md-6", "col-lg-5", "top" );
+            document.querySelector('#online').classList.remove("r_sidebar", "select-height",  "col-sm-12","col-md-6", "col-lg-5", "top");
+
+            document.querySelector('#chan-name').classList.add('shuffle-right');
+            document.querySelector('#chan-name-div').classList.add("sidebar", "name-height", "fixed-pos","col-sm-10","col-sm-4","col-md-4", "col-lg-4", "form-width", "top" );
+            document.querySelector('#chan-selection').classList.add("sidebar", "select-height",  "col-sm-12","col-md-6", "col-lg-5", "top");
+            ham1.classList.add("alt_ham");
+            //ham2.classList.add("alt_ham");
+            chanTitleDiv.classList.add("color-change");
             document.querySelector('#chan-name-div').classList.remove("col-sm-5");
             /*document.querySelector('#chan-name-div').style.left = "8.3%";*/
 
-            ham1.style.zIndex = "2";
+            //ham1.style.zIndex = "2";
             ham1.style.position = "relative"
             leftSidebarActive = true;
+            rightSidebarActive = false;
             }
         else {
-            document.querySelector('#chan-name-div').classList.remove("sidebar", "name-height", "col-md-6", "col-lg-5", "shift-div" );
-            document.querySelector('#chan-selection').classList.remove("sidebar", "select-height", "col-md-6", "col-lg-5" );
+            document.querySelector('#chan-name-div').classList.remove("sidebar", "name-height", "fixed-pos","col-sm-10","col-md-6", "col-lg-5", "form-width", "top" );
+            document.querySelector('#chan-selection').classList.remove("sidebar", "select-height", "col-sm-12","col-md-6", "col-lg-5", "top" );
+            ham1.classList.remove("alt_ham");
+            //ham2.classList.remove("alt_ham");
+            chanTitleDiv.classList.remove("color-change");
             document.querySelector('#chan-name-div').classList.add("col-sm-5")
             leftSidebarActive = false;
         }
@@ -426,16 +439,25 @@ document.addEventListener('DOMContentLoaded', () => {
     ham2.addEventListener("click", () => {
         if (rightSidebarActive == false) {
             console.log("clicked!!!");
-            document.querySelector('#online-div').classList.add("r_sidebar", "name-height", "col-md-6", "col-lg-5" );
-            document.querySelector('#online').classList.add("r_sidebar", "select-height",  "col-md-6", "col-lg-5");
+            chanTitleDiv.classList.remove("color-change");
+            document.querySelector('#chan-name-div').classList.remove("sidebar", "name-height", "fixed-pos","col-sm-10","col-md-6", "col-lg-5", "form-width", "top" );
+            document.querySelector('#chan-selection').classList.remove("sidebar", "select-height", "col-sm-12","col-md-6", "col-lg-5", "top" );
+
+            document.querySelector('#online-div').classList.add("r_sidebar", "name-height", "col-sm-12","col-md-6", "col-lg-5", "top" );
+            document.querySelector('#online').classList.add("r_sidebar", "select-height",  "col-sm-12","col-md-6", "col-lg-5", "top");
+            //ham2.classList.add("alt_ham");
             document.querySelector('#h-title-span').classList.add("invisible");
-            ham2.style.zIndex = "5";
+            //ham2.style.zIndex = "5";
+            ham1.classList.remove("alt_ham");
             ham2.style.position = "relative"
+
             rightSidebarActive = true;
+            leftSidebarActive = false;
             }
         else {
-            document.querySelector('#online-div').classList.remove("r_sidebar", "name-height", "col-md-6", "col-lg-5" );
-            document.querySelector('#online').classList.remove("r_sidebar", "select-height", "col-md-6", "col-lg-5" );
+            document.querySelector('#online-div').classList.remove("r_sidebar", "name-height", "col-sm-12","col-md-6", "col-lg-5", "top" );
+            document.querySelector('#online').classList.remove("r_sidebar", "select-height", "col-sm-12","col-md-6", "col-lg-5", "top" );
+            ham1.classList.remove("alt_ham");
             document.querySelector('#h-title-span').classList.remove("invisible");
             rightSidebarActive = false;
         }
@@ -449,7 +471,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function resize() {
         if (mq.matches && leftSidebarActive == true || rightSidebarActive == true) {
             console.log("removing classes");
-            document.querySelector('#chan-name-div').classList.remove("sidebar", "name-height", "col-md-6", "col-lg-5", "shift-div" );
+            document.querySelector('#chan-name-div').classList.remove("sidebar", "name-height", "col-md-6", "col-lg-5", "form-width" );
             document.querySelector('#chan-selection').classList.remove("sidebar", "select-height", "col-md-6", "col-lg-5" );
             document.querySelector('#online-div').classList.remove("r_sidebar", "name-height", "col-md-6", "col-lg-5" );
             document.querySelector('#online').classList.remove("r_sidebar", "select-height", "col-md-6", "col-lg-5" );
@@ -459,10 +481,30 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    window.onresize = getHeight;
+    function closeSideBars() {
+       
+        leftSidebarActive = false;
+        rightSidebarActive = false;
 
 
+        document.querySelector('#chan-name-div').classList.remove("sidebar", "name-height", "col-md-6", "col-lg-5", "form-width" );
+        document.querySelector('#chan-selection').classList.remove("sidebar", "select-height", "col-md-6", "col-lg-5" );
+        document.querySelector('#chan-name-div').classList.remove("col-sm-5")
+
+        document.querySelector('#online-div').classList.remove("r_sidebar", "name-height", "col-md-6", "col-lg-5" );
+        document.querySelector('#online').classList.remove("r_sidebar", "select-height",  "col-md-6", "col-lg-5");
+        document.querySelector('#h-title-span').classList.remove("invisible");
+    }
+
+    function theResizeSteps() {
+        getHeight();
+        closeSideBars();
+    }
+
+    //window.onresize = getHeight;
+    //window.onresize = closeSideBars;
+    window.onresize = theResizeSteps;
+
+    /*need left sidebar to reach to bottom. bottom no longer appearas*/
     
-    
-
 });
