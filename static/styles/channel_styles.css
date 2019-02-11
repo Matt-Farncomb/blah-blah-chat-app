@@ -319,6 +319,11 @@
 
 
 /* sidebar classes */
+
+      .side-bar {
+
+      }
+
       .sidebar {
             display: block !important;
             position: fixed;
@@ -362,7 +367,7 @@
             /* color: white; */
             color: black;
             text-align: center;
-
+            position: relative;
             z-index: 100;
       }
 

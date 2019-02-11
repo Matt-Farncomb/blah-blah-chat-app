@@ -1,7 +1,7 @@
 
 
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("test")
+    //console.log("test")
 
     const channel = document.querySelector('#channels');
     const chanNames = document.querySelectorAll('.chan-name');
@@ -33,13 +33,13 @@ document.addEventListener('DOMContentLoaded', () => {
         chanChanNavBtnsCount += 1;
     });
 
-    console.log(`chachan ${chanChanNavBtnsCount}`);
-    console.log(privChanNavBtnsCount);
+    //console.log(`chachan ${chanChanNavBtnsCount}`);
+    //console.log(privChanNavBtnsCount);
 
     
 
     let targeting = false;
-    console.log(location);
+    //console.log(location);
 
     //Grabs current channel name from url
     curChanPath = location.pathname.split('/')
@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
         newHeight =  iH - deducter;
         //approx mobile width
         let curWidth = window.matchMedia( "(max-width: 768px)" );
-        console.log(`curWidth = ${window.innerWidth}`)
+        //console.log(`curWidth = ${window.innerWidth}`)
         // maths used to calcualte the size of the msg box
         ///... so that the size of widnows will change accordingly
 
@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
             newHeight /= 2;
             // below used to account for msg box
             let newHeightH = newHeight - r3H/2;
-            console.log("Changing according to m");
+            //console.log("Changing according to m");
             msgW.style.height = `${newHeight}px`;
             msgWH.style.height = `${newHeightH}px`;
             //r2.style.height = `${newHeight}px`;
@@ -92,14 +92,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         else {
             //console.log(newHeight)
-            console.log(r2.offsetHeight);
+            //console.log(r2.offsetHeight);
 
             //r2.style.height = `${newHeight}px`;
             msgW.style.height = `${newHeight}px`;
             msgWH.style.height = `${newHeight}px`;
 
-            console.log(r2.offsetHeight);
-            console.log("r2.offsetHeight");
+            //console.log(r2.offsetHeight);
+            //console.log("r2.offsetHeight");
         }
 
         
@@ -253,7 +253,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // hides the channel nav buttons so only a column of 5 appear at once
     function hideChannels(chanType, chanNavId) {
-        console.log(`showing only  ${chanNavId}`)
+        //console.log(`showing only  ${chanNavId}`)
         const chanLinks = document.querySelectorAll(`.${chanType}-links`);
         chanLinks.forEach((chanLink) => {
             let linkId = parseFloat(chanLink.id.slice(10));
@@ -276,7 +276,7 @@ document.addEventListener('DOMContentLoaded', () => {
                let chan_target = document.querySelector('#chan-span');
                // change the text next that shows what channel user is posting to
                chan_target.textContent = focus.slice(9)
-               console.log("clicked")
+               //console.log("clicked")
             });
         });
    
@@ -301,7 +301,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 targeting = true;
             }
             else if (e.code === "Space" && targeting === true) {
-                console.log("Space Detected");
+                //console.log("Space Detected");
                 temp = msgBox.value
                 target = msgBox.value.slice(1,temp.length);
                 target = target.toLowerCase();
@@ -313,7 +313,7 @@ document.addEventListener('DOMContentLoaded', () => {
                    //change the session[channels] to home, but not the url
                 }
                 else {
-                    console.log(`lowercase: ${target}`);
+                    //console.log(`lowercase: ${target}`);
                     socket.emit('check', target)
                 }
                     /*location = `http://127.0.0.1:5000/channels/${target}`*/
@@ -336,7 +336,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     socket.on('delete msg', id => {
-        console.log(`id=${id}`)
+        //console.log(`id=${id}`)
         old_msg = document.getElementById(`${id}`).parentNode;
         /*old_msg.parentNode.removeChild(old_msg);*/
         old_msg.style.display = 'none';
@@ -346,7 +346,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // last step of save channel...
     // creates channel locally (previous steps created on server)
     socket.on('create channel', chanName => {
-        console.log("working");
+        //console.log("working");
         let appendHere = ""
         const li = document.createElement('li');
         /*li.className = "channel-links";*/
@@ -355,7 +355,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (chanName.private == true) {
             li.classList.add('priv-links', 'channel-links')
             li.id = `priv-link-${parseInt(finPrivLinkId)+1}`
-            console.log(`NEw id = ${finPrivLinkId}`);
+            //console.log(`NEw id = ${finPrivLinkId}`);
             appendHere = pc;
             let tempId = parseFloat(li.id.slice(10));
             hideChannels("priv", Math.ceil(tempId / 10));
@@ -364,7 +364,7 @@ document.addEventListener('DOMContentLoaded', () => {
         else {
             li.classList.add('chan-links', 'channel-links')
             li.id = `chan-link-${parseInt(finChanLinkId)+1}`
-            console.log(`NEw id = ${finChanLinkId}`)
+            //console.log(`NEw id = ${finChanLinkId}`)
             appendHere = jc;
             let tempId = parseFloat(li.id.slice(10));
             hideChannels("chan", Math.ceil(tempId / 10));
@@ -400,111 +400,100 @@ document.addEventListener('DOMContentLoaded', () => {
         })
     })
 
+// -- sidebars
+
     const ham1 = document.querySelector('#l-sidebar-toggle');
     const ham2 = document.querySelector('#r-sidebar-toggle');
-    const chanTitleDiv = document.querySelector('#chan-title-div');
-    let leftSidebarActive = false;
-    let rightSidebarActive = false;
 
     ham1.addEventListener("click", () => {
-        if (leftSidebarActive == false) {;
-            document.querySelector('#online-div').classList.remove("r_sidebar", "name-height", "col-sm-12","col-md-6", "col-lg-5", "top" );
-            document.querySelector('#online').classList.remove("r_sidebar", "select-height",  "col-sm-12","col-md-6", "col-lg-5", "top");
-
-            document.querySelector('#chan-name').classList.add('shuffle-right');
-            document.querySelector('#chan-name-div').classList.add("sidebar", "name-height", "fixed-pos","col-sm-10","col-sm-4","col-md-4", "col-lg-4", "form-width", "top" );
-            document.querySelector('#chan-selection').classList.add("sidebar", "select-height",  "col-sm-12","col-md-6", "col-lg-5", "top");
-            ham1.classList.add("alt_ham");
-            //ham2.classList.add("alt_ham");
-            chanTitleDiv.classList.add("color-change");
-            document.querySelector('#chan-name-div').classList.remove("col-sm-5");
-            /*document.querySelector('#chan-name-div').style.left = "8.3%";*/
-
-            //ham1.style.zIndex = "2";
-            ham1.style.position = "relative"
-            leftSidebarActive = true;
-            rightSidebarActive = false;
-            }
-        else {
-            document.querySelector('#chan-name-div').classList.remove("sidebar", "name-height", "fixed-pos","col-sm-10","col-md-6", "col-lg-5", "form-width", "top" );
-            document.querySelector('#chan-selection').classList.remove("sidebar", "select-height", "col-sm-12","col-md-6", "col-lg-5", "top" );
-            ham1.classList.remove("alt_ham");
-            //ham2.classList.remove("alt_ham");
-            chanTitleDiv.classList.remove("color-change");
-            document.querySelector('#chan-name-div').classList.add("col-sm-5")
-            leftSidebarActive = false;
-        }
+        sideBar("left")
         });
 
     ham2.addEventListener("click", () => {
-        if (rightSidebarActive == false) {
-            console.log("clicked!!!");
-            chanTitleDiv.classList.remove("color-change");
-            document.querySelector('#chan-name-div').classList.remove("sidebar", "name-height", "fixed-pos","col-sm-10","col-md-6", "col-lg-5", "form-width", "top" );
-            document.querySelector('#chan-selection').classList.remove("sidebar", "select-height", "col-sm-12","col-md-6", "col-lg-5", "top" );
-
-            document.querySelector('#online-div').classList.add("r_sidebar", "name-height", "col-sm-12","col-md-6", "col-lg-5", "top" );
-            document.querySelector('#online').classList.add("r_sidebar", "select-height",  "col-sm-12","col-md-6", "col-lg-5", "top");
-            //ham2.classList.add("alt_ham");
-            document.querySelector('#h-title-span').classList.add("invisible");
-            //ham2.style.zIndex = "5";
-            ham1.classList.remove("alt_ham");
-            ham2.style.position = "relative"
-
-            rightSidebarActive = true;
-            leftSidebarActive = false;
-            }
-        else {
-            document.querySelector('#online-div').classList.remove("r_sidebar", "name-height", "col-sm-12","col-md-6", "col-lg-5", "top" );
-            document.querySelector('#online').classList.remove("r_sidebar", "select-height", "col-sm-12","col-md-6", "col-lg-5", "top" );
-            ham1.classList.remove("alt_ham");
-            document.querySelector('#h-title-span').classList.remove("invisible");
-            rightSidebarActive = false;
-        }
+        sideBar("right")
         });
 
     //if sidebar is opened and screensize is changed, hide sidebar when... 
     //media query when normally kick in
     var mq = window.matchMedia( "(min-width: 1200px)" );
-    window.onresize = resize;
+ 
 
-    function resize() {
-        if (mq.matches && leftSidebarActive == true || rightSidebarActive == true) {
-            console.log("removing classes");
-            document.querySelector('#chan-name-div').classList.remove("sidebar", "name-height", "col-md-6", "col-lg-5", "form-width" );
-            document.querySelector('#chan-selection').classList.remove("sidebar", "select-height", "col-md-6", "col-lg-5" );
-            document.querySelector('#online-div').classList.remove("r_sidebar", "name-height", "col-md-6", "col-lg-5" );
-            document.querySelector('#online').classList.remove("r_sidebar", "select-height", "col-md-6", "col-lg-5" );
-            document.querySelector('#h-title-span').classList.remove("invisible");
-            leftSidebarActive = false;
-            rightSidebarActive = false;
+    // classLists for sidebars
+    const chan_title_div = document.querySelector('#chan-title-div');
+    const ctd_list = chan_title_div.classList;
+    const chan_name_div = document.querySelector('#chan-name-div');
+    const cnd_list = chan_name_div.classList;
+    const chan_selection = document.querySelector('#chan-selection');
+    const cs_list = chan_selection.classList;
+    const online_div = document.querySelector('#online-div');
+    const od_list = online_div.classList;
+    const online = document.querySelector('#online');
+    const o_list = online.classList;
+    //classes to be added so sidebars appear and dissapear
+    const row1_classes = ["name-height", "col-md-6", "col-lg-5", "top"];
+    const row2_classes = ["select-height", "col-sm-12","col-md-6", "col-lg-5", "top"];
+    //left_sidebar
+    const cnd_classes = row1_classes.concat(["sidebar", "form-width", "col-sm-10"])
+    const cs_classes = row2_classes.concat(['sidebar'])
+    //right_sidebar
+    const od_classes = row1_classes.concat(["r_sidebar", "col-sm-12"])
+    const o_classes = row2_classes.concat(["r_sidebar"])
+
+    // toggle classes on and off
+    function multi_class_toggle(ele_class_list, added_class_list, notClosing) {
+        added_class_list.forEach(function(ele) {
+            if (ele_class_list.contains(ele) == true) {
+                console.log(`removing class: ${ele}`);
+                ele_class_list.remove(ele);
+            }
+            else if (ele_class_list.contains(ele) == false && notClosing) {
+                console.log(`adding class: ${ele}`);
+                ele_class_list.add(ele);
+            }
+        });
+    }
+
+    //toggle the left sidebar on and off
+    function leftSBar() {
+        ham1.classList.toggle("alt_ham");
+        multi_class_toggle(cnd_list, cnd_classes, notClosing);
+        multi_class_toggle(cs_list, cs_classes, notClosing);
+        multi_class_toggle(ctd_list, ["color-change"], notClosing);  
+    }
+
+    //toggle the right sidebar on and off
+    function rightSBar() {
+        multi_class_toggle(od_list, od_classes, notClosing);
+        multi_class_toggle(o_list, o_classes, notClosing);    
+    }
+
+    // main function for sidebars
+    function sideBar(side) {
+        // if left hamburger is clicked
+        if (side === "left") {
+            notClosing = true;
+            leftSBar();
+        }
+        // if right hamburger is clicked
+        else if (side === "right") {
+            notClosing = true;
+            rightSBar();
+        }
+        // if resizing window
+        else {
+            notClosing = false;
+            ham1.classList.add("alt_ham");
+            leftSBar();
+            rightSBar();
         }
     }
 
-    function closeSideBars() {
-       
-        leftSidebarActive = false;
-        rightSidebarActive = false;
-
-
-        document.querySelector('#chan-name-div').classList.remove("sidebar", "name-height", "col-md-6", "col-lg-5", "form-width" );
-        document.querySelector('#chan-selection').classList.remove("sidebar", "select-height", "col-md-6", "col-lg-5" );
-        document.querySelector('#chan-name-div').classList.remove("col-sm-5")
-
-        document.querySelector('#online-div').classList.remove("r_sidebar", "name-height", "col-md-6", "col-lg-5" );
-        document.querySelector('#online').classList.remove("r_sidebar", "select-height",  "col-md-6", "col-lg-5");
-        document.querySelector('#h-title-span').classList.remove("invisible");
-    }
-
-    function theResizeSteps() {
+    //close sidebars on resize and resize scrollbars nicely
+    function resize() {
         getHeight();
-        closeSideBars();
+        //closeSideBars();
+        sideBar("close")
     }
 
-    //window.onresize = getHeight;
-    //window.onresize = closeSideBars;
-    window.onresize = theResizeSteps;
-
-    /*need left sidebar to reach to bottom. bottom no longer appearas*/
-    
+    window.onresize = resize;
 });
