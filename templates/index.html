@@ -1,23 +1,49 @@
 {% extends "template.html" %}
-
-{% block heading %}
-   Home channel
+{% block head %} 
+  <title>Welcome Page</title>
+  <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/welcome.css') }}">
 {% endblock %}
 
-{% block body %}
 
+{% block body %} 
+      <div class="container-fluid" id="welcome-page">
+        <div class="row">
+          <div class="col-12">
+            <h1>@Blah Blah</h1>
+          </div>
+        </div>
+        <div class="row" id="welcome-form-row">
+          <div class="col-5"></div>
+            <div class="col-2 welcome-form">
 
-<h3>Channels</h3>
-<button id="create">Spawn</button>
-<input id='chan-name' type='text' hidden></input>
-<button id='save-chan' hidden>Save</button>
+              {% if first_visit == False %}
+         
+                <div class="form-group">
 
+                  <input type="text" readonly class="form-control-plaintext" id="staticEmail2" value="{{message}}">
+                </div>
+   
+                <a href="{{  url_for('channel_selection', chan=last_visited) }}" class="btn btn-dark mb-2" role="button">Continue</a>
+                <a href="{{  url_for('logout') }}" class="btn btn-warning mb-2" role="button">That's not me!</a>
+              
+              {% else %}
 
-{% for k,v in channels.items() %}
-<li><button><a href="{{ url_for('channel_selection', chan=k ) }}">{{k}}</button></li>
-</form>
-{% endfor %}
+              <form action="{{ url_for('welcome') }}" method="post">
+                <div class="form-group">
+                  <input id="name-box" name="name" type="text" placeholder="Tell us your name..." autofocus class="form-control" aria-describedby="emailHelp">
+                </div>
+                <button class="btn btn-dark">Join Us...</button>
+              </form>
 
-<span id="jinja_channels"></span>
+              {% endif %}
 
+            </div>
+          <div class="col-5"></div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12"></div>
+        </div>
+      </div>
 {% endblock %}
+

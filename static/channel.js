@@ -1,7 +1,6 @@
 
 
 document.addEventListener('DOMContentLoaded', () => {
-    //console.log("test")
 
     const channel = document.querySelector('#channels');
     const chanNames = document.querySelectorAll('.chan-name');
@@ -21,8 +20,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // used to find buttons on either side of nav
     const navShifter = maxNavBtns-1
 
-
-
     let privChanNavBtnsCount = 0;
     privChanNavBtns.forEach((privChanNavBtn) => {
         privChanNavBtnsCount += 1;
@@ -33,13 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
         chanChanNavBtnsCount += 1;
     });
 
-    //console.log(`chachan ${chanChanNavBtnsCount}`);
-    //console.log(privChanNavBtnsCount);
-
-    
-
     let targeting = false;
-    //console.log(location);
 
     //Grabs current channel name from url
     curChanPath = location.pathname.split('/')
@@ -61,6 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
     //... resize too.
     let iH = 0;
 
+    //get height of windows so scrollbars can be resized nicely
     function getHeight(){   
         iH = window.innerHeight;
         r2 = document.querySelector(`#row-2`);
@@ -73,55 +65,37 @@ document.addEventListener('DOMContentLoaded', () => {
         newHeight =  iH - deducter;
         //approx mobile width
         let curWidth = window.matchMedia( "(max-width: 768px)" );
-        //console.log(`curWidth = ${window.innerWidth}`)
         // maths used to calcualte the size of the msg box
         ///... so that the size of widnows will change accordingly
 
         //If window is at the small/mobile width...
         if (curWidth.matches) {
-            //two widnows now untop of each other instead of side to side...
+            //two windows now untop of each other instead of side to side...
             ///... hence the '/2'.
             newHeight /= 2;
             // below used to account for msg box
             let newHeightH = newHeight - r3H/2;
-            //console.log("Changing according to m");
             msgW.style.height = `${newHeight}px`;
             msgWH.style.height = `${newHeightH}px`;
-            //r2.style.height = `${newHeight}px`;
-
         }
         else {
-            //console.log(newHeight)
-            //console.log(r2.offsetHeight);
-
-            //r2.style.height = `${newHeight}px`;
             msgW.style.height = `${newHeight}px`;
             msgWH.style.height = `${newHeight}px`;
-
-            //console.log(r2.offsetHeight);
-            //console.log("r2.offsetHeight");
         }
-
-        
-
     }
 
     getHeight();
-
-    
 
     //get final int-id of channel-links
     //right now this restarts when coutning privs. Must seperate them
     chanLinks.forEach((chanLink) => {
         finChanLinkId = chanLink.id;
         finChanLinkId = finChanLinkId.slice(10);
-        //console.log(`finChanLinkId: ${finChanLinkId}`)
     });
 
      privLinks.forEach((privLink) => {
         finPrivLinkId = privLink.id;
         finPrivLinkId = finPrivLinkId.slice(10);
-        //console.log(`finPrivLinkId: ${finPrivLinkId}`)
     });
 
 
@@ -210,8 +184,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (right_parsed_int < btnCount) {
                 right_parsed_str = `${right_parsed_name}${right_parsed_int}`;
                 document.querySelector(`#${right_parsed_str}`).classList.add("invisible");
-            }
-                        
+            }                    
         }
     }
 
@@ -253,7 +226,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // hides the channel nav buttons so only a column of 5 appear at once
     function hideChannels(chanType, chanNavId) {
-        //console.log(`showing only  ${chanNavId}`)
         const chanLinks = document.querySelectorAll(`.${chanType}-links`);
         chanLinks.forEach((chanLink) => {
             let linkId = parseFloat(chanLink.id.slice(10));
@@ -276,7 +248,6 @@ document.addEventListener('DOMContentLoaded', () => {
                let chan_target = document.querySelector('#chan-span');
                // change the text next that shows what channel user is posting to
                chan_target.textContent = focus.slice(9)
-               //console.log("clicked")
             });
         });
    
@@ -300,8 +271,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // prepare to switch channel
                 targeting = true;
             }
-            else if (e.code === "Space" && targeting === true) {
-                //console.log("Space Detected");
+            else if (e.code === "Space" && targeting === true) {;
                 temp = msgBox.value
                 target = msgBox.value.slice(1,temp.length);
                 target = target.toLowerCase();
@@ -313,10 +283,8 @@ document.addEventListener('DOMContentLoaded', () => {
                    //change the session[channels] to home, but not the url
                 }
                 else {
-                    //console.log(`lowercase: ${target}`);
                     socket.emit('check', target)
                 }
-                    /*location = `http://127.0.0.1:5000/channels/${target}`*/
                 msgBox.style.color = "#495057"
                 msgBox.value = ""
                 // stop preparing to switch channel
@@ -336,9 +304,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     socket.on('delete msg', id => {
-        //console.log(`id=${id}`)
         old_msg = document.getElementById(`${id}`).parentNode;
-        /*old_msg.parentNode.removeChild(old_msg);*/
         old_msg.style.display = 'none';
         //maybe can change to .remove instead of display 'none'
     });
@@ -346,16 +312,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // last step of save channel...
     // creates channel locally (previous steps created on server)
     socket.on('create channel', chanName => {
-        //console.log("working");
         let appendHere = ""
         const li = document.createElement('li');
-        /*li.className = "channel-links";*/
         jc = document.querySelector('#jinja_channels');
         pc = document.querySelector('#private_channels');
         if (chanName.private == true) {
             li.classList.add('priv-links', 'channel-links')
             li.id = `priv-link-${parseInt(finPrivLinkId)+1}`
-            //console.log(`NEw id = ${finPrivLinkId}`);
             appendHere = pc;
             let tempId = parseFloat(li.id.slice(10));
             hideChannels("priv", Math.ceil(tempId / 10));
@@ -364,16 +327,12 @@ document.addEventListener('DOMContentLoaded', () => {
         else {
             li.classList.add('chan-links', 'channel-links')
             li.id = `chan-link-${parseInt(finChanLinkId)+1}`
-            //console.log(`NEw id = ${finChanLinkId}`)
             appendHere = jc;
             let tempId = parseFloat(li.id.slice(10));
             hideChannels("chan", Math.ceil(tempId / 10));
         }
         li.innerHTML = `<a href="/channels/${chanName["name"]}" class="nav-link">${chanName["name"]}</a>`
-        appendHere.appendChild(li)
-        //here here
-        
-        
+        appendHere.appendChild(li)   
     });
 
     socket.on('swap channel', value => {
@@ -404,12 +363,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const ham1 = document.querySelector('#l-sidebar-toggle');
     const ham2 = document.querySelector('#r-sidebar-toggle');
+    let lSideBar = false;
+    let rSideBar = false;
 
+
+    //Opens up sidebars. If on sml screen size, close opposite sbar.
     ham1.addEventListener("click", () => {
+        let curWidth = window.matchMedia( "(max-width: 768px)" );
+        lSideBar = !lSideBar;
+        if (curWidth.matches && rSideBar) {
+                rSideBar = !rSideBar;
+                sideBar("right")               
+            }
         sideBar("left")
         });
 
     ham2.addEventListener("click", () => {
+        let curWidth = window.matchMedia( "(max-width: 768px)" );
+        rSideBar = !rSideBar;
+        if (curWidth.matches && lSideBar) {
+                lSideBar = !lSideBar;
+                sideBar("left")
+            }
         sideBar("right")
         });
 
@@ -432,22 +407,22 @@ document.addEventListener('DOMContentLoaded', () => {
     //classes to be added so sidebars appear and dissapear
     const row1_classes = ["name-height", "col-md-6", "col-lg-5", "top"];
     const row2_classes = ["select-height", "col-sm-12","col-md-6", "col-lg-5", "top"];
-    //left_sidebar
+    //left sidebar classes
     const cnd_classes = row1_classes.concat(["sidebar", "form-width", "col-sm-10"])
     const cs_classes = row2_classes.concat(['sidebar'])
-    //right_sidebar
+    //right sidebar classes
     const od_classes = row1_classes.concat(["r_sidebar", "col-sm-12"])
     const o_classes = row2_classes.concat(["r_sidebar"])
 
     // toggle classes on and off
-    function multi_class_toggle(ele_class_list, added_class_list, notClosing) {
+    function multi_class_toggle(ele_class_list, added_class_list, notResizing) {
         added_class_list.forEach(function(ele) {
             if (ele_class_list.contains(ele) == true) {
-                console.log(`removing class: ${ele}`);
+                //console.log(`removing class: ${ele}`);
                 ele_class_list.remove(ele);
             }
-            else if (ele_class_list.contains(ele) == false && notClosing) {
-                console.log(`adding class: ${ele}`);
+            else if (ele_class_list.contains(ele) == false && notResizing) {
+                //console.log(`adding class: ${ele}`);
                 ele_class_list.add(ele);
             }
         });
@@ -456,32 +431,34 @@ document.addEventListener('DOMContentLoaded', () => {
     //toggle the left sidebar on and off
     function leftSBar() {
         ham1.classList.toggle("alt_ham");
-        multi_class_toggle(cnd_list, cnd_classes, notClosing);
-        multi_class_toggle(cs_list, cs_classes, notClosing);
-        multi_class_toggle(ctd_list, ["color-change"], notClosing);  
+        multi_class_toggle(cnd_list, cnd_classes, notResizing);
+        multi_class_toggle(cs_list, cs_classes, notResizing);
+        multi_class_toggle(ctd_list, ["color-change"], notResizing);  
     }
 
     //toggle the right sidebar on and off
     function rightSBar() {
-        multi_class_toggle(od_list, od_classes, notClosing);
-        multi_class_toggle(o_list, o_classes, notClosing);    
+        multi_class_toggle(od_list, od_classes, notResizing);
+        multi_class_toggle(o_list, o_classes, notResizing);    
     }
 
     // main function for sidebars
     function sideBar(side) {
         // if left hamburger is clicked
         if (side === "left") {
-            notClosing = true;
+            notResizing = true;
             leftSBar();
         }
         // if right hamburger is clicked
         else if (side === "right") {
-            notClosing = true;
+            notResizing = true;
             rightSBar();
         }
         // if resizing window
         else {
-            notClosing = false;
+            notResizing = false;
+            lSideBar = false;
+            RSideBar = false
             ham1.classList.add("alt_ham");
             leftSBar();
             rightSBar();
@@ -494,6 +471,7 @@ document.addEventListener('DOMContentLoaded', () => {
         //closeSideBars();
         sideBar("close")
     }
-
     window.onresize = resize;
+
+
 });

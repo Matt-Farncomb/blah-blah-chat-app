@@ -27,13 +27,10 @@ app.config["SESSION_TYPE"] = "filesystem"
 #enable jinja extension 'break' - app is the jina env
 app.jinja_env.add_extension('jinja2.ext.loopcontrols')
 
-
-
 Session(app)
 
 engine = create_engine(os.getenv("DATABASE_URL"))
 db = scoped_session(sessionmaker(bind=engine))
-
 
 svr_reset = True
 
@@ -78,11 +75,6 @@ p_dict = {}
 for row in p_channels:
 	p_dict.setdefault(row.channel_name, []).append(row.user_name)
 
-print(f"p_dict: {p_dict}")
-
-
-
-
 messages = db.execute('''
 	SELECT * FROM messages
 	ORDER BY id DESC
@@ -95,14 +87,15 @@ for row in channel_names:
 	channels.update({
 		row.channel_name: {
 			"chan_id":row.id,
-			"private":{"private": row.private, "members":p_dict.setdefault(row.channel_name, []) },
+			"private":{
+				"private":row.private, 
+				"members":p_dict.setdefault(row.channel_name, []) 
+				},
 			"msg_count":0,
 			"msg_list":[],
 			"current_users":[]
 			}
-		})
-
-print(f"channel members: {channels}")		
+		})	
 
 x = len(messages)
 
@@ -110,9 +103,6 @@ for i in range(x):
 	for k,v in channels.items():
 		if v["chan_id"] == messages[-1-i].channel_id:
 			channels[k]["msg_list"].append(messages[-1-i])
-
-
-
 
 @app.route("/")
 def welcome():
@@ -128,15 +118,13 @@ def welcome():
 		if "chan_name" in session:
 			last_visited = session["chan_name"]
 		# else load up 'home'
-		#TODO: Legacy code: HOME should never be loaded up here. 
-		#	   HOME is always on right window. What to do?
 		else:
 			last_visited = "select channel"
 	else:
 		message = f"Welcome to Blah-Blah! Sign-In!"
 		last_visited = "select channel"
 
-	return render_template("new_welcome.html", 
+	return render_template("index.html", 
 		message=message, 
 		first_visit=first_visit, 
 		last_visited=last_visited)
@@ -212,9 +200,7 @@ def channel_selection(chan):
 		for key,value in channels.items():
 			for k,v in value.items():
 				if k == "private":
-					print(f"k is private")
 					if v["private"] == True:
-						print(f"v is private")
 						if session["name"] in v["members"]:
 							privCount += 1
 							my_private_channels.append(key)
@@ -227,7 +213,10 @@ def channel_selection(chan):
 		if chanCount < 20:
 			chanCount = 20
 
-		chanCounts = {"privCount": math.ceil(privCount/5), "chanCount": math.ceil(chanCount/5)}	
+		chanCounts = {
+			"privCount": math.ceil(privCount/5), 
+			"chanCount": math.ceil(chanCount/5)
+			}	
 		current_privacy = False
 
 		if chan in my_private_channels:
@@ -235,12 +224,14 @@ def channel_selection(chan):
 		messages = []
 		current = {"chan_name":chan, "private":current_privacy }
 		if chan == "select channel":
-			print("I am a select 2")
-			messages.append({"message":"Select a channel on the left", "id":9999, "name":"Blah-Blah"})
+			messages.append({
+				"message":"Select a channel on the left", 
+				"id":9999, "name":"Blah-Blah"
+				})
 		else:
 			messages = channels[chan]["msg_list"]
 		
-		return render_template("new_channel_template.html", 
+		return render_template("channel.html", 
 			messages=messages, 
 			channels=channels,
 			my_private_channels=my_private_channels,
@@ -273,7 +264,7 @@ def upload_msg(data):
 
 	#each message has an id
 	#this id increments on python and is sent with the msg
-	#python emits a command to delete id with number incremenetr minus maximum
+	#python emits a command to delete id with number increments minus maximum
 	if session['chan_name'] == "select channel":
 		return
 	channels[session['chan_name']]["msg_list"].append(new_msg)
@@ -292,7 +283,10 @@ def create_channel(data):
 	chanName = data['chanName']
 	private = data['private']
 	new_channel(chanName, private)								
-	emit("create channel", {"name":chanName, "private":data['private']},
+	emit("create channel", {
+				"name":chanName, 
+				"private":data['private']
+				},
 		broadcast=True)
 
 '''Creates a new channel dict and adds it to the DB'''
@@ -313,7 +307,10 @@ def new_channel(name, private):
 	{ name:
 		{
 		"chan_id":chan_id.id,
-		"private":{"private":private, "members":[session["name"]]},
+		"private":{
+				"private":private, 
+				"members":[session["name"]]
+				},
 		"msg_count":0,
 		"msg_list":[],
 		"current_users":[]
@@ -323,13 +320,12 @@ def new_channel(name, private):
 	channels.update(new_channel)
 
 	if private == True:
-		update_private({"command":"add", "friend": session["name"]}, name)
+		update_private({
+			"command":"add", 
+			"friend": session["name"]
+			}, name)
 
 	return new_channel
-
-#TODO:
-# Maybe experiment with making db queries in a different fucntion
-# ... so it does not slow down real time messaging (if it even slows it down)
 
 '''Create new msg and upload it to the DB'''
 def new_message(data):
@@ -361,17 +357,15 @@ the necessary channel.
 '''
 @socketio.on("check")
 def check_channels(target):
-	print(f"current_users are {current_users}")
 	if target in channels:
 		emit("swap channel", target, 
 			broadcast=False)
 	elif target in current_users:
-		print(f"{current_users} are current")
 		new_value = current_users[target]
 		emit("swap channel", new_value, 
 			broadcast=False)
 	else:
-		print(f"{target} not found")
+		pass
 
 '''
 Update the 'online' column with the correct users 
@@ -388,7 +382,6 @@ def send_users_channels():
 					}
 			emit("update users", temp,
 			broadcast=True)
-
 
 '''
 Update session dict to show new channel user is in

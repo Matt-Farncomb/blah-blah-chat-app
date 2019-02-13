@@ -36,7 +36,7 @@
 /*--- Row 1 ---*/
             #row-1 {
                   /* height: 6vh;  */
-                  height: 4em;
+                  /* height: 4em; */
             }
                   #hamburg-1 {
                         padding: 4px;
@@ -49,7 +49,6 @@
                         background-color: white;
                         color:black;
                         border-color: black; 
-
                   }
 
                   h2 {
@@ -57,20 +56,12 @@
                   }
 
       /* Left */
-                        #chan-name-div {
+                  #chan-name-div {
                         padding: 0px;
                   }
 
                   .chan-form{
                         background-color:var(--even-darker-blue);
-                       
-                        #35383D
-                        #485160
-
-
-
-                        
-
                   } 
 
                   .chan-form:hover::placeholder, .chan-form:focus::placeholder {
@@ -103,11 +94,6 @@
             }
                  
 /*--- Row 2 ---*/
-            #row-2 {
-                  /* height: 85vh;  */
-                  /* height: 100%;  */
-
-            }
                         
       /* Left */
 
@@ -228,8 +214,6 @@
                         color:slategrey; 
                         border-top: none;
                         margin-bottom: -90px;
-
-                        /* display: none; */
                   }
 
                   #online-title{
@@ -274,11 +258,7 @@
                    #msg-div {
                         padding: 0px;
                         padding-top: 10px;
-                        padding-right: 14px;
-                        /* background-color: red; */
-                        /* border:solid white 30px 0 0 0; */
-                        /* margin-left: -11vw; */
-                        
+                        padding-right: 14px;         
                   }
 
                   #msg {
@@ -320,17 +300,12 @@
 
 /* sidebar classes */
 
-      .side-bar {
-
-      }
-
       .sidebar {
             display: block !important;
             position: fixed;
             z-index: 10;
             top: 30;
-            left: 0;
-            
+            left: 0;          
       }
 
       .r_sidebar {
@@ -338,8 +313,7 @@
             position: fixed;
             z-index: 1;
             top: 30;
-            right: 0;
-           
+            right: 0;     
       }
 
 
@@ -352,19 +326,8 @@
             height: 100%;
       }
 
-      /* #l-sidebar-toggle {
-            background-color: #35383D;
-            color: white;
-      } */
-
-      /*  #r-sidebar-toggle {
-           background-color: #35383D;
-           color: white;
-            } */
-
       .toggle {
-            /* background-color: #35383D; */
-            /* color: white; */
+            
             color: black;
             text-align: center;
             position: relative;
@@ -375,31 +338,21 @@
             
             padding-top: 10px;
             font-size: 2em;
-
       }
 
       .alt_ham {
             background-color: var(--even-darker-blue);
             color:white;
-            
+            z-index: 101;
       }
 
       .top {
             z-index: 99;
       }
 
-      
 
-      
-/* 
-      .shift-div {
-            left:16.6vw;
-            width: 25vw;
-      } */
 
       .fixed-pos {
-            /* position:fixed;
-            left:5.5em; */
             background-color: red !important;
       }
 
