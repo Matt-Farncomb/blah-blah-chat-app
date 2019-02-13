@@ -3,3 +3,4 @@ Flask-SocketIO
 
 SQLAlchemy == 1.2.10
 gunicorn
+flask_session
