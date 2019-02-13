@@ -439,3 +439,6 @@ def update_private(*args):
 
 		channels[priv_chan_name]["private"]["members"].remove(args[0]["friend"])
 	db.commit()
+
+if __name__ == '__main__':
+    socketio.run(app)
