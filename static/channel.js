@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // Connect to websocket
-    var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port, {transports: ['websocket']});
+    var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
 
     // Text grabbed from chat msg window and sent to server
     function sendMessage() {
