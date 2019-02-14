@@ -1,1 +1,1 @@
-web: gunicorn -k gevent-websocket application:app
+web: gunicorn -k eventlet application:app
