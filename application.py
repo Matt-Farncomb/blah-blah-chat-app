@@ -42,7 +42,7 @@ channels = {
 		"msg_list":[],
 		"current_users":[]},
 	"select channel": {
-		"chan_id":9999,
+		"chan_id":9999, # is 999 so will not intefere with app
 		"private": {"private":False, "members":[] },
 		"msg_count":0,
 		"msg_list":["Please select a channel on the left"],
@@ -440,5 +440,23 @@ def update_private(*args):
 		channels[priv_chan_name]["private"]["members"].remove(args[0]["friend"])
 	db.commit()
 
-if __name__ == '__main__':
-    socketio.run(app)
+# if __name__ == '__main__':
+#     socketio.run(app)
+
+# THINGS TO RESEARCH:
+#What is eventlet (on the Procfile)
+#What is gunicorn (also on the Procfile)
+#What is that -k before eventlet on on the Procfile
+#What is a Procfile
+#What are dynos?
+
+# what is wss:// 
+# What exactly are web-sockets
+# WHat is special about SocketIO
+# What is a websocket handshake
+# What is polling
+# What is 'session affinity'
+# what is that thing: heroku ps:scale web=0 --app scrolled, heroku ps:scale web=1 --app scrolled
+
+# Why is websocket closed before connection is established
+# Why are the web socket connections failing

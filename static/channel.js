@@ -43,9 +43,12 @@ document.addEventListener('DOMContentLoaded', () => {
     let focused = false;
     let focus = `msg-room-${curChan}`;
 
-    //for final int-id of below
-    let finChanLinkId = ""
-    let finPrivLinkId = ""
+    // used to find what nav number is currently selected
+    let current_c_nav = {
+        "priv":1,
+        "chan":1
+    }
+ 
 
     //gets size of row-2 on load and resizes r2 according
     //... to height of fixed chat bar. Function called on
@@ -86,17 +89,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
     getHeight();
 
-    //get final int-id of channel-links
-    //right now this restarts when coutning privs. Must seperate them
-    chanLinks.forEach((chanLink) => {
-        finChanLinkId = chanLink.id;
-        finChanLinkId = finChanLinkId.slice(10);
-    });
+    // Counts total private channels. Used on browser load.
+    function count_chans() {
+        let temp = 0
+        const chanLinks = document.querySelectorAll('.chan-links');
 
-     privLinks.forEach((privLink) => {
-        finPrivLinkId = privLink.id;
-        finPrivLinkId = finPrivLinkId.slice(10);
-    });
+        chanLinks.forEach((chanLink) => {
+            const finChanLinkId = chanLink.id;
+            temp = parseInt(finChanLinkId.slice(10)) + 1;
+        });
+        //console.log(`temp: ${temp}`)    
+        return temp
+    }
+
+    // Counts total private channels. Used on browser load.
+    function count_privs() {
+        let temp = 0
+        const privLinks = document.querySelectorAll('.priv-links');
+
+        privLinks.forEach((privLink) => {
+            const finPrivLinkId = privLink.id;
+            temp = parseInt(finPrivLinkId.slice(10)) + 1;
+        });
+        //console.log(`temp: ${temp}`)    
+        return temp
+    }
+
+    // Will be incremeneted by one each time a channle is added to...
+    //save having to run the whole fucntion multiple times
+    let chan_count = count_chans();
+    let priv_count = count_privs();
 
 
     // Connect to websocket
@@ -115,11 +137,21 @@ document.addEventListener('DOMContentLoaded', () => {
     // Sends info to server to enable creation...
     // with channel named 'chanName' that's private or public
     function saveChannel(chanName, private) {
-        socket.emit('send create', {
+        const temp = chanName.value;
+        if (temp.length < 1){
+            alert("Please enter a valid name");
+        }
+        else if (temp.includes(" ")){
+            alert("No spaces allowed");
+        }
+        else {
+            socket.emit('send create', {
             'private':private,
             'chanName': chanName.value.toLowerCase()
             });
-        chanName.value = ""
+            chanName.value = ""
+        }
+        
     }
 
     // Get id of the sibling two steps over in specified direction
@@ -214,12 +246,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // when cicking on chan page number, hide all channles not in that page...
     // and reveal the others
+    // Sets current Chan Nav too
     chanNavs.forEach((chanNav) => {
         chanNav.addEventListener('click', () => {
             //let linkId = 1.0;
             const navType = chanNav.id.slice(4,8);
             const chanNavId = parseFloat(chanNav.id.slice(9));
-            
+            current_c_nav[navType] = chanNavId     
             hideChannels(navType, chanNavId);
         });
     });
@@ -229,7 +262,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const chanLinks = document.querySelectorAll(`.${chanType}-links`);
         chanLinks.forEach((chanLink) => {
             let linkId = parseFloat(chanLink.id.slice(10));
-            linkId = Math.ceil(linkId / 10) 
+
+            linkId = Math.ceil((linkId+1) / 10) 
+            console.log(`chanNavId: ${chanNavId} linkId: ${linkId}`)
             if (linkId == chanNavId) {
                 chanLink.classList.remove("invisible");
             }
@@ -314,25 +349,33 @@ document.addEventListener('DOMContentLoaded', () => {
     socket.on('create channel', chanName => {
         let appendHere = ""
         const li = document.createElement('li');
+        let c_type = "priv"
         jc = document.querySelector('#jinja_channels');
         pc = document.querySelector('#private_channels');
         if (chanName.private == true) {
             li.classList.add('priv-links', 'channel-links')
-            li.id = `priv-link-${parseInt(finPrivLinkId)+1}`
+            li.id = `priv-link-${priv_count}`
+            priv_count++;
+            //console.log(li.id)
             appendHere = pc;
             let tempId = parseFloat(li.id.slice(10));
-            hideChannels("priv", Math.ceil(tempId / 10));
+            // hideChannels("priv", current_c_nav);
 
         }
         else {
+            c_type = "chan"
             li.classList.add('chan-links', 'channel-links')
-            li.id = `chan-link-${parseInt(finChanLinkId)+1}`
+            li.id = `chan-link-${chan_count}`
+            chan_count++;
+
+            //console.log(li.id)
             appendHere = jc;
             let tempId = parseFloat(li.id.slice(10));
-            hideChannels("chan", Math.ceil(tempId / 10));
+            // hideChannels("chan", current_c_nav);
         }
         li.innerHTML = `<a href="/channels/${chanName["name"]}" class="nav-link">${chanName["name"]}</a>`
-        appendHere.appendChild(li)   
+        appendHere.appendChild(li)
+        hideChannels(c_type, current_c_nav[c_type]);   
     });
 
     socket.on('swap channel', value => {
