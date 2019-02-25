@@ -17,6 +17,7 @@
 
 			<div class="row" id="row-1">
 				<div class="col-2 toggle" id="l-sidebar-toggle"><i class="fas fa-bars"></i></div>
+
             	<div class="sidebar-left col-xl-2 col-lg-2 col-md-2 col-sm-3" id="chan-name-div">
             		<input class="form-control border-0 chan-form chan-name new-chan-name" id='chan-name' type='text' placeholder="  Channels +" onfocus="this.placeholder='  Type new name...'" onblur="this.placeholder = '  Channels +'"></input>
             	</div>
@@ -87,10 +88,10 @@
 					</ul>
 				</div>
 
-				 <div class="col-xl col-lg-2 col-md-2" id="online">
+				 <div class="col-xl-2 col-lg-2 col-md-2" id="online">
                     {% for k,v in channels.items() %}
                     	{% for e in v.current_users %}
-                    		<li class="online-names">@{{e}}:<span class="user-channel" id="cur-chan-{{e}}">{{k}}</span></a></li>
+                    		<li class="online-names">@{{e}}:<span class="user-channel" id="cur-chan-{{e}}">{{k}}</span>:<span class="user-status" id="cur-stat-{{e}}">online</span></li>
                     	{% endfor %}
 					
 					{% endfor %}

@@ -217,7 +217,7 @@
                   }
 
                   #online-title{
-                              padding: 15px;
+                              /* padding: 15px; */
                               text-align: center;
 
                   }
@@ -297,15 +297,17 @@
 }
 
 
-
 /* sidebar classes */
-
       .sidebar {
             display: block !important;
             position: fixed;
             z-index: 10;
-            top: 30;
-            left: 0;          
+            top: 1;
+            left: 0;
+
+/*             animation-duration: 0.3s;
+           animation-name: l_slidein;
+           animation-fill-mode: forwards;  */           
       }
 
       .r_sidebar {
@@ -313,7 +315,11 @@
             position: fixed;
             z-index: 1;
             top: 30;
-            right: 0;     
+            right: 0; 
+
+            animation-duration: 0.3s;
+            animation-name: r_slidein;
+            animation-fill-mode: forwards;      
       }
 
 
@@ -351,11 +357,6 @@
       }
 
 
-
-      .fixed-pos {
-            background-color: red !important;
-      }
-
       .shuffle-right {
             padding-left:65px;
             
@@ -368,6 +369,8 @@
       }  
 
 
+
+
 @media (max-width: 768px) {
 
       #msg-window, #msg-window-home {
@@ -377,7 +380,74 @@
       .form-width {
             left:16.6vw;
             width: 66.6vw;
+      } 
+
+       #chan-name {
+            
+            margin-left: 25%;
+            width: 100%;
+      } 
+      /* Animations - responsive */
+
+      .sidebar {
+            animation-duration: 0.3s;
+            animation-name: l_slidein;
+            animation-fill-mode: forwards;            
+      }
+
+      /* slideout */
+      .l_slideOut {
+            animation-duration: 0.3s;
+            animation-name: l_slideOut;
+            animation-fill-mode: forwards;   
+      }
+
+      .r_slideOut {
+            animation-duration: 0.3s;
+            animation-name: r_slideOut; 
+            animation-fill-mode: forwards;  
+      }
+
+      @keyframes l_slideOut {
+        from {
+          left: 0%; 
+        }
+
+        to {
+          left: -100%;
+        }
+      }
+          
+      @keyframes r_slideOut {
+        from {
+          right: 0%; 
+        }
+
+        to {
+          right: -100%;
+        }
       }  
+
+      /* slidein */
+      @keyframes l_slidein {
+        from {
+          left: -100%; 
+        }
+
+        to {
+          left: 0%;
+        }
+      }
+
+      @keyframes r_slidein {
+        from {
+          right: -100%; 
+        }
+
+        to {
+          right: 0%;
+        }
+      }      
 
           
 }
@@ -392,6 +462,25 @@
             display: block;
       }
 
+}
+
+@media only screen and (max-width: 991px) and (min-width: 769px) {
+
+      #chan-name {
+                
+                  margin-left: 50%;
+                  margin-right: 20%;
+
+            }
+}
+
+@media only screen and (max-width: 1199px) and (min-width: 992px) {
+
+      #chan-name {
+                
+                  margin-left: 66%;
+                  width: 101%;
+            }
 }
 
 
@@ -440,6 +529,84 @@
 
 
 }
+
+
+@media (max-width: 990px) and (min-width: 769px) {
+      .r_slideOut {
+            animation-duration: 0.3s;
+            animation-name: r_slideOut; 
+            animation-fill-mode: forwards;  
+      }
+
+      @keyframes r_slideOut {
+        from {
+          right: 0%; 
+        }
+
+        to {
+          right: -50%;
+        }
+      }  
+}
+
+
+@media (max-width: 1199px) and (min-width: 769px) {
+
+      /* Animations */
+
+      .sidebar {
+            animation-duration: 0.3s;
+            animation-name: l_slidein;
+            animation-fill-mode: forwards;            
+      }
+
+      /* slideout */
+      .l_slideOut {
+            animation-duration: 0.3s;
+            animation-name: l_slideOut;
+            animation-fill-mode: forwards;   
+      }
+
+      @keyframes l_slideOut {
+        from {
+          left: 0%; 
+        }
+
+        to {
+          left: -50%;
+        }
+      }
+
+      .r_slideOut {
+            animation-duration: 0.3s;
+            animation-name: r_slideOut; 
+            animation-fill-mode: forwards;  
+      }
+
+      
+      /* slidein */
+      @keyframes l_slidein {
+        from {
+          left: -50%; 
+        }
+
+        to {
+          left: 0%;
+        }
+      }
+
+      @keyframes r_slidein {
+        from {
+          right: -50%; 
+        }
+
+        to {
+          right: 0%;
+        }
+      }
+
+      /*  */
+      }
 
 @media (min-width:1200px ) {
 

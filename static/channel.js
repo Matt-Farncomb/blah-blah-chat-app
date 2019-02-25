@@ -388,6 +388,67 @@ document.addEventListener('DOMContentLoaded', () => {
         userChan.innerText = value.chan
     })
 
+    // array to store who is online
+    currently_online = []
+
+    //tell server to reply who is online
+    window.setInterval(function(){
+        socket.emit("update online");
+    }, 2000);
+    
+
+    // receive name of each user who is online... 
+    socket.on('append online', value => {
+        // and append to array
+        // console.log(`value is ${value}`);
+        currently_online.push(value);
+    })
+
+    // wipe array ever X seconds so old users won't remain logged on
+    window.setInterval(function(){
+        let onlineNames = document.querySelectorAll('.user-status');
+        onlineNames.forEach((onlineName) => {
+            const nameId = onlineName.id;
+            const name = nameId.slice(9)
+            console.log(`currently_online is ${currently_online}`)
+            if (!currently_online.includes(name)) {
+                onlineName.innerHTML = "offline"
+            }
+            else {
+                onlineName.innerHTML = "online"
+            }
+        });
+        currently_online = []
+    }, 4000);
+
+    //if user is not online, will not emit therefore will be removed from online
+    /*socket.emit("update online");*/
+    // socket.emit("update online", temp)
+
+        /*updaters.forEach((updater) => {
+                updater.addEventListener('keydown', (e) => {
+                    if (e.key == "Enter") {
+                        socket.emit("update private", {
+                            "friend": updater.value,
+                            "command":updater.id } )
+                        updater.value = ""; 
+                    }
+                })
+            })*/
+
+    //socket.on('append online', value => {
+        /*let onlineNames = document.querySelectorAll('.user-channel');
+        onlineNames.forEach((onlineName) => {
+            const nameId = onlineName.id;
+            const name = nameId.slice(9)
+            console.log(`your name is ${name}`)
+            if (!currently_online.includes(name)) {
+                onlineName.innerHTML = "offline"
+            }
+        });*/
+    //});
+        
+
     updaters = document.querySelectorAll('.updater');
 
     // add new members to private channels
@@ -458,31 +519,59 @@ document.addEventListener('DOMContentLoaded', () => {
     const o_classes = row2_classes.concat(["r_sidebar"])
 
     // toggle classes on and off
-    function multi_class_toggle(ele_class_list, added_class_list, notResizing) {
+    function multi_class_toggle(ele_class_list, added_class_list, notResizing, side) {
+        removed = []
         added_class_list.forEach(function(ele) {
             if (ele_class_list.contains(ele) == true) {
+                removed.push(ele)
+                ele_class_list.add(`${side}_slideOut`)
                 //console.log(`removing class: ${ele}`);
-                ele_class_list.remove(ele);
+                //ele_class_list.remove(ele);
+                setTimeout(function () {
+                        ele_class_list.remove(ele);
+                }, 500); 
             }
             else if (ele_class_list.contains(ele) == false && notResizing) {
                 //console.log(`adding class: ${ele}`);
+                ele_class_list.remove(`${side}_slideOut`)
                 ele_class_list.add(ele);
-            }
+            } 
         });
+           /* window.setInterval(function(){
+                removed.forEach(function(e) {
+                    console.log(removed)
+                    ele_class_list.remove(e);
+                })
+        }, 2000);*/
+        
+    }
+
+    function sidebarAnimate() {
+        
     }
 
     //toggle the left sidebar on and off
     function leftSBar() {
-        ham1.classList.toggle("alt_ham");
-        multi_class_toggle(cnd_list, cnd_classes, notResizing);
-        multi_class_toggle(cs_list, cs_classes, notResizing);
-        multi_class_toggle(ctd_list, ["color-change"], notResizing);  
+        
+
+        if (ham1.classList.contains("alt_ham")){
+            setTimeout(function() {
+                ham1.classList.remove("alt_ham");
+            }, 100);
+        }
+        else if (!ham1.classList.contains("alt_ham") && notResizing) {
+            ham1.classList.add("alt_ham");
+        }
+        
+        multi_class_toggle(cnd_list, cnd_classes, notResizing, "l");
+        multi_class_toggle(cs_list, cs_classes, notResizing,"l");
+        /*multi_class_toggle(ctd_list, ["color-change"], notResizing, "l");*/  
     }
 
     //toggle the right sidebar on and off
     function rightSBar() {
-        multi_class_toggle(od_list, od_classes, notResizing);
-        multi_class_toggle(o_list, o_classes, notResizing);    
+        multi_class_toggle(od_list, od_classes, notResizing, "r");
+        multi_class_toggle(o_list, o_classes, notResizing, "r");    
     }
 
     // main function for sidebars
@@ -502,7 +591,7 @@ document.addEventListener('DOMContentLoaded', () => {
             notResizing = false;
             lSideBar = false;
             RSideBar = false
-            ham1.classList.add("alt_ham");
+            /*ham1.classList.add("alt_ham");*/
             leftSBar();
             rightSBar();
         }

@@ -6,6 +6,7 @@ from flask_session import Session
 from flask_socketio import SocketIO, emit
 from jinja2 import Environment, PackageLoader
 from flask import g
+import sqlite3
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
@@ -13,11 +14,26 @@ from sqlalchemy import exc
 
 app = Flask(__name__)
 
-# Check for environment variable
-if not os.getenv("DATABASE_URL"):
-    raise RuntimeError("DATABASE_URL is not set")
 
-app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
+
+## SQLITE
+## note - 4 slashes needed for linux for some reason
+app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{os.getcwd()}/user_info.db"
+##
+# APP.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://%s:%s@%s/%s' % (
+#     # ARGS.dbuser, ARGS.dbpass, ARGS.dbhost, ARGS.dbname
+#     os.environ['DBUSER'], os.environ['DBPASS'], os.environ['DBHOST'], os.environ['DBNAME']
+# )
+
+## --- PSQL
+# Check for environment variable
+# if not os.getenv("DATABASE_URL"):
+#     raise RuntimeError("DATABASE_URL is not set")
+
+
+# app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
+## --
+
 socketio = SocketIO(app)
 
 #Configure session to use filesystem
@@ -28,11 +44,69 @@ app.config["SESSION_TYPE"] = "filesystem"
 app.jinja_env.add_extension('jinja2.ext.loopcontrols')
 
 Session(app)
+## --- PSQL
+# engine = create_engine(os.getenv("DATABASE_URL"))
+## --
 
-engine = create_engine(os.getenv("DATABASE_URL"))
+## SQLITE
+engine = create_engine(app.config["SQLALCHEMY_DATABASE_URI"])
+##
 db = scoped_session(sessionmaker(bind=engine))
 
+currently_online = []
+
 svr_reset = True
+
+def create_tables():
+	# db.execute('''DROP TABLE if exists blah_users''' )
+	# db.execute('''DROP TABLE if exists channels''' )
+	# db.execute('''DROP TABLE if exists membership''' )
+	# db.execute('''DROP TABLE if exists messages''' )
+
+	# inititate tables
+	db.execute('''CREATE TABLE if not exists blah_users
+		(id INTEGER PRIMARY KEY AUTOINCREMENT,
+		user_name TEXT NULL,
+		password TEXT NULL)''')
+
+	db.execute('''CREATE TABLE if not exists channels
+		(id INTEGER PRIMARY KEY AUTOINCREMENT,
+		channel_name TEXT NULL,
+		private INTEGER NULL)''')
+
+	db.execute('''CREATE TABLE if not exists membership
+		(id INTEGER PRIMARY KEY AUTOINCREMENT,
+		user_id INTEGER NULL,
+		channel_id INTEGER NULL)''')
+
+	db.execute('''CREATE TABLE if not exists messages
+		(id INTEGER PRIMARY KEY AUTOINCREMENT,
+		channel_id INTEGER NULL,
+		name TEXT NULL,
+		message TEXT NULL)''')
+
+	# initiate dummy values in each row...
+	# a hack to avoid None type errors on DB start up
+	db.execute('''INSERT INTO  blah_users (user_name, password)
+		VALUES (:user_name, :password)''', {	
+			"user_name":"Mudd",
+			"password":"1234"
+		})
+
+	db.execute('''INSERT INTO  channels (channel_name, private)
+		VALUES (:channel_name, :private)''', {
+			"channel_name":"Channel-One",
+			"private":1
+		})
+
+	db.execute('''INSERT INTO  membership (user_id, channel_id)
+		VALUES (:user_id, :channel_id)''', {
+			"user_id":1,
+			"channel_id":1
+		})
+	db.commit()
+
+create_tables()
 
 channels = {
 	"home": {
@@ -66,7 +140,7 @@ p_channels = db.execute('''SELECT channel_name, user_name, private
 	FROM channels
 	INNER JOIN membership ON channels.id = membership.channel_id
 	INNER JOIN blah_users ON membership.user_id = blah_users.id
-	WHERE private = true
+	WHERE private = 1
 	ORDER BY channel_name
 	''').fetchall()
 
@@ -382,6 +456,17 @@ def send_users_channels():
 					}
 			emit("update users", temp,
 			broadcast=True)
+
+'''Send back name of client currently online'''
+@socketio.on("update online")
+def update_online():
+	emit("append online", session["name"],
+		broadcast=True)
+
+# def update_online():
+# 	currently_online.append(session["name"])
+# 	emit("append online", currently_online, 
+# 		broadcast=True)
 
 '''
 Update session dict to show new channel user is in
