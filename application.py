@@ -115,7 +115,7 @@ channels = {
 		"msg_count":0,
 		"msg_list":[],
 		"current_users":[]},
-	"select channel": {
+	"Welcome": {
 		"chan_id":9999, # is 999 so will not intefere with app
 		"private": {"private":False, "members":[] },
 		"msg_count":0,
@@ -193,10 +193,10 @@ def welcome():
 			last_visited = session["chan_name"]
 		# else load up 'home'
 		else:
-			last_visited = "select channel"
+			last_visited = "Welcome"
 	else:
 		message = f"Welcome to Blah-Blah! Sign-In!"
-		last_visited = "select channel"
+		last_visited = "Welcome"
 
 	return render_template("index.html", 
 		message=message, 
@@ -228,7 +228,7 @@ def login():
  	session["name"] = user_name
  	current_users.update({user_name:"home"})
 
- 	return redirect(url_for("channel_selection", chan="select channel"))
+ 	return redirect(url_for("channel_selection", chan="Welcome"))
 
 
 @app.route("/logout", methods=["GET"])
@@ -297,7 +297,7 @@ def channel_selection(chan):
 			current_privacy = True
 		messages = []
 		current = {"chan_name":chan, "private":current_privacy }
-		if chan == "select channel":
+		if chan == "Welcome":
 			messages.append({
 				"message":"Select a channel on the left", 
 				"id":9999, "name":"Blah-Blah"
@@ -339,7 +339,7 @@ def upload_msg(data):
 	#each message has an id
 	#this id increments on python and is sent with the msg
 	#python emits a command to delete id with number increments minus maximum
-	if session['chan_name'] == "select channel":
+	if session['chan_name'] == "Welcome":
 		return
 	channels[session['chan_name']]["msg_list"].append(new_msg)
 

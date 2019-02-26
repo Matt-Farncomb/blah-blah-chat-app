@@ -55,6 +55,38 @@ document.addEventListener('DOMContentLoaded', () => {
     //... resize too.
     let iH = 0;
 
+    function getSideBarHeight(){
+        iH = window.innerHeight;
+        r2 = document.querySelector(`#row-2`);
+        r3 = document.querySelector(`#row-3`);
+        sH = document.querySelector(`.select-height`);
+        r3H = r3.offsetHeight;
+        // Double the size of row 3 (.25 used to make it look nicer)
+        deducter = r3H * 1.75;
+        newHeight =  iH - deducter;
+        //approx mobile width
+        //let curWidth = window.matchMedia( "(max-width: 768px)" );
+        // maths used to calcualte the size of the msg box
+        ///... so that the size of widnows will change accordingly
+
+        //If window is at the small/mobile width...
+        sH.style.height = `${newHeight}px`;
+        console.log("chaning");
+        /*if (curWidth.matches) {
+            //two windows now untop of each other instead of side to side...
+            ///... hence the '/2'.
+            newHeight /= 2;
+            // below used to account for msg box
+            let newHeightH = newHeight - r3H/2;
+            sH.style.height = `${newHeightH}px`;
+        }
+        else {
+
+            sH.style.height = `${newHeightH}px`;
+        }*/
+
+    }
+
     //get height of windows so scrollbars can be resized nicely
     function getHeight(){   
         iH = window.innerHeight;
@@ -473,23 +505,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
     //Opens up sidebars. If on sml screen size, close opposite sbar.
     ham1.addEventListener("click", () => {
+        
         let curWidth = window.matchMedia( "(max-width: 768px)" );
         lSideBar = !lSideBar;
         if (curWidth.matches && rSideBar) {
                 rSideBar = !rSideBar;
-                sideBar("right")               
+                
+                sideBar("right");               
             }
         sideBar("left")
+        getSideBarHeight();
         });
 
     ham2.addEventListener("click", () => {
+        
         let curWidth = window.matchMedia( "(max-width: 768px)" );
         rSideBar = !rSideBar;
         if (curWidth.matches && lSideBar) {
                 lSideBar = !lSideBar;
-                sideBar("left")
+                getSideBarHeight();
+                sideBar("left");
             }
         sideBar("right")
+        getSideBarHeight();
         });
 
     //if sidebar is opened and screensize is changed, hide sidebar when... 

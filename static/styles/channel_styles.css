@@ -4,6 +4,9 @@
                   list-style: none;
                   font-family: courier new;
                   overflow-y: hidden;
+                  overflow-x: hidden;
+
+
             }
 
             :root {
@@ -110,7 +113,7 @@
 
                 .new-chan-name {
                         border-radius: 0px;
-                        height: 110%;
+                        height: 3.5em;
                         box-shadow:outset 5px 5px 5px 5px slategrey;
                   }
 
@@ -305,6 +308,8 @@
             top: 1;
             left: 0;
 
+
+
 /*             animation-duration: 0.3s;
            animation-name: l_slidein;
            animation-fill-mode: forwards;  */           
@@ -322,14 +327,21 @@
             animation-fill-mode: forwards;      
       }
 
-
-      .name-height {
-            height: 7%;
-            
+       #r-sidebar-toggle {
+            background-color: white;
       }
 
+
+   /*    .name-height {
+         height: 7%;
+         
+   } */
+
       .select-height {
-            height: 100%;
+            height: 10%;
+            overflow-y: scroll;
+            overflow-x: hidden;
+
       }
 
       .toggle {
@@ -462,14 +474,16 @@
             display: block;
       }
 
+
+
 }
 
 @media only screen and (max-width: 991px) and (min-width: 769px) {
 
       #chan-name {
                 
-                  margin-left: 50%;
-                  margin-right: 20%;
+                  margin-left: 25%;
+                  width:125%;
 
             }
 }
@@ -478,8 +492,8 @@
 
       #chan-name {
                 
-                  margin-left: 66%;
-                  width: 101%;
+                  margin-left: 30%;
+                  width: 137%;
             }
 }
 
@@ -611,7 +625,7 @@
 @media (min-width:1200px ) {
 
       .new-chan-name {
-            height: 100%;
+            /* height: 100%; */
       }
       /*Hides div to be revealed by button click */
       #chan-name-div, #chan-selection, #bottom-left {
