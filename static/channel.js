@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
         msgWH = document.querySelector(`#msg-window-home`);
         r3H = r3.offsetHeight;
         // Double the size of row 3 (.25 used to make it look nicer)
-        deducter = r3H * 1.75;
+        deducter = r3H * 1.58;
         newHeight =  iH - deducter;
         //approx mobile width
         let curWidth = window.matchMedia( "(max-width: 768px)" );
@@ -121,7 +121,38 @@ document.addEventListener('DOMContentLoaded', () => {
 
     getHeight();
 
-    // Counts total private channels. Used on browser load.
+    // gets the height of the left sidebar and adds scrollbar when necessary
+    // basically, I made my own scroll:auto because the pre made one wouldnt work
+    function getCurrentHeight(clicked) {
+        const iH = window.innerHeight;
+        const r1 = document.querySelector(`#row-1`);
+        r1H = r1.offsetHeight;
+        const privBar = document.querySelector('.priv-bar');
+        const temp = privBar.getBoundingClientRect();
+        console.log(`temp = ${temp.top}`);
+        console.log(`iH = ${iH}`);
+        let deducter = iH - r1H
+        if (clicked) {
+            const r3 = document.querySelector(`#row-3`);
+            const r3H = r3.offsetHeight;
+            deducter -= r3H;
+        }
+
+        if (deducter <= temp.top) {
+            document.querySelector('#chan-selection').style.height = `${deducter}px`;
+            document.querySelector('#chan-selection').style.overflowY = "scroll";
+            document.querySelector('#chan-selection').style.overflowX = "hidden";
+        }   
+        else {
+            document.querySelector('#chan-selection').style.height = `${iH}px`;
+            document.querySelector('#chan-selection').style.overflowY = "hidden";
+            document.querySelector('#chan-selection').style.overflowX = "hidden"; 
+        }
+    }
+
+    getCurrentHeight()
+
+    // Counts total channels. Used on browser load.
     function count_chans() {
         let temp = 0
         const chanLinks = document.querySelectorAll('.chan-links');
@@ -515,6 +546,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         sideBar("left")
         getSideBarHeight();
+        getCurrentHeight(true);
         });
 
     ham2.addEventListener("click", () => {
@@ -638,6 +670,7 @@ document.addEventListener('DOMContentLoaded', () => {
     //close sidebars on resize and resize scrollbars nicely
     function resize() {
         getHeight();
+        getCurrentHeight(false);
         //closeSideBars();
         sideBar("close")
     }
