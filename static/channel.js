@@ -15,6 +15,30 @@ document.addEventListener('DOMContentLoaded', () => {
     const chanChanNavBtns = document.querySelectorAll(`.chan-bar > .chan-nav-btn`);
     const privChanNavBtns = document.querySelectorAll(`.priv-bar > .chan-nav-btn`);
 
+    /*----------------------------------------*/
+    /*----------------------------------------*/
+    /*----------------------------------------*/
+
+    const row1 = document.querySelector(`#row-1`);
+    const row2 = document.querySelector(`#row-2`);
+    const row3 = document.querySelector(`#row-3`);
+    const cs = document.querySelector('#chan-selection');
+
+    const ol = document.querySelector('#online');
+
+    const r1H = row1.offsetHeight;
+    const r3H = row3.offsetHeight;
+
+
+    //The below const is used for window re-sizing points.
+    //When the brwoser window passes it, resizing function is called
+    //This is the private channel numbered nav bar
+    const privBar = document.querySelector('.priv-bar');
+
+    /*----------------------------------------*/
+    /*----------------------------------------*/
+    /*----------------------------------------*/
+
     // max amount of nav buttons for channel page switching
     const maxNavBtns = 3
     // used to find buttons on either side of nav
@@ -55,49 +79,50 @@ document.addEventListener('DOMContentLoaded', () => {
     //... resize too.
     let iH = 0;
 
-    function getSideBarHeight(){
-        iH = window.innerHeight;
-        r2 = document.querySelector(`#row-2`);
-        r3 = document.querySelector(`#row-3`);
-        sH = document.querySelector(`.select-height`);
-        r3H = r3.offsetHeight;
-        // Double the size of row 3 (.25 used to make it look nicer)
-        deducter = r3H * 1.75;
-        newHeight =  iH - deducter;
-        //approx mobile width
-        //let curWidth = window.matchMedia( "(max-width: 768px)" );
-        // maths used to calcualte the size of the msg box
-        ///... so that the size of widnows will change accordingly
+    /*----------------------------------------*/
+    /*----------------------------------------*/
+    /*----------------------------------------*/
 
-        //If window is at the small/mobile width...
-        sH.style.height = `${newHeight}px`;
-        console.log("chaning");
-        /*if (curWidth.matches) {
-            //two windows now untop of each other instead of side to side...
-            ///... hence the '/2'.
-            newHeight /= 2;
-            // below used to account for msg box
-            let newHeightH = newHeight - r3H/2;
-            sH.style.height = `${newHeightH}px`;
+        function resizeBar(clicked, side) {
+
+            const iH = window.innerHeight;
+            const prvBarLoc = privBar.getBoundingClientRect();
+
+            //resized to offset size of divs in window
+            let newSize = iH - r1H;
+
+            if (clicked) newSize -= r3H;
+
+            if (side === "left") {
+                if (newSize <= prvBarLoc.top) {
+                    cs.style.height = `${newSize}px` 
+                    cs.style.overflowY = "scroll";
+                } else {
+                    cs.style.height = `${iH}px`; 
+                    cs.style.overflowY = "hidden";
+                }
+            } else {
+                ol.style.height = `${newSize}px`;
+            }
         }
-        else {
 
-            sH.style.height = `${newHeightH}px`;
-        }*/
+    /*----------------------------------------*/
+    /*----------------------------------------*/
+    /*----------------------------------------*/    
 
-    }
+    function calcHeight(offset) {
+        const iH = window.innerHeight;
+        const newHeight = r3H + offset;
+        return iH - newHeight
+}
 
     //get height of windows so scrollbars can be resized nicely
     function getHeight(){   
-        iH = window.innerHeight;
-        r2 = document.querySelector(`#row-2`);
-        r3 = document.querySelector(`#row-3`);
-        msgW = document.querySelector(`#msg-window`);
-        msgWH = document.querySelector(`#msg-window-home`);
-        r3H = r3.offsetHeight;
-        // Double the size of row 3 (.25 used to make it look nicer)
-        deducter = r3H * 1.58;
-        newHeight =  iH - deducter;
+        /*const iH = window.innerHeight;*/
+        const msgW = document.querySelector(`#msg-window`);
+        const msgWH = document.querySelector(`#msg-window-home`);  
+        /*const offset = r3H + r1H;*/
+        let newHeight =  calcHeight(r1H)
         //approx mobile width
         let curWidth = window.matchMedia( "(max-width: 768px)" );
         // maths used to calcualte the size of the msg box
@@ -108,49 +133,22 @@ document.addEventListener('DOMContentLoaded', () => {
             //two windows now untop of each other instead of side to side...
             ///... hence the '/2'.
             newHeight /= 2;
-            // below used to account for msg box
-            let newHeightH = newHeight - r3H/2;
             msgW.style.height = `${newHeight}px`;
-            msgWH.style.height = `${newHeightH}px`;
+            // below used to account for msg box
+            msgWH.style.height = `${newHeight-r3H/2}px`;
         }
         else {
-            msgW.style.height = `${newHeight}px`;
             msgWH.style.height = `${newHeight}px`;
         }
+        msgW.style.height = `${newHeight}px`;
     }
 
     getHeight();
 
-    // gets the height of the left sidebar and adds scrollbar when necessary
-    // basically, I made my own scroll:auto because the pre made one wouldnt work
-    function getCurrentHeight(clicked) {
-        const iH = window.innerHeight;
-        const r1 = document.querySelector(`#row-1`);
-        r1H = r1.offsetHeight;
-        const privBar = document.querySelector('.priv-bar');
-        const temp = privBar.getBoundingClientRect();
-        console.log(`temp = ${temp.top}`);
-        console.log(`iH = ${iH}`);
-        let deducter = iH - r1H
-        if (clicked) {
-            const r3 = document.querySelector(`#row-3`);
-            const r3H = r3.offsetHeight;
-            deducter -= r3H;
-        }
-
-        if (deducter <= temp.top) {
-            document.querySelector('#chan-selection').style.height = `${deducter}px`;
-            document.querySelector('#chan-selection').style.overflowY = "scroll";
-            document.querySelector('#chan-selection').style.overflowX = "hidden";
-        }   
-        else {
-            document.querySelector('#chan-selection').style.height = `${iH}px`;
-            document.querySelector('#chan-selection').style.overflowY = "hidden";
-            document.querySelector('#chan-selection').style.overflowX = "hidden"; 
-        }
-    }
-
-    getCurrentHeight()
+    //getCurrentHeight()
+    resizeBar(false, "left");
+    //getCurrentHeight_online()
+    resizeBar(false, "right");
 
     // Counts total channels. Used on browser load.
     function count_chans() {
@@ -419,6 +417,11 @@ document.addEventListener('DOMContentLoaded', () => {
             li.classList.add('priv-links', 'channel-links')
             li.id = `priv-link-${priv_count}`
             priv_count++;
+            const mod = priv_count % 10
+            console.log(`mod = ${mod}`)
+            if (mod >= 5 ) {
+                priv_count+=(10-mod)
+            }
             //console.log(li.id)
             appendHere = pc;
             let tempId = parseFloat(li.id.slice(10));
@@ -430,6 +433,11 @@ document.addEventListener('DOMContentLoaded', () => {
             li.classList.add('chan-links', 'channel-links')
             li.id = `chan-link-${chan_count}`
             chan_count++;
+            const mod = chan_count % 10
+            console.log(`mod = ${mod}`)
+            if (mod >= 5 ) {
+                chan_count+=(10-mod)
+            }
 
             //console.log(li.id)
             appendHere = jc;
@@ -442,7 +450,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     socket.on('swap channel', value => {
-        location = `http://127.0.0.1:5000/channels/${value}/none`
+        location = `http://127.0.0.1:5000/channels/${value}`
     })
 
     // updates 'online' div with the users and their channels
@@ -484,34 +492,6 @@ document.addEventListener('DOMContentLoaded', () => {
         currently_online = []
     }, 4000);
 
-    //if user is not online, will not emit therefore will be removed from online
-    /*socket.emit("update online");*/
-    // socket.emit("update online", temp)
-
-        /*updaters.forEach((updater) => {
-                updater.addEventListener('keydown', (e) => {
-                    if (e.key == "Enter") {
-                        socket.emit("update private", {
-                            "friend": updater.value,
-                            "command":updater.id } )
-                        updater.value = ""; 
-                    }
-                })
-            })*/
-
-    //socket.on('append online', value => {
-        /*let onlineNames = document.querySelectorAll('.user-channel');
-        onlineNames.forEach((onlineName) => {
-            const nameId = onlineName.id;
-            const name = nameId.slice(9)
-            console.log(`your name is ${name}`)
-            if (!currently_online.includes(name)) {
-                onlineName.innerHTML = "offline"
-            }
-        });*/
-    //});
-        
-
     updaters = document.querySelectorAll('.updater');
 
     // add new members to private channels
@@ -534,32 +514,14 @@ document.addEventListener('DOMContentLoaded', () => {
     let rSideBar = false;
 
 
+
     //Opens up sidebars. If on sml screen size, close opposite sbar.
     ham1.addEventListener("click", () => {
-        
-        let curWidth = window.matchMedia( "(max-width: 768px)" );
-        lSideBar = !lSideBar;
-        if (curWidth.matches && rSideBar) {
-                rSideBar = !rSideBar;
-                
-                sideBar("right");               
-            }
-        sideBar("left")
-        getSideBarHeight();
-        getCurrentHeight(true);
+        masterSB("left", "right");
         });
 
     ham2.addEventListener("click", () => {
-        
-        let curWidth = window.matchMedia( "(max-width: 768px)" );
-        rSideBar = !rSideBar;
-        if (curWidth.matches && lSideBar) {
-                lSideBar = !lSideBar;
-                getSideBarHeight();
-                sideBar("left");
-            }
-        sideBar("right")
-        getSideBarHeight();
+        masterSB("right", "left");    
         });
 
     //if sidebar is opened and screensize is changed, hide sidebar when... 
@@ -588,6 +550,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const od_classes = row1_classes.concat(["r_sidebar", "col-sm-12"])
     const o_classes = row2_classes.concat(["r_sidebar"])
 
+    // sidebar object to store if left or right bar is open/closed
+    // true if open
+    const sBarObj = {
+        "left":false,
+        "right":false
+     }
+
+
     // toggle classes on and off
     function multi_class_toggle(ele_class_list, added_class_list, notResizing, side) {
         removed = []
@@ -607,22 +577,35 @@ document.addEventListener('DOMContentLoaded', () => {
                 ele_class_list.add(ele);
             } 
         });
-           /* window.setInterval(function(){
-                removed.forEach(function(e) {
-                    console.log(removed)
-                    ele_class_list.remove(e);
-                })
-        }, 2000);*/
-        
     }
 
-    function sidebarAnimate() {
+
+function masterSB(side, oppSide) {
+    let curWidth = window.matchMedia( "(max-width: 768px)" );
+    notResizing = true;
+
+    // open/close 'side' bar
+    if (side === 'close') {
+        notResizing = false;
+        openSB("left")
+        openSB("right")
         
+    } else {
+        openSB(side)
+    }
+    
+    // if small width and both are now open, close oppSide
+    if (curWidth.matches && notResizing && sBarObj[side] && sBarObj[oppSide]) {
+        openSB(oppSide)
     }
 
-    //toggle the left sidebar on and off
-    function leftSBar() {
-        
+}
+
+
+
+function openSB(side) {
+
+    if (side === "left") {
 
         if (ham1.classList.contains("alt_ham")){
             setTimeout(function() {
@@ -635,44 +618,26 @@ document.addEventListener('DOMContentLoaded', () => {
         
         multi_class_toggle(cnd_list, cnd_classes, notResizing, "l");
         multi_class_toggle(cs_list, cs_classes, notResizing,"l");
-        /*multi_class_toggle(ctd_list, ["color-change"], notResizing, "l");*/  
+        resizeBar(true, side);
+        //lSideBar = !lSideBar;
+        sBarObj["left"] = !sBarObj["left"]; 
     }
 
-    //toggle the right sidebar on and off
-    function rightSBar() {
+    else {
         multi_class_toggle(od_list, od_classes, notResizing, "r");
-        multi_class_toggle(o_list, o_classes, notResizing, "r");    
+        multi_class_toggle(o_list, o_classes, notResizing, "r"); 
+        resizeBar(true, side);
+        //rSideBar = !rSideBar;
+        sBarObj["right"] = !sBarObj["right"]; 
     }
-
-    // main function for sidebars
-    function sideBar(side) {
-        // if left hamburger is clicked
-        if (side === "left") {
-            notResizing = true;
-            leftSBar();
-        }
-        // if right hamburger is clicked
-        else if (side === "right") {
-            notResizing = true;
-            rightSBar();
-        }
-        // if resizing window
-        else {
-            notResizing = false;
-            lSideBar = false;
-            RSideBar = false
-            /*ham1.classList.add("alt_ham");*/
-            leftSBar();
-            rightSBar();
-        }
-    }
+}
 
     //close sidebars on resize and resize scrollbars nicely
     function resize() {
         getHeight();
-        getCurrentHeight(false);
-        //closeSideBars();
-        sideBar("close")
+        resizeBar(false, "left");
+        resizeBar(false, "right");
+        masterSB("close")
     }
     window.onresize = resize;
 
