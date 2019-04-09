@@ -48,8 +48,8 @@
             <br> {{ channel_nav(chanCounts.privCount, 'priv') }}
             <br>
         </div>
-        <div class="col-xl-4 col-lg-5 col-md-6 col-sm-12 chat-windows" id="msg-window">
-            <ul id="msg-room-{{current.chan_name}}">
+        <div class="col-xl-4 col-lg-5 col-md-6 col-sm-12 chat-windows" 
+        id="msg-window"><ul id="msg-room-{{current.chan_name}}">
                 {% if current.private %}
                 <form>
                     <div class="row">
@@ -66,8 +66,8 @@
         <div class="col-xl-4 col-lg-5 col-md-6 col-sm-12" id="home-title-div-mob">
             <h2>@Home</h2>
         </div>
-        <div class="col-xl-4 col-lg-5 col-md-6 col-sm-12 chat-windows" id="msg-window-home">
-            <ul id="msg-room-home">
+        <div class="col-xl-4 col-lg-5 col-md-6 col-sm-12 chat-windows"
+         id="msg-window-home"><ul id="msg-room-home">
                 <hr> {% for message in home_chan %}
                 <li class="msgs"><span id="{{message.id}}"><span class="names">{{message.name}}:</span> {{message.message}}</span>
                 </li>

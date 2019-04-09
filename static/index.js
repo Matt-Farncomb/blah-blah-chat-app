@@ -1,7 +1,4 @@
 
-//NOTES: Won't regeister a change unless actual new code is added ratehr than just ccommenting out some stuff
-
-
 document.addEventListener('DOMContentLoaded', () => {
     console.log("test")
 

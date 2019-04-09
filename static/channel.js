@@ -15,29 +15,39 @@ document.addEventListener('DOMContentLoaded', () => {
     const chanChanNavBtns = document.querySelectorAll(`.chan-bar > .chan-nav-btn`);
     const privChanNavBtns = document.querySelectorAll(`.priv-bar > .chan-nav-btn`);
 
-    /*----------------------------------------*/
-    /*----------------------------------------*/
-    /*----------------------------------------*/
-
     const row1 = document.querySelector(`#row-1`);
     const row2 = document.querySelector(`#row-2`);
     const row3 = document.querySelector(`#row-3`);
-    const cs = document.querySelector('#chan-selection');
 
     const ol = document.querySelector('#online');
 
     const r1H = row1.offsetHeight;
     const r3H = row3.offsetHeight;
 
-
-    //The below const is used for window re-sizing points.
-    //When the brwoser window passes it, resizing function is called
     //This is the private channel numbered nav bar
     const privBar = document.querySelector('.priv-bar');
 
-    /*----------------------------------------*/
-    /*----------------------------------------*/
-    /*----------------------------------------*/
+    // classLists for sidebars
+    const chan_name_div = document.querySelector('#chan-name-div');
+    const cnd_list = chan_name_div.classList;
+
+    const chan_selection = document.querySelector('#chan-selection');
+    const cs_list = chan_selection.classList;
+
+    const online_div = document.querySelector('#online-div');
+    const od_list = online_div.classList;
+
+    const online = document.querySelector('#online');
+    const o_list = online.classList;
+    //classes to be added so sidebars appear and dissapear
+    const row1_classes = ["name-height", "col-md-6", "col-lg-5", "top"];
+    const row2_classes = ["select-height", "col-sm-12","col-md-6", "col-lg-5", "top"];
+    //left sidebar classes
+    const cnd_classes = row1_classes.concat(["sidebar", "form-width", "col-sm-10"])
+    const cs_classes = row2_classes.concat(['sidebar'])
+    //right sidebar classes
+    const od_classes = row1_classes.concat(["r_sidebar", "col-sm-12"])
+    const o_classes = row2_classes.concat(["r_sidebar"])
 
     // max amount of nav buttons for channel page switching
     const maxNavBtns = 3
@@ -73,15 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
         "chan":1
     }
  
-
-    //gets size of row-2 on load and resizes r2 according
-    //... to height of fixed chat bar. Function called on
-    //... resize too.
     let iH = 0;
-
-    /*----------------------------------------*/
-    /*----------------------------------------*/
-    /*----------------------------------------*/
 
         function resizeBar(clicked, side) {
 
@@ -95,20 +97,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (side === "left") {
                 if (newSize <= prvBarLoc.top) {
-                    cs.style.height = `${newSize}px` 
-                    cs.style.overflowY = "scroll";
+                    chan_selection.style.height = `${newSize}px` 
+                    chan_selection.style.overflowY = "scroll";
                 } else {
-                    cs.style.height = `${iH}px`; 
-                    cs.style.overflowY = "hidden";
+                    chan_selection.style.height = `${iH}px`; 
+                    chan_selection.style.overflowY = "hidden";
                 }
             } else {
                 ol.style.height = `${newSize}px`;
             }
         }
-
-    /*----------------------------------------*/
-    /*----------------------------------------*/
-    /*----------------------------------------*/    
 
     function calcHeight(offset) {
         const iH = window.innerHeight;
@@ -118,10 +116,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     //get height of windows so scrollbars can be resized nicely
     function getHeight(){   
-        /*const iH = window.innerHeight;*/
         const msgW = document.querySelector(`#msg-window`);
         const msgWH = document.querySelector(`#msg-window-home`);  
-        /*const offset = r3H + r1H;*/
         let newHeight =  calcHeight(r1H)
         //approx mobile width
         let curWidth = window.matchMedia( "(max-width: 768px)" );
@@ -171,8 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
         privLinks.forEach((privLink) => {
             const finPrivLinkId = privLink.id;
             temp = parseInt(finPrivLinkId.slice(10)) + 1;
-        });
-        //console.log(`temp: ${temp}`)    
+        });  
         return temp
     }
 
@@ -310,7 +305,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Sets current Chan Nav too
     chanNavs.forEach((chanNav) => {
         chanNav.addEventListener('click', () => {
-            //let linkId = 1.0;
             const navType = chanNav.id.slice(4,8);
             const chanNavId = parseFloat(chanNav.id.slice(9));
             current_c_nav[navType] = chanNavId     
@@ -422,10 +416,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (mod >= 5 ) {
                 priv_count+=(10-mod)
             }
-            //console.log(li.id)
             appendHere = pc;
             let tempId = parseFloat(li.id.slice(10));
-            // hideChannels("priv", current_c_nav);
 
         }
         else {
@@ -439,10 +431,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 chan_count+=(10-mod)
             }
 
-            //console.log(li.id)
             appendHere = jc;
             let tempId = parseFloat(li.id.slice(10));
-            // hideChannels("chan", current_c_nav);
         }
         li.innerHTML = `<a href="/channels/${chanName["name"]}" class="nav-link">${chanName["name"]}</a>`
         appendHere.appendChild(li)
@@ -471,7 +461,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // receive name of each user who is online... 
     socket.on('append online', value => {
         // and append to array
-        // console.log(`value is ${value}`);
         currently_online.push(value);
     })
 
@@ -513,8 +502,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let lSideBar = false;
     let rSideBar = false;
 
-
-
     //Opens up sidebars. If on sml screen size, close opposite sbar.
     ham1.addEventListener("click", () => {
         masterSB("left", "right");
@@ -527,28 +514,6 @@ document.addEventListener('DOMContentLoaded', () => {
     //if sidebar is opened and screensize is changed, hide sidebar when... 
     //media query when normally kick in
     var mq = window.matchMedia( "(min-width: 1200px)" );
- 
-
-    // classLists for sidebars
-    const chan_title_div = document.querySelector('#chan-title-div');
-    const ctd_list = chan_title_div.classList;
-    const chan_name_div = document.querySelector('#chan-name-div');
-    const cnd_list = chan_name_div.classList;
-    const chan_selection = document.querySelector('#chan-selection');
-    const cs_list = chan_selection.classList;
-    const online_div = document.querySelector('#online-div');
-    const od_list = online_div.classList;
-    const online = document.querySelector('#online');
-    const o_list = online.classList;
-    //classes to be added so sidebars appear and dissapear
-    const row1_classes = ["name-height", "col-md-6", "col-lg-5", "top"];
-    const row2_classes = ["select-height", "col-sm-12","col-md-6", "col-lg-5", "top"];
-    //left sidebar classes
-    const cnd_classes = row1_classes.concat(["sidebar", "form-width", "col-sm-10"])
-    const cs_classes = row2_classes.concat(['sidebar'])
-    //right sidebar classes
-    const od_classes = row1_classes.concat(["r_sidebar", "col-sm-12"])
-    const o_classes = row2_classes.concat(["r_sidebar"])
 
     // sidebar object to store if left or right bar is open/closed
     // true if open
@@ -565,14 +530,11 @@ document.addEventListener('DOMContentLoaded', () => {
             if (ele_class_list.contains(ele) == true) {
                 removed.push(ele)
                 ele_class_list.add(`${side}_slideOut`)
-                //console.log(`removing class: ${ele}`);
-                //ele_class_list.remove(ele);
                 setTimeout(function () {
                         ele_class_list.remove(ele);
                 }, 500); 
             }
             else if (ele_class_list.contains(ele) == false && notResizing) {
-                //console.log(`adding class: ${ele}`);
                 ele_class_list.remove(`${side}_slideOut`)
                 ele_class_list.add(ele);
             } 
@@ -619,7 +581,6 @@ function openSB(side) {
         multi_class_toggle(cnd_list, cnd_classes, notResizing, "l");
         multi_class_toggle(cs_list, cs_classes, notResizing,"l");
         resizeBar(true, side);
-        //lSideBar = !lSideBar;
         sBarObj["left"] = !sBarObj["left"]; 
     }
 
@@ -627,7 +588,6 @@ function openSB(side) {
         multi_class_toggle(od_list, od_classes, notResizing, "r");
         multi_class_toggle(o_list, o_classes, notResizing, "r"); 
         resizeBar(true, side);
-        //rSideBar = !rSideBar;
         sBarObj["right"] = !sBarObj["right"]; 
     }
 }

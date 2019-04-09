@@ -14,25 +14,9 @@ from sqlalchemy import exc
 
 app = Flask(__name__)
 
-
-
 ## SQLITE
 ## note - 4 slashes needed for linux for some reason
 app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{os.getcwd()}/user_info.db"
-##
-# APP.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://%s:%s@%s/%s' % (
-#     # ARGS.dbuser, ARGS.dbpass, ARGS.dbhost, ARGS.dbname
-#     os.environ['DBUSER'], os.environ['DBPASS'], os.environ['DBHOST'], os.environ['DBNAME']
-# )
-
-## --- PSQL
-# Check for environment variable
-# if not os.getenv("DATABASE_URL"):
-#     raise RuntimeError("DATABASE_URL is not set")
-
-
-# app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
-## --
 
 socketio = SocketIO(app)
 
@@ -44,13 +28,10 @@ app.config["SESSION_TYPE"] = "filesystem"
 app.jinja_env.add_extension('jinja2.ext.loopcontrols')
 
 Session(app)
-## --- PSQL
-# engine = create_engine(os.getenv("DATABASE_URL"))
-## --
 
-## SQLITE
+
 engine = create_engine(app.config["SQLALCHEMY_DATABASE_URI"])
-##
+
 db = scoped_session(sessionmaker(bind=engine))
 
 currently_online = []
@@ -58,6 +39,7 @@ currently_online = []
 svr_reset = True
 
 def create_tables():
+	# for testing purposes:
 	# db.execute('''DROP TABLE if exists blah_users''' )
 	# db.execute('''DROP TABLE if exists channels''' )
 	# db.execute('''DROP TABLE if exists membership''' )
@@ -122,7 +104,7 @@ channels = {
 		"msg_list":["Please select a channel on the left"],
 		"current_users":[]},
 	}
-	#'select' is a channel whose only purpose is to display
+	#'select' is a channel whose only purpose is to display...
 	# "please select a channel" when user loads up for the first time
 
 
@@ -463,11 +445,6 @@ def update_online():
 	emit("append online", session["name"],
 		broadcast=True)
 
-# def update_online():
-# 	currently_online.append(session["name"])
-# 	emit("append online", currently_online, 
-# 		broadcast=True)
-
 '''
 Update session dict to show new channel user is in
 This would be the channel's window they have clicked on
@@ -524,24 +501,3 @@ def update_private(*args):
 
 		channels[priv_chan_name]["private"]["members"].remove(args[0]["friend"])
 	db.commit()
-
-# if __name__ == '__main__':
-#     socketio.run(app)
-
-# THINGS TO RESEARCH:
-#What is eventlet (on the Procfile)
-#What is gunicorn (also on the Procfile)
-#What is that -k before eventlet on on the Procfile
-#What is a Procfile
-#What are dynos?
-
-# what is wss:// 
-# What exactly are web-sockets
-# WHat is special about SocketIO
-# What is a websocket handshake
-# What is polling
-# What is 'session affinity'
-# what is that thing: heroku ps:scale web=0 --app scrolled, heroku ps:scale web=1 --app scrolled
-
-# Why is websocket closed before connection is established
-# Why are the web socket connections failing

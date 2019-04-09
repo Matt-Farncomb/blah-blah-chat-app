@@ -15,7 +15,7 @@ h1 {
     text-align: center;
     padding-top: 2em;
     padding-right: 1em;
-    font-size: 6em;
+    font-size: 4em;
 }
 
 .col-4{
@@ -23,7 +23,7 @@ h1 {
 }
 
 .col-12 {
-    height:45vh;
+    height:35vh;
 }
 
 
